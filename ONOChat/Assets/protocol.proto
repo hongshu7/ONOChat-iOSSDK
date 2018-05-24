@@ -1,0 +1,67 @@
+syntax = "proto3";
+option java_package = "com.highma.im.proto";
+option java_outer_classname = "MessageProtos";
+option csharp_namespace = "Game.Net.Proto";
+//有推送 用户信息
+message UserData {
+  string uid = 1;
+  string name = 2;
+  string icon = 3;
+  string sign = 4;
+  string email = 5;
+  string birth = 6; 
+  string mobile = 7;
+  int32 gender = 8; //用户性别，0表示未知，1表示男，2女表示女，其它会报参数错误
+  string ex = 9; //用户名片扩展字段，最大长度1024字符，用户可自行扩展，建议封装成JSON字符串
+}
+
+message Message {
+  string uid = 1;
+  string mid = 2;
+  string from = 3;
+  string to = 4;
+  int32 type = 5; 
+  string content = 6;
+  string tag = 7; 
+  double time = 8;
+  int32 unread = 9; 
+}
+
+message ErrorResponse {
+  int32 code = 1;
+  string message = 2;
+  string extra = 3;
+}
+
+
+
+//推送 重复登录被提出
+message UserKick {
+  string content = 1;
+}
+
+//请求 登陆接口
+message UserLoginRequest {
+  string token = 1;
+}
+//响应 登陆
+message UserLoginResponse {
+  UserData user = 1;
+  repeated Message messages = 2;
+}
+
+//请求 标记消息已读
+message ReadMessageRequest {
+  string mid = 1;
+}
+//请求 发送消息
+message SendMessageRequest {
+  int32 type = 1; //1文字 2图片 3表情
+  string to = 2; //接收者id
+  string content = 3;
+  string tag = 4;
+}
+
+
+
+

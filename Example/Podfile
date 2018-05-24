@@ -1,7 +1,9 @@
 use_frameworks!
+platform :ios, '9.0'
 
 target 'ONOChat_Example' do
   pod 'ONOChat', :path => '../'
+  pod 'Protobuf', '3.5.0'
 
   target 'ONOChat_Tests' do
     inherit! :search_paths

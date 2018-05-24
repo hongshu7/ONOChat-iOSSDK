@@ -37,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		10435B51AE6D4053F6D94EBF /* ONOChat.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = ONOChat.podspec; path = ../ONOChat.podspec; sourceTree = "<group>"; };
+		10435B51AE6D4053F6D94EBF /* ONOChat.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ONOChat.podspec; path = ../ONOChat.podspec; sourceTree = "<group>"; };
 		391BD87DC845599C12EEE3DF /* Pods_ONOChat_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ONOChat_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48E1B27B551972DC2008F4D9 /* Pods-ONOChat_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ONOChat_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ONOChat_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ONOChat_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,8 +61,8 @@
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8FD0E81857F8BD420B15D422 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		AFE2D398B0592E2DBA0BE08E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		8FD0E81857F8BD420B15D422 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		AFE2D398B0592E2DBA0BE08E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B0FE7315C6B87E9251F78D7E /* Pods-ONOChat_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ONOChat_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C2AA97DBABA4F1D0D3E5177F /* Pods_ONOChat_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ONOChat_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F593088685EE471ADBC39997 /* Pods-ONOChat_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ONOChat_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ONOChat_Tests/Pods-ONOChat_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -248,6 +248,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Kevin;
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = C73UF8Z9WM;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -357,10 +360,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ONOChat/ONOChat.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ONOChat.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -504,6 +509,7 @@
 			baseConfigurationReference = 48E1B27B551972DC2008F4D9 /* Pods-ONOChat_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = C73UF8Z9WM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ONOChat/ONOChat-Prefix.pch";
 				INFOPLIST_FILE = "ONOChat/ONOChat-Info.plist";
@@ -519,6 +525,7 @@
 			baseConfigurationReference = B0FE7315C6B87E9251F78D7E /* Pods-ONOChat_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = C73UF8Z9WM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ONOChat/ONOChat-Prefix.pch";
 				INFOPLIST_FILE = "ONOChat/ONOChat-Info.plist";

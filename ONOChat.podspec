@@ -18,25 +18,30 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+IM SDK for ONO chat.
                        DESC
 
-  s.homepage         = 'https://github.com/Kevin/ONOChat'
+  s.homepage         = 'https://github.com/lhs168/ONOChat'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Kevin' => 'lhs168@gmail.com' }
   s.source           = { :git => 'https://github.com/Kevin/ONOChat.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '8.0'
-
+  s.ios.deployment_target = '9.0'
   s.source_files = 'ONOChat/Classes/**/*'
-  
+  non_arc_files = 'ONOChat/Classes/proto/*'
+  s.exclude_files = non_arc_files
+  s.subspec 'ONOProto' do |sna|
+    sna.requires_arc = false
+    sna.source_files = non_arc_files
+  end
   # s.resource_bundles = {
   #   'ONOChat' => ['ONOChat/Assets/*.png']
   # }
-
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Protobuf', '~> 3.5.0'
+
+  # Set a CPP symbol so the code knows to use framework imports.
+  s.user_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1' }
+  s.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1' }
 end
