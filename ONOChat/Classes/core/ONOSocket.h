@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IMPacket.h"
+#import "ONOPacket.h"
 
-@interface IMSocket : NSObject
+@interface ONOSocket : NSObject
 
 @property BOOL isConnect;
 
@@ -20,6 +20,6 @@
 
 - (void)heartBeat:(NSInteger)hbi;
 
-- (void)sendData:(IMPacket*)message;
+- (void)sendData:(ONOPacket*)message;
 
 @end

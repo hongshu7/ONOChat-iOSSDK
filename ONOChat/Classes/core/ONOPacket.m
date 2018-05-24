@@ -4,12 +4,12 @@
 //  Copyright (c) 2014年 Xiamen justit. All rights reserved.
 //
 
-#import "IMPacket.h"
+#import "ONOPacket.h"
 
-@implementation IMPacket
+@implementation ONOPacket
 
 
-- (instancetype)initWithType:(IMPacketType)type andData:(NSData *)data
+- (instancetype)initWithType:(ONOPacketType)type andData:(NSData *)data
 {
     if (self = [super init]) {
         _type = type;

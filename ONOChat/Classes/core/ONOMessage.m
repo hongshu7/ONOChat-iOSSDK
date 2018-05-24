@@ -4,21 +4,21 @@
 //  Copyright (c) 2014年 Xiamen justit. All rights reserved.
 //
 
-#import "IMMessage.h"
-#import "IMClient.h"
+#import "ONOMessage.h"
+#import "ONOIMClient.h"
 
 #define MSG_COMPRESS_GZIP_MASK 0x1;
 #define MSG_TYPE_MASK 0x7;
 #define MSG_ERROR_MASK 0x1;
 
-@implementation IMMessage
+@implementation ONOMessage
 
 - (NSData *)encode {
     
     int headHength = 2; //flag + route
     if (self.type == IM_MT_REQUEST) {
         //msgid
-        headHength += [IMMessage caculateMsgIdBytes:self.messageId];
+        headHength += [ONOMessage caculateMsgIdBytes:self.messageId];
     }
     
     char headBytes[headHength];
@@ -29,9 +29,9 @@
     headBytes[offset++] = (self.type << 1) | (compressGzip ? 1 : 0);
     if (self.type == IM_MT_REQUEST) {
         //写入message id
-        offset = [IMMessage encodeMsgId:self.messageId andBuffer:headBytes andOffset:offset];
+        offset = [ONOMessage encodeMsgId:self.messageId andBuffer:headBytes andOffset:offset];
     }
-    IMRouteInfo *routeInfo = [[IMClient sharedInstance] getRouteInfo:self.route];
+    ONORouteInfo *routeInfo = [[ONOIMClient sharedClient] getRouteInfo:self.route];
     headBytes[offset++] = routeInfo.routeId;
     NSLog(@"encode type:%d, route:%@, routeid:%zd, msgid:%zd", self.type, self.route, routeInfo.routeId, self.messageId);
     
@@ -69,12 +69,12 @@
         } while(m >= 128);
         //消息id
         self.messageId = msgId;
-        self.route = [[IMClient sharedInstance] getRouteByMsgId:self.messageId];
+        self.route = [[ONOIMClient sharedClient] getRouteByMsgId:self.messageId];
         
     } else if (self.type == IM_MT_PUSH) {
         //解析route
         int routeId = bytes[offset++];
-        self.route = [[IMClient sharedInstance] getRouteByRouteId:routeId];
+        self.route = [[ONOIMClient sharedClient] getRouteByRouteId:routeId];
     }
     NSLog(@"decode messageId:%zd, route:%@, body length:%d", self.messageId, self.route, length - offset);
     NSData *body = [NSData dataWithBytes:&(bytes[offset]) length:length - offset];
@@ -84,7 +84,7 @@
     if (self.isError) {
         self.message = [ErrorResponse parseFromData:body error:nil];
     } else {
-        IMRouteInfo *routeInfo = [[IMClient sharedInstance] getRouteInfo:self.route];
+        ONORouteInfo *routeInfo = [[ONOIMClient sharedClient] getRouteInfo:self.route];
         //push将使用resuest
         NSString *messageName = self.type == IM_MT_RESPONSE ? routeInfo.response : routeInfo.request;
 //        if (self.type == IM_MT_PUSH) {

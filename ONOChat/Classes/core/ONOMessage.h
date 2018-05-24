@@ -13,11 +13,11 @@ typedef enum {
     IM_MT_NOTIFY,
     IM_MT_RESPONSE,
     IM_MT_PUSH
-} IMMessageType;
+} ONOMessageType;
 
-@interface IMMessage : NSObject
+@interface ONOMessage : NSObject
 
-@property(nonatomic) IMMessageType type;
+@property(nonatomic) ONOMessageType type;
 @property(nonatomic) NSString *route;
 @property(nonatomic) NSUInteger messageId;
 @property(nonatomic) BOOL isError;

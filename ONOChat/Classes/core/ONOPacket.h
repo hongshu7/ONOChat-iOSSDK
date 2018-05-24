@@ -13,13 +13,13 @@ typedef enum {
     IM_PT_HEARTBEAT,
     IM_PT_DATA,
     IM_PT_KICK
-} IMPacketType;
+} ONOPacketType;
 
-@interface IMPacket : NSObject
+@interface ONOPacket : NSObject
 
-@property(nonatomic) IMPacketType type;
+@property(nonatomic) ONOPacketType type;
 @property(nonatomic, strong) NSData *data;
 
-- (instancetype)initWithType:(IMPacketType)type andData:(NSData *)data;
+- (instancetype)initWithType:(ONOPacketType)type andData:(NSData *)data;
 
 @end

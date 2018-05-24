@@ -6,12 +6,12 @@
 //  Copyright (c) 2014年 rxwang. All rights reserved.
 //
 
-#import "IMSocket.h"
+#import "ONOSocket.h"
 #import "FastSocket.h"
-#import "IMMessage.h"
-#import "IMClient.h"
+#import "ONOMessage.h"
+#import "ONOIMClient.h"
 
-@interface IMSocket ()
+@interface ONOSocket ()
 
 @property BOOL isStop;
 
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation IMSocket
+@implementation ONOSocket
 
 
 
@@ -105,7 +105,7 @@
 {
     NSString *str = @"{\"sys\":{\"type\":\"ios\",\"version\":\"1.0\",\"protocol\":\"protobuf\"}}";
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
-    IMPacket *packet = [[IMPacket alloc] initWithType:IM_PT_HANDSHAKE andData:data];
+    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_HANDSHAKE andData:data];
     [self sendData:packet];
 }
 
@@ -116,7 +116,7 @@
      _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), hbi * NSEC_PER_SEC, 0);
     dispatch_source_set_event_handler(_timer, ^{
-        IMPacket* mp = [[IMPacket alloc] init];
+        ONOPacket* mp = [[ONOPacket alloc] init];
         mp.type = IM_PT_HEARTBEAT;
         [self sendData:mp];
         //if (self.lastSendTime < [[NSDate date] timeIntervalSince1970] - 30.0) {
@@ -202,7 +202,7 @@
 }
 
 
-- (void)sendData:(IMPacket*)packet
+- (void)sendData:(ONOPacket*)packet
 {
     //发送队列，先进先出
     dispatch_async(self.sendQueue, ^{
@@ -240,12 +240,12 @@
     }
     
     //解析头部信息
-    IMPacketType type = (IMPacketType) headers[0];
+    ONOPacketType type = (ONOPacketType) headers[0];
     unsigned int length = ((headers[1]) << 16 | (headers[2]) << 8 | headers[3]) >> 0;
     
     NSLog(@"headers: %d,%d,%d,%d", headers[0], headers[1], headers[2], headers[3]);
     
-    IMPacket* packet = [[IMPacket alloc] init];
+    ONOPacket* packet = [[ONOPacket alloc] init];
     packet.type = type;
     NSLog(@"revice type:%d, length:%d", type, length);
     
@@ -267,10 +267,10 @@
     NSLog(@"dispatch packet");
     if (packet.type == IM_PT_HANDSHAKE) {
         //服务端握手回应
-        [[IMClient sharedInstance] handleConnected:packet.data];
+        [[ONOIMClient sharedClient] handleConnected:packet.data];
     } else if (packet.type == IM_PT_DATA) {
         //消息包
-        IMMessage *message = [[IMMessage alloc] init];
+        ONOMessage *message = [[ONOMessage alloc] init];
         [message decode:packet.data];
         [self performSelectorOnMainThread:@selector(dispatchMessage:) withObject:message waitUntilDone:NO];
     }
@@ -280,7 +280,7 @@
 - (void)dispatchMessage:(id)message
 {
     NSLog(@"get packet:%@", message);
-    [[IMClient sharedInstance] handleResponse:message];
+    [[ONOIMClient sharedClient] handleResponse:message];
 }
 
 @end

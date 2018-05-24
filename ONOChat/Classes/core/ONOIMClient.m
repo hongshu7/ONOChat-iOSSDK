@@ -6,10 +6,9 @@
 //  Copyright (c) 2018年 Xiamen ONO technology. All rights reserved.
 //
 
-#import "IMClient.h"
-#import "IMSocket.h"
-#import "IMPacket.h"
-
+#import "ONOIMClient.h"
+#import "ONOSocket.h"
+#import "ONOPacket.h"
 
 @interface IMResponsePacket : NSObject
 
@@ -25,11 +24,7 @@
 @end
 
 
-@implementation IMRouteInfo
-
-@end
-
-@interface IMClient()
+@interface ONOIMClient()
 
 @property (nonatomic, strong) NSString *loginToken;
 @property (nonatomic, copy) IMSuccessResponse loginSuccessCallback;
@@ -37,7 +32,7 @@
 @property (nonatomic, strong) NSString *clientId;
 @property (nonatomic, strong) NSString *deviceToken;
 
-@property (nonatomic, strong) IMSocket* client;
+@property (nonatomic, strong) ONOSocket* client;
 @property (nonatomic, strong) NSMutableDictionary *routes;
 @property (nonatomic, strong) NSMutableDictionary *routesById;
 @property (nonatomic) NSInteger heartbeatInterval;
@@ -46,9 +41,9 @@
 @property (nonatomic) NSInteger listenerId;;
 @end
 
-@implementation IMClient
+@implementation ONOIMClient
 
-+ (IMClient*)sharedInstance
++ (ONOIMClient*)sharedClient
 {
     static dispatch_once_t pred = 0;
     __strong static id _sharedObject = nil;
@@ -62,7 +57,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _client = [[IMSocket alloc] init];
+        _client = [[ONOSocket alloc] init];
         _routes = [[NSMutableDictionary alloc] init];
         _routesById = [[NSMutableDictionary alloc] init];
         _responseMap = [[NSMutableDictionary alloc] init];
@@ -100,7 +95,7 @@
     NSDictionary *routes = sys[@"routes"];
     for (NSString *route in routes) {
         NSArray* routeArray = [routes[route] componentsSeparatedByString:@","];
-        IMRouteInfo *routeInfo = [[IMRouteInfo alloc] init];
+        ONORouteInfo *routeInfo = [[ONORouteInfo alloc] init];
         routeInfo.routeId = [routeArray[0] integerValue];
         routeInfo.request = routeArray.count > 1 && ![routeArray[1] isEqualToString:@"_"] ? routeArray[1]: nil;
         routeInfo.response = routeArray.count > 2 && ![routeArray[2] isEqualToString:@"_"] ? routeArray[2]: nil;
@@ -160,7 +155,7 @@
 //    }
 }
 
-- (void)handleResponse:(IMMessage *)message
+- (void)handleResponse:(ONOMessage *)message
 {
     //处理回调
     if (message.messageId > 0) {
@@ -198,7 +193,7 @@
     return [self.routesById objectForKey:[@(routeId) stringValue]];
 }
 
-- (IMRouteInfo *)getRouteInfo:(NSString *)route
+- (ONORouteInfo *)getRouteInfo:(NSString *)route
 {
     return [self.routes objectForKey:route];
 }
@@ -206,7 +201,7 @@
 #pragma mark -- send
 - (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg  onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error
 {
-    IMMessage *msgPacket = [[IMMessage alloc] init];
+    ONOMessage *msgPacket = [[ONOMessage alloc] init];
     msgPacket.type = IM_MT_REQUEST;
     msgPacket.route = route;
     msgPacket.messageId = [self randomNumber:1 to:99999999];
@@ -220,18 +215,18 @@
     rp.errorResponse = error;
     [self.responseMap setObject:rp forKey:[@(msgPacket.messageId) stringValue]];
     
-    IMPacket *packet = [[IMPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
+    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
     [self.client sendData:packet];
 }
 
 - (void)notifyRoute:(NSString *)route withMessage:(GPBMessage *)msg
 {
-    IMMessage *msgPacket = [[IMMessage alloc] init];
+    ONOMessage *msgPacket = [[ONOMessage alloc] init];
     msgPacket.type = IM_MT_NOTIFY;
     msgPacket.route = route;
     msgPacket.message = msg;
     
-    IMPacket *packet = [[IMPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
+    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
     [self.client sendData:packet];
 }
 
@@ -308,12 +303,12 @@
     }
 }
 
-- (void)sendMessageTo:(NSString *)userId type:(int)type content:(NSString *)content tag:(NSString *)tag onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error {
+- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error {
     SendMessageRequest *request = [[SendMessageRequest alloc] init];
     request.to = userId;
-    request.type = type;
-    request.content = content;
-    request.tag = tag;
+    request.type = message.type;
+    request.content = message.content;
+    request.tag = message.data;
     [self requestRoute:@"client.message.send" withMessage:request onSuccess:success onError:error];
 }
 

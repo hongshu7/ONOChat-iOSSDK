@@ -7,23 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "IMMessage.h"
+#import "ONOMessage.h"
+#import "ONORouteInfo.h"
+#import "ONOBaseMessage.h"
 
 //todo:重连机制，客户端保存session id
 typedef void (^IMSuccessResponse)(id msg);
 typedef void (^IMErrorResponse)(id msg);
 
-@interface IMRouteInfo : NSObject
 
-@property (nonatomic) NSInteger routeId;
-@property (nonatomic, strong) NSString *request;
-@property (nonatomic, strong) NSString *response;
+@interface ONOIMClient : NSObject
 
-@end
-
-@interface IMClient : NSObject
-
-+ (IMClient *)sharedInstance;
++ (ONOIMClient *)sharedClient;
 
 
 
@@ -70,11 +65,11 @@ typedef void (^IMErrorResponse)(id msg);
 - (void)disconnect;
 
 - (void)handleConnected:(NSData *)response;
-- (void)handleResponse:(IMMessage *)message;
+- (void)handleResponse:(ONOMessage *)message;
 
 - (NSString *)getRouteByMsgId:(NSUInteger)msgId;
 - (NSString *)getRouteByRouteId:(NSUInteger)routeId;
-- (IMRouteInfo *)getRouteInfo:(NSString *)route;
+- (ONORouteInfo *)getRouteInfo:(NSString *)route;
 
 
 - (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
@@ -84,7 +79,7 @@ typedef void (^IMErrorResponse)(id msg);
 - (void)bindClientId:(NSString *)clientId;
 - (void)bindDeviceToken:(NSString *)deviceToken;
 
-- (void)sendMessageTo:(NSString *)userId type:(int)type content:(NSString *)content tag:(NSString *)tag onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
+- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
 - (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
 
 
