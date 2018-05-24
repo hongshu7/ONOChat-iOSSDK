@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ONOChat_Example' do
+  pod 'ONOChat', :path => '../'
+
+  target 'ONOChat_Tests' do
+    inherit! :search_paths
+
+    pod 'Kiwi'
+  end
+end
