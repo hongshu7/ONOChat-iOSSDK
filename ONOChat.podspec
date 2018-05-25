@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'ONOChat'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of ONOChat.'
+  s.summary          = 'ONOChat.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,7 +25,7 @@ IM SDK for ONO chat.
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Kevin' => 'lhs168@gmail.com' }
-  s.source           = { :git => 'https://github.com/Kevin/ONOChat.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/lhs168/ONOChat.git', :tag => s.version.to_s }
   s.ios.deployment_target = '9.0'
   s.source_files = 'ONOChat/Classes/**/*'
   non_arc_files = 'ONOChat/Classes/proto/*'

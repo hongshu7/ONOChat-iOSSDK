@@ -34,8 +34,10 @@
     userOne.token = @"ju9es1b7w6kproa32ghqvdt0xzmfycin";
     
     IMUserModel *userTwo = [[IMUserModel alloc] init];
-    userTwo.name = @"lsp";
-    userTwo.token = @"ju9es1b7w6kproa32ghqvdt0xzmfycin";
+    userTwo.name = @"carrot2";
+    userTwo.token = @"jkdlpx7830zuan4gr5o1f9sivmwbq2he";
+    
+// 7d98kx2b5qulfzgsv4ma3rjnhwic06p1    carrot3
     
     // one chat to two
     self.dataArray = @[userTwo];
@@ -86,6 +88,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     IMChatViewController *vc = [[IMChatViewController alloc] init];
+    vc.toUserModel = [self.dataArray objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

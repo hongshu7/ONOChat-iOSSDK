@@ -15,6 +15,9 @@
 #import <MJRefresh/MJRefresh.h>
 #import "UUChatCategory.h"
 
+#import "ONOIMClient.h"
+#import "ONOTextMessage.h"
+
 @interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	CGFloat _keyboardHeight;
@@ -39,6 +42,10 @@
     [self loadBaseViewsAndData];
 	_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
+    
+    [[ONOIMClient sharedClient] addListenerForRoute:@"push.message" withCallback:^(id msg) {
+        NSLog(@"%@",msg);
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -193,6 +200,16 @@
     funcView.textViewInput.text = @"";
     [funcView changeSendBtnWithPhoto:YES];
     [self dealTheFunctionData:dic];
+    
+    ONOTextMessage *msg = [[ONOTextMessage alloc] init];
+    msg.text = message;
+    
+    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.token onSuccess:^(id msg) {
+        NSLog(@"ono send success");
+    } onError:^(id msg) {
+        NSLog(@"ono send faild %@",msg);
+    }];
+
 }
 
 - (void)UUInputFunctionView:(UUInputFunctionView *)funcView sendPicture:(UIImage *)image

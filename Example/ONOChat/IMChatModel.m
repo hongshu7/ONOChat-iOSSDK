@@ -15,14 +15,14 @@
 
 - (void)populateRandomDataSource {
     self.dataSource = [NSMutableArray array];
-    [self.dataSource addObjectsFromArray:[self additems:5]];
+//    [self.dataSource addObjectsFromArray:[self additems:5]];
 }
 
 - (void)addRandomItemsToDataSource:(NSInteger)number{
     
-    for (int i=0; i<number; i++) {
-        [self.dataSource insertObject:[[self additems:1] firstObject] atIndex:0];
-    }
+//    for (int i=0; i<number; i++) {
+//        [self.dataSource insertObject:[[self additems:1] firstObject] atIndex:0];
+//    }
 }
 
 - (void)recountFrame
@@ -43,6 +43,30 @@
     [dataDic setObject:@(UUMessageFromMe) forKey:@"from"];
     [dataDic setObject:[[NSDate date] description] forKey:@"strTime"];
 	[dataDic setObject:@"Hi:sister" forKey:@"strName"];
+    [dataDic setObject:URLStr forKey:@"strIcon"];
+    
+    [message setWithDict:dataDic];
+    [message minuteOffSetStart:previousTime end:dataDic[@"strTime"]];
+    messageFrame.showTime = message.showDateLabel;
+    [messageFrame setMessage:message];
+    
+    if (message.showDateLabel) {
+        previousTime = dataDic[@"strTime"];
+    }
+    [self.dataSource addObject:messageFrame];
+}
+
+// 添加自己的item
+- (void)addOtherSpecifiedItem:(NSDictionary *)dic
+{
+    UUMessageFrame *messageFrame = [[UUMessageFrame alloc]init];
+    UUMessage *message = [[UUMessage alloc] init];
+    NSMutableDictionary *dataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    
+    NSString *URLStr = @"http://img0.bdstatic.com/img/image/shouye/xinshouye/mingxing16.jpg";
+    [dataDic setObject:@(UUMessageFromOther) forKey:@"from"];
+    [dataDic setObject:[[NSDate date] description] forKey:@"strTime"];
+    [dataDic setObject:@"Hi:sister" forKey:@"strName"];
     [dataDic setObject:URLStr forKey:@"strIcon"];
     
     [message setWithDict:dataDic];

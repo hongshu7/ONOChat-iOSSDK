@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IMUserModel.h"
 
 @interface IMChatViewController : UIViewController
+
+@property (nonatomic, strong) IMUserModel *toUserModel;
 
 @end
