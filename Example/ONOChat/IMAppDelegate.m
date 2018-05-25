@@ -7,7 +7,7 @@
 //
 
 #import "IMAppDelegate.h"
-#import "IMChatViewController.h"
+#import "IMSessionViewController.h"
 
 @implementation IMAppDelegate
 
@@ -16,7 +16,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    IMChatViewController *root = [[IMChatViewController alloc] init];
+    IMSessionViewController *root = [[IMSessionViewController alloc] init];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:root];
     self.window.rootViewController = nav;
     
