@@ -306,7 +306,7 @@
 - (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error {
     SendMessageRequest *request = [[SendMessageRequest alloc] init];
     request.to = userId;
-    request.type = message.type;
+    request.type = (int)message.type;
     request.content = message.content;
     request.tag = message.data;
     [self requestRoute:@"client.message.send" withMessage:request onSuccess:success onError:error];

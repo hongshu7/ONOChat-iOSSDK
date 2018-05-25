@@ -20,8 +20,6 @@ typedef void (^IMErrorResponse)(id msg);
 
 + (ONOIMClient *)sharedClient;
 
-
-
 /**
  *  设置聊天服务器参数
  *
@@ -34,12 +32,8 @@ typedef void (^IMErrorResponse)(id msg);
  *  登录
  *
  *  @param token      令牌 (在后台绑定的登录token)
- *  @param success    登录成功回调
- *  @param error      登录失败回调
  */
 - (void)loginWithToken:(NSString *)token onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
-
-
 
 /**
  *  监听消息
@@ -57,6 +51,20 @@ typedef void (^IMErrorResponse)(id msg);
  */
 - (void)removeListenerWithId:(NSInteger)listenerId;
 
+/**
+ *  发送消息
+ *
+ *  @param userId    目标用户ID
+ */
+
+- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
+/**
+ *  请求 标记消息已读
+ *
+ *  @param messageId 消息ID
+ *  @discussion 登陆的时候服务器会返回(UserLoginResponse)里面有个(Message)数组.表示有未读消息.
+ */
+- (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
 
 /** 暂时不需要调用的函数 */
 @property (nonatomic) NSInteger userId;
@@ -79,8 +87,6 @@ typedef void (^IMErrorResponse)(id msg);
 - (void)bindClientId:(NSString *)clientId;
 - (void)bindDeviceToken:(NSString *)deviceToken;
 
-- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
-- (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
 
 
 
