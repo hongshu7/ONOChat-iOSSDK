@@ -305,11 +305,11 @@
 
 - (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error {
     SendMessageRequest *request = [[SendMessageRequest alloc] init];
-    request.to = userId;
     request.type = (int)message.type;
+    request.to = userId;
     request.content = message.content;
     request.tag = message.data;
-    [self requestRoute:@"client.message.send" withMessage:request onSuccess:success onError:error];
+    [self requestRoute:@"client.message.sendMessage" withMessage:request onSuccess:success onError:error];
 }
 
 - (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error

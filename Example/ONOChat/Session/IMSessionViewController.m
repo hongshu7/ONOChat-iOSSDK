@@ -30,21 +30,21 @@
     
     // 模拟两个用户
     IMUserModel *userOne = [[IMUserModel alloc] init];
-    userOne.name = @"carrot";
+    userOne.userId = @"carrot";
     userOne.token = @"ju9es1b7w6kproa32ghqvdt0xzmfycin";
     
     IMUserModel *userTwo = [[IMUserModel alloc] init];
-    userTwo.name = @"carrot2";
+    userTwo.userId = @"carrot2";
     userTwo.token = @"jkdlpx7830zuan4gr5o1f9sivmwbq2he";
     
 // 7d98kx2b5qulfzgsv4ma3rjnhwic06p1    carrot3
     
-    // one chat to two
+    // iPhoneX
     self.dataArray = @[userTwo];
     [self LoginByUser:userOne];
     
     
-    // two chat to one
+    // iPhone8P
 //    self.dataArray = @[userOne];
 //    [self LoginByUser:userTwo];
     
@@ -59,7 +59,7 @@
         NSLog(@"error %d, %@", msg.code, msg.message);
     }];
     
-    self.navigationItem.title = userModel.name;
+    self.navigationItem.title = userModel.userId;
 }
 
 #pragma mark - tableView about

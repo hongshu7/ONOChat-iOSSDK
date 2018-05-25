@@ -25,7 +25,7 @@
 
 - (void)setUserModel:(IMUserModel *)userModel {
     _userModel = userModel;
-    self.nicknameLabel.text = userModel.name;
+    self.nicknameLabel.text = userModel.userId;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

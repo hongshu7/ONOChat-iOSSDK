@@ -204,7 +204,8 @@
     ONOTextMessage *msg = [[ONOTextMessage alloc] init];
     msg.text = message;
     
-    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.token onSuccess:^(id msg) {
+    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.userId onSuccess:^(id msg) {
+//    [[ONOIMClient sharedClient] sendMessage:msg to:@"hbin" onSuccess:^(id msg) {
         NSLog(@"ono send success");
     } onError:^(id msg) {
         NSLog(@"ono send faild %@",msg);
