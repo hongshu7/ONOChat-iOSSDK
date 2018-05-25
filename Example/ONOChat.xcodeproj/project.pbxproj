@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4286A64C20B7C1C100EEDD8B /* UUAVAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */; };
+		4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */; };
+		4286A64E20B7C1C100EEDD8B /* UUMessageContentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63C20B7C1C100EEDD8B /* UUMessageContentButton.m */; };
+		4286A64F20B7C1C100EEDD8B /* UUMessageFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64220B7C1C100EEDD8B /* UUMessageFrame.m */; };
+		4286A65020B7C1C100EEDD8B /* UUChatTableView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4286A64620B7C1C100EEDD8B /* UUChatTableView.bundle */; };
+		4286A65120B7C1C100EEDD8B /* UUMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64720B7C1C100EEDD8B /* UUMessageCell.m */; };
+		4286A65220B7C1C100EEDD8B /* UUProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64820B7C1C100EEDD8B /* UUProgressHUD.m */; };
+		4286A65320B7C1C100EEDD8B /* UUMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64920B7C1C100EEDD8B /* UUMessage.m */; };
+		4286A65420B7C1C100EEDD8B /* UUImageAvatarBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64A20B7C1C100EEDD8B /* UUImageAvatarBrowser.m */; };
+		4286A65520B7C1C100EEDD8B /* UUChatCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A64B20B7C1C100EEDD8B /* UUChatCategory.m */; };
+		4286A65D20B7C1DD00EEDD8B /* NSDate+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A65820B7C1DD00EEDD8B /* NSDate+Utils.m */; };
+		4286A65E20B7C1DD00EEDD8B /* 0.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65A20B7C1DD00EEDD8B /* 0.jpeg */; };
+		4286A65F20B7C1DD00EEDD8B /* 1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65B20B7C1DD00EEDD8B /* 1.jpeg */; };
+		4286A66020B7C1DD00EEDD8B /* headImage.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */; };
+		4286A66320B7C97500EEDD8B /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A66120B7C97500EEDD8B /* RootViewController.m */; };
+		4286A66620B7C99600EEDD8B /* ChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A66520B7C99600EEDD8B /* ChatModel.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -39,6 +55,34 @@
 /* Begin PBXFileReference section */
 		10435B51AE6D4053F6D94EBF /* ONOChat.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ONOChat.podspec; path = ../ONOChat.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		391BD87DC845599C12EEE3DF /* Pods_ONOChat_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ONOChat_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUAVAudioPlayer.m; sourceTree = "<group>"; };
+		4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUInputFunctionView.m; sourceTree = "<group>"; };
+		4286A63B20B7C1C100EEDD8B /* UUMessageFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUMessageFrame.h; sourceTree = "<group>"; };
+		4286A63C20B7C1C100EEDD8B /* UUMessageContentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUMessageContentButton.m; sourceTree = "<group>"; };
+		4286A63D20B7C1C100EEDD8B /* UUProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUProgressHUD.h; sourceTree = "<group>"; };
+		4286A63E20B7C1C100EEDD8B /* UUMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUMessageCell.h; sourceTree = "<group>"; };
+		4286A63F20B7C1C100EEDD8B /* UUChatCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUChatCategory.h; sourceTree = "<group>"; };
+		4286A64020B7C1C100EEDD8B /* UUImageAvatarBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUImageAvatarBrowser.h; sourceTree = "<group>"; };
+		4286A64120B7C1C100EEDD8B /* UUMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUMessage.h; sourceTree = "<group>"; };
+		4286A64220B7C1C100EEDD8B /* UUMessageFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUMessageFrame.m; sourceTree = "<group>"; };
+		4286A64320B7C1C100EEDD8B /* UUInputFunctionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUInputFunctionView.h; sourceTree = "<group>"; };
+		4286A64420B7C1C100EEDD8B /* UUAVAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUAVAudioPlayer.h; sourceTree = "<group>"; };
+		4286A64520B7C1C100EEDD8B /* UUMessageContentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUMessageContentButton.h; sourceTree = "<group>"; };
+		4286A64620B7C1C100EEDD8B /* UUChatTableView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UUChatTableView.bundle; sourceTree = "<group>"; };
+		4286A64720B7C1C100EEDD8B /* UUMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUMessageCell.m; sourceTree = "<group>"; };
+		4286A64820B7C1C100EEDD8B /* UUProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUProgressHUD.m; sourceTree = "<group>"; };
+		4286A64920B7C1C100EEDD8B /* UUMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUMessage.m; sourceTree = "<group>"; };
+		4286A64A20B7C1C100EEDD8B /* UUImageAvatarBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUImageAvatarBrowser.m; sourceTree = "<group>"; };
+		4286A64B20B7C1C100EEDD8B /* UUChatCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUChatCategory.m; sourceTree = "<group>"; };
+		4286A65720B7C1DD00EEDD8B /* NSDate+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utils.h"; sourceTree = "<group>"; };
+		4286A65820B7C1DD00EEDD8B /* NSDate+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utils.m"; sourceTree = "<group>"; };
+		4286A65A20B7C1DD00EEDD8B /* 0.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 0.jpeg; sourceTree = "<group>"; };
+		4286A65B20B7C1DD00EEDD8B /* 1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpeg; sourceTree = "<group>"; };
+		4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = headImage.jpeg; sourceTree = "<group>"; };
+		4286A66120B7C97500EEDD8B /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		4286A66220B7C97500EEDD8B /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		4286A66420B7C99600EEDD8B /* ChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatModel.h; sourceTree = "<group>"; };
+		4286A66520B7C99600EEDD8B /* ChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatModel.m; sourceTree = "<group>"; };
 		48E1B27B551972DC2008F4D9 /* Pods-ONOChat_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ONOChat_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ONOChat_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ONOChat_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -106,6 +150,61 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4286A63720B7C19500EEDD8B /* DemoCode */ = {
+			isa = PBXGroup;
+			children = (
+				4286A65620B7C1DD00EEDD8B /* OtherResources */,
+				4286A63820B7C1C100EEDD8B /* Class */,
+			);
+			name = DemoCode;
+			sourceTree = "<group>";
+		};
+		4286A63820B7C1C100EEDD8B /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */,
+				4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */,
+				4286A63B20B7C1C100EEDD8B /* UUMessageFrame.h */,
+				4286A63C20B7C1C100EEDD8B /* UUMessageContentButton.m */,
+				4286A63D20B7C1C100EEDD8B /* UUProgressHUD.h */,
+				4286A63E20B7C1C100EEDD8B /* UUMessageCell.h */,
+				4286A63F20B7C1C100EEDD8B /* UUChatCategory.h */,
+				4286A64020B7C1C100EEDD8B /* UUImageAvatarBrowser.h */,
+				4286A64120B7C1C100EEDD8B /* UUMessage.h */,
+				4286A64220B7C1C100EEDD8B /* UUMessageFrame.m */,
+				4286A64320B7C1C100EEDD8B /* UUInputFunctionView.h */,
+				4286A64420B7C1C100EEDD8B /* UUAVAudioPlayer.h */,
+				4286A64520B7C1C100EEDD8B /* UUMessageContentButton.h */,
+				4286A64620B7C1C100EEDD8B /* UUChatTableView.bundle */,
+				4286A64720B7C1C100EEDD8B /* UUMessageCell.m */,
+				4286A64820B7C1C100EEDD8B /* UUProgressHUD.m */,
+				4286A64920B7C1C100EEDD8B /* UUMessage.m */,
+				4286A64A20B7C1C100EEDD8B /* UUImageAvatarBrowser.m */,
+				4286A64B20B7C1C100EEDD8B /* UUChatCategory.m */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		4286A65620B7C1DD00EEDD8B /* OtherResources */ = {
+			isa = PBXGroup;
+			children = (
+				4286A65720B7C1DD00EEDD8B /* NSDate+Utils.h */,
+				4286A65820B7C1DD00EEDD8B /* NSDate+Utils.m */,
+				4286A65920B7C1DD00EEDD8B /* photo */,
+			);
+			path = OtherResources;
+			sourceTree = "<group>";
+		};
+		4286A65920B7C1DD00EEDD8B /* photo */ = {
+			isa = PBXGroup;
+			children = (
+				4286A65A20B7C1DD00EEDD8B /* 0.jpeg */,
+				4286A65B20B7C1DD00EEDD8B /* 1.jpeg */,
+				4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */,
+			);
+			path = photo;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -143,11 +242,16 @@
 		6003F593195388D20070C39A /* Example for ONOChat */ = {
 			isa = PBXGroup;
 			children = (
+				4286A63720B7C19500EEDD8B /* DemoCode */,
 				6003F59C195388D20070C39A /* IMAppDelegate.h */,
 				6003F59D195388D20070C39A /* IMAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* IMViewController.h */,
 				6003F5A6195388D20070C39A /* IMViewController.m */,
+				4286A66220B7C97500EEDD8B /* RootViewController.h */,
+				4286A66120B7C97500EEDD8B /* RootViewController.m */,
+				4286A66420B7C99600EEDD8B /* ChatModel.h */,
+				4286A66520B7C99600EEDD8B /* ChatModel.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -282,10 +386,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4286A65F20B7C1DD00EEDD8B /* 1.jpeg in Resources */,
+				4286A65E20B7C1DD00EEDD8B /* 0.jpeg in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
+				4286A65020B7C1C100EEDD8B /* UUChatTableView.bundle in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
+				4286A66020B7C1DD00EEDD8B /* headImage.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,11 +499,15 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/ONOChat/ONOChat.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ONOChat.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 			);
@@ -411,9 +523,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4286A64F20B7C1C100EEDD8B /* UUMessageFrame.m in Sources */,
+				4286A65420B7C1C100EEDD8B /* UUImageAvatarBrowser.m in Sources */,
+				4286A65120B7C1C100EEDD8B /* UUMessageCell.m in Sources */,
+				4286A66620B7C99600EEDD8B /* ChatModel.m in Sources */,
+				4286A64C20B7C1C100EEDD8B /* UUAVAudioPlayer.m in Sources */,
+				4286A64E20B7C1C100EEDD8B /* UUMessageContentButton.m in Sources */,
+				4286A65D20B7C1DD00EEDD8B /* NSDate+Utils.m in Sources */,
 				6003F59E195388D20070C39A /* IMAppDelegate.m in Sources */,
+				4286A65320B7C1C100EEDD8B /* UUMessage.m in Sources */,
+				4286A66320B7C97500EEDD8B /* RootViewController.m in Sources */,
+				4286A65520B7C1C100EEDD8B /* UUChatCategory.m in Sources */,
 				6003F5A7195388D20070C39A /* IMViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */,
+				4286A65220B7C1C100EEDD8B /* UUProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
