@@ -43,9 +43,9 @@
 	_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
     
-    [[ONOIMClient sharedClient] addListenerForRoute:@"push.message" withCallback:^(id msg) {
-        NSLog(@"%@",msg);
-    }];
+//    [[ONOIMClient sharedClient] addListenerForRoute:@"push.message" withCallback:^(id msg) {
+//        NSLog(@"%@",msg);
+//    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -204,11 +204,10 @@
     ONOTextMessage *msg = [[ONOTextMessage alloc] init];
     msg.text = message;
     
-    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.userId onSuccess:^(id msg) {
-//    [[ONOIMClient sharedClient] sendMessage:msg to:@"hbin" onSuccess:^(id msg) {
-        NSLog(@"ono send success");
-    } onError:^(id msg) {
-        NSLog(@"ono send faild %@",msg);
+    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.userId onSuccess:^(NSString *messageId) {
+        NSLog(@"send ok");
+    } onError:^(int errorCode, NSString *messageId) {
+        NSLog(@"send failure");
     }];
 
 }

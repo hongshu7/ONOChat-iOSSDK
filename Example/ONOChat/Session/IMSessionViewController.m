@@ -53,10 +53,10 @@
 
 - (void)LoginByUser:(IMUserModel *)userModel {
     [[ONOIMClient sharedClient] setupWithHost:@"101.201.236.225" port:3001];
-    [[ONOIMClient sharedClient] loginWithToken:userModel.token onSuccess:^(UserLoginResponse *msg) {
-        NSLog(@"user logined with name:%@", msg.user.name);
-    } onError:^(ErrorResponse *msg) {
-        NSLog(@"error %d, %@", msg.code, msg.message);
+    [[ONOIMClient sharedClient] loginWithToken:userModel.token onSuccess:^(ONOUser *user) {
+       NSLog(@"user logined with name:%@", user.nickname);
+    } onError:^(int errorCode, NSString *errorMsg) {
+        NSLog(@"user logined with error:%@", errorMsg);
     }];
     
     self.navigationItem.title = userModel.userId;

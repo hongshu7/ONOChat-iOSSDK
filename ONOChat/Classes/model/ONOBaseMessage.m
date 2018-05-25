@@ -9,4 +9,16 @@
 
 @implementation ONOBaseMessage
 
+- (NSInteger)type {
+    return 0;
+}
+
+- (NSString *)encode {
+    return @"";
+}
+
+- (void)decode:(NSString *)data {
+    
+}
+
 @end

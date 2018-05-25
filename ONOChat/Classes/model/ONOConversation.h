@@ -1,0 +1,29 @@
+//  Lemeng
+//
+//  Created by Kevin Lai on 14-8-23.
+//  Copyright (c) 2014年 Xiamen justit. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "ONOUser.h"
+#import "ONOBaseMessage.h"
+
+typedef enum _ConversationType {
+    ConversationTypePrivate  = 1,
+    ConversationTypeGroup,
+} ConversationType;
+
+@interface ONOConversation : NSObject
+
+@property (nonatomic, strong) NSString *belongId;
+@property (nonatomic) ConversationType conversationType;
+@property (nonatomic) long long contactTime;
+@property (nonatomic) int unreadCount;
+
+@property (nonatomic, strong) ONOUser *user;
+@property (nonatomic, strong) ONOBaseMessage *lastMessage;
+
+@property (nonatomic, assign) BOOL isNew;
+
+
+@end

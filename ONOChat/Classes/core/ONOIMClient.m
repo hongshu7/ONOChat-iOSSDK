@@ -7,38 +7,20 @@
 //
 
 #import "ONOIMClient.h"
-#import "ONOSocket.h"
-#import "ONOPacket.h"
+#import "ONOCore.h"
+#import "BSONIdGenerator.h"
 
-@interface IMResponsePacket : NSObject
+#import "ONODB.h"
+#import "ONOTextMessage.h"
+#import "ONOImageMessage.h"
+#import "ONOAudioMessage.h"
 
-@property (nonatomic) NSInteger msgId;
-@property (nonatomic, strong) NSString *route;
-@property (nonatomic, copy) IMSuccessResponse successResponse;
-@property (nonatomic, copy) IMErrorResponse errorResponse;
-
-@end
-
-@implementation IMResponsePacket
-
-@end
 
 
 @interface ONOIMClient()
 
-@property (nonatomic, strong) NSString *loginToken;
-@property (nonatomic, copy) IMSuccessResponse loginSuccessCallback;
-@property (nonatomic, copy) IMErrorResponse loginErrorCallback;
-@property (nonatomic, strong) NSString *clientId;
-@property (nonatomic, strong) NSString *deviceToken;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOBaseMessage*> *userQuerys;
 
-@property (nonatomic, strong) ONOSocket* client;
-@property (nonatomic, strong) NSMutableDictionary *routes;
-@property (nonatomic, strong) NSMutableDictionary *routesById;
-@property (nonatomic) NSInteger heartbeatInterval;
-@property (nonatomic, strong) NSMutableDictionary *responseMap;
-@property (nonatomic, strong) NSMutableDictionary *pushMap;
-@property (nonatomic) NSInteger listenerId;;
 @end
 
 @implementation ONOIMClient
@@ -57,266 +39,146 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _client = [[ONOSocket alloc] init];
-        _routes = [[NSMutableDictionary alloc] init];
-        _routesById = [[NSMutableDictionary alloc] init];
-        _responseMap = [[NSMutableDictionary alloc] init];
-        _pushMap = [[NSMutableDictionary alloc] init];
-        //事件监听
+        _userQuerys = [NSMutableDictionary dictionary];
+        [[ONOCore sharedCore] addListenerForRoute:@"push.Message" withCallback:^(Message *msg) {
+            [self receiveMessage:msg];
+        }];
     }
     return self;
 }
 
+- (void)receiveMessage:(Message *)msg {
+    //通过服务端已收到
+    [self readMessage:msg.mid onSuccess:nil onError:nil];
+    //创建消息
+    ONOBaseMessage *mb = [self createMessageByType:msg.type];
+    mb.messageId = msg.mid;
+    mb.timestamp = msg.time;
+    [mb decode:msg.data_p];
+    NSString *userId = msg.from;
+    ONOUser *user =  [ONODB fetchUser:msg.from];
+    if (user == nil) {
+        _userQuerys[msg.from] = mb;
+        return;
+    }
+    mb.user = user;
+    if (self.receiveMessageDelegate) {
+        [self.receiveMessageDelegate onReceived:mb];
+    }
+}
+
+#pragma mark public apis
+
 - (void)setupWithHost:(NSString*)host port:(int)port
 {
-    [self.client setupWithHost:host port:port];
+    [[ONOCore sharedCore] setupWithHost:host port:port];
 }
 
-#pragma mark -- socket actions
-- (void)connect
-{
-    [self.client connect];
-}
 
-- (void)disconnect
-{
-    [self.client close];
-}
-
-- (void)handleConnected:(NSData *)response
-{
-    //routes
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:response options:kNilOptions error:nil];
-    //NSLog(@"handshake:%@", dict);
-    NSDictionary *sys = dict[@"sys"];
-    self.heartbeatInterval = [sys[@"heartbeat"] integerValue];
-    [self.routes removeAllObjects];
-    [self.routesById removeAllObjects];
-    NSDictionary *routes = sys[@"routes"];
-    for (NSString *route in routes) {
-        NSArray* routeArray = [routes[route] componentsSeparatedByString:@","];
-        ONORouteInfo *routeInfo = [[ONORouteInfo alloc] init];
-        routeInfo.routeId = [routeArray[0] integerValue];
-        routeInfo.request = routeArray.count > 1 && ![routeArray[1] isEqualToString:@"_"] ? routeArray[1]: nil;
-        routeInfo.response = routeArray.count > 2 && ![routeArray[2] isEqualToString:@"_"] ? routeArray[2]: nil;
-        [self.routes setObject:routeInfo forKey:route];
-        [self.routesById setObject:route forKey:routeArray[0]];
-        //NSLog(@"routeid:%zd, %@, %@", routeInfo.routeId, routeInfo.request, routeInfo.response);
+- (ONOBaseMessage *)createMessageByType:(int)type {
+    ONOBaseMessage *msg = nil;
+    if (type == 1) {
+        msg = [[ONOTextMessage alloc] init];
+    } else if (type == 2) {
+        msg = [[ONOImageMessage alloc] init];
+    } else if (type == 3) {
+        msg = [[ONOAudioMessage alloc] init];
+    } else {
+        //todo:custom types
     }
+    return msg;
+}
+
+- (void)loginWithToken:(NSString *)token onSuccess:(void(^)(ONOUser *user))successBlock onError:(void(^)(int errorCode, NSString *errorMsg))errorBlock
+{
+    [[ONOCore sharedCore] loginWithToken:token onSuccess:^(UserLoginResponse* msg) {
+        NSString *userId = msg.user.uid;
+        ONOUser *user = [[ONOUser alloc] init];
+        user.userId = msg.user.uid;
+        user.nickname = msg.user.name;
+        user.avatar = msg.user.icon;
+        user.gender = msg.user.gender;
+        if ([ONODB fetchUser:userId] == nil) {
+            [ONODB insertUser:user];
+        } else {
+            [ONODB updateUser:user];
+        }
+        successBlock(user);
+    } onError:^(ErrorResponse *msg) {
+        errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
     
-    [self.client heartBeat:self.heartbeatInterval];
+    //create msgid
+    message.messageId = [BSONIdGenerator generate];
+    message.timestamp = [[NSDate date] timeIntervalSince1970];
+    message.isSelf = YES;
+    [ONODB insertMessage:message to:userId];
     
-    //do login
-    UserLoginRequest *clientUserLogin = [[UserLoginRequest alloc] init];
-    clientUserLogin.token = _loginToken;
-    [self requestRoute:@"client.user.login" withMessage:clientUserLogin onSuccess:^(UserLoginResponse *msg) {
-        NSLog(@"user login response");
-        //upload device token
-        [self uploadDeviceToken];
-        
-        //todo:save uid
-        if (self.loginSuccessCallback) {
-            self.loginSuccessCallback(msg);
-            self.loginSuccessCallback = nil;
-            self.loginErrorCallback = nil;
+    SendMessageRequest *request = [[SendMessageRequest alloc] init];
+    request.to = userId;
+    request.type = (int)[message type];
+    request.data_p = [message encode];
+    request.mid = message.messageId;
+    NSString *msgId = [message.messageId copy];
+    [[ONOCore sharedCore] requestRoute:@"client.message.sendMessage" withMessage:request onSuccess:^(SendMessagenResponse *response) {
+        [ONODB updateMessage:response.nmid fromOldId:response.omid];
+        successBlock(response.nmid);
+    } onError:^(ErrorResponse *err) {
+        [ONODB updateMessageError:YES msgId:msgId];
+        errorBlock(err.code, msgId);
+    }];
+}
+
+- (void)readMessage:(NSString *)messageId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
+{
+    ReadMessageRequest *request = [[ReadMessageRequest alloc] init];
+    request.mid = messageId;
+    [[ONOCore sharedCore] requestRoute:@"client.message.read" withMessage:request onSuccess:success onError:error];
+}
+
+- (void)queryUser:(NSString *)userId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
+{
+    UserProfileRequest *request = [[UserProfileRequest alloc] init];
+    request.uid = userId;
+    
+    [[ONOCore sharedCore] requestRoute:@"client.user.profile" withMessage:request onSuccess:^(UserData *msg) {
+        ONOBaseMessage *bmsg = self.userQuerys[userId];
+        if (bmsg == nil) {
+            return;
+        }
+        [self.userQuerys removeObjectForKey:userId];
+        ONOUser *user = [[ONOUser alloc] init];
+        user.userId = msg.uid;
+        user.nickname = msg.name;
+        user.avatar = msg.icon;
+        user.gender = msg.gender;
+        bmsg.user = user;
+        if ([ONODB fetchUser:userId] == nil) {
+            [ONODB insertUser:user];
+        } else {
+            [ONODB updateUser:user];
+        }
+        if (self.receiveMessageDelegate) {
+            [self.receiveMessageDelegate onReceived:bmsg];
         }
         
-
-    } onError:^(ErrorResponse *error) {
-        //not login
-        NSLog(@"user login error code:%d, msg:%@", error.code, error.message);
-        if (self.loginErrorCallback) {
-            self.loginErrorCallback(error);
-            self.loginSuccessCallback = nil;
-            self.loginErrorCallback = nil;
+    } onError:^(id msg) {
+        ONOBaseMessage *bmsg = self.userQuerys[userId];
+        if (bmsg != nil) {
+            [self.userQuerys removeObjectForKey:userId];
         }
     }];
 }
 
-- (void)uploadDeviceToken
-{
-//    if (self.clientId != nil) {
-//        DeviceBindRequest *request = [[[[DeviceBindRequest builder] setType:1] setToken:self.clientId] build];
-//        [self requestRoute:@"client.user.bindDevice" withMessage:request onSuccess:^(id msg) {
-//            NSLog(@"upload clientid success, token:%@", self.clientId);
-//            self.clientId = nil; //only upload once
-//        } onError:^(ErrorResponse *error) {
-//            NSLog(@"upload clientid with error code:%d, msg:%@", error.code, error.message);
-//        }];
-//    }
-//    if (self.deviceToken != nil) {
-//        DeviceBindRequest *request = [[[[DeviceBindRequest builder] setType:2] setToken:self.deviceToken] build];
-//        [self requestRoute:@"client.user.bindDevice" withMessage:request onSuccess:^(id msg) {
-//            NSLog(@"upload device token success, token:%@", self.deviceToken);
-//            self.deviceToken = nil; //only upload once
-//        } onError:^(ErrorResponse *error) {
-//            NSLog(@"upload device token with error code:%d, msg:%@", error.code, error.message);
-//        }];
-//    }
+- (NSArray <ONOConversation *>*)getConversationList {
+    return [ONODB fetchConversations];
 }
 
-- (void)handleResponse:(ONOMessage *)message
-{
-    //处理回调
-    if (message.messageId > 0) {
-        //response
-        IMResponsePacket *rp = [self.responseMap objectForKey:[@(message.messageId) stringValue]];
-        if (rp) {
-            [self.responseMap removeObjectForKey:[@(message.messageId) stringValue]];
-            if (message.isError) {
-                if (rp.errorResponse) rp.errorResponse(message.message);
-            } else {
-                if (rp.successResponse) rp.successResponse(message.message);
-            }
-            
-        }
-    } else {
-        //push
-        NSMutableArray *routeListeners = [self.pushMap objectForKey:message.route];
-        if (routeListeners) {
-            for (IMResponsePacket *rp in routeListeners) {
-                if (rp.successResponse) rp.successResponse(message.message);
-            }
-        }
-    }
-    
-}
-
-- (NSString *)getRouteByMsgId:(NSUInteger)msgId
-{
-    IMResponsePacket *rp = [self.responseMap objectForKey:[@(msgId) stringValue]];
-    return rp == nil ? @"" : rp.route;
-}
-
-- (NSString *)getRouteByRouteId:(NSUInteger)routeId
-{
-    return [self.routesById objectForKey:[@(routeId) stringValue]];
-}
-
-- (ONORouteInfo *)getRouteInfo:(NSString *)route
-{
-    return [self.routes objectForKey:route];
-}
-
-#pragma mark -- send
-- (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg  onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error
-{
-    ONOMessage *msgPacket = [[ONOMessage alloc] init];
-    msgPacket.type = IM_MT_REQUEST;
-    msgPacket.route = route;
-    msgPacket.messageId = [self randomNumber:1 to:99999999];
-    msgPacket.message = msg;
-    
-    //保存request
-    IMResponsePacket *rp = [[IMResponsePacket alloc] init];
-    rp.msgId = msgPacket.messageId;
-    rp.route = route;
-    rp.successResponse = success;
-    rp.errorResponse = error;
-    [self.responseMap setObject:rp forKey:[@(msgPacket.messageId) stringValue]];
-    
-    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
-    [self.client sendData:packet];
-}
-
-- (void)notifyRoute:(NSString *)route withMessage:(GPBMessage *)msg
-{
-    ONOMessage *msgPacket = [[ONOMessage alloc] init];
-    msgPacket.type = IM_MT_NOTIFY;
-    msgPacket.route = route;
-    msgPacket.message = msg;
-    
-    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
-    [self.client sendData:packet];
-}
-
-- (NSInteger)addListenerForRoute:(NSString *)route withCallback:(IMSuccessResponse)response
-{
-    //保存request
-    IMResponsePacket *rp = [[IMResponsePacket alloc] init];
-    rp.msgId = self.listenerId++;
-    rp.route = route;
-    rp.successResponse = response;
-    
-    NSMutableArray *routeListeners = [self.pushMap objectForKey:route];
-    if (routeListeners == nil) {
-        routeListeners = [[NSMutableArray alloc] init];
-        [self.pushMap setObject:routeListeners forKey:route];
-    }
-    [routeListeners addObject:rp];
-    
-    return rp.msgId;
-}
-
-- (void)removeListenerWithId:(NSInteger)listenerId
-{
-    BOOL found = NO;
-    for (NSString *route in self.pushMap) {
-        NSMutableArray *routeListeners = [self.pushMap objectForKey:route];
-        for (IMResponsePacket *rp in routeListeners) {
-            if (rp.msgId == listenerId) {
-                [routeListeners removeObject:rp];
-                found = YES;
-                return;
-            }
-        }
-        if (found) {
-            return;
-        }
-    }
-}
-
-- (long)randomNumber:(long)from to:(long)to
-{
-    return (int)(from + (arc4random() % (to - from + 1)));
-}
-
-#pragma mark -- login
-- (void)loginWithToken:(NSString *)token onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error
-{
-    self.loginToken = token;
-    self.loginSuccessCallback = success;
-    self.loginErrorCallback = error;
-    [self connect];
-}
-
-#pragma mark -- bind device token
-- (void)bindClientId:(NSString *)clientId
-{
-    if (clientId == nil || clientId.length == 0) {
-        return;
-    }
-    self.clientId = clientId;
-    if (self.client.isConnect) {
-        [self uploadDeviceToken];
-    }
-}
-
-- (void)bindDeviceToken:(NSString *)deviceToken
-{
-    if (deviceToken == nil || deviceToken.length == 0) {
-        return;
-    }
-    self.deviceToken = deviceToken;
-    if (self.client.isConnect) {
-        [self uploadDeviceToken];
-    }
-}
-
-- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error {
-    SendMessageRequest *request = [[SendMessageRequest alloc] init];
-    request.type = (int)message.type;
-    request.to = userId;
-    request.content = message.content;
-    request.tag = message.data;
-    [self requestRoute:@"client.message.sendMessage" withMessage:request onSuccess:success onError:error];
-}
-
-- (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error
-{
-    ReadMessageRequest *request = [[ReadMessageRequest alloc] init];
-    request.mid = messageId;
-    [self requestRoute:@"client.message.read" withMessage:request onSuccess:success onError:error];
+- (ONOConversation *)getConversation:(NSString *)userId {
+    return [ONODB fetchConversation:userId];
 }
 
 @end

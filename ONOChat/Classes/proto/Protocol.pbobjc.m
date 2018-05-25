@@ -182,8 +182,7 @@ typedef struct UserData__storage_ {
 @dynamic from;
 @dynamic to;
 @dynamic type;
-@dynamic content;
-@dynamic tag;
+@dynamic data_p;
 @dynamic time;
 @dynamic unread;
 
@@ -195,8 +194,7 @@ typedef struct Message__storage_ {
   NSString *mid;
   NSString *from;
   NSString *to;
-  NSString *content;
-  NSString *tag;
+  NSString *data_p;
   double time;
 } Message__storage_;
 
@@ -252,20 +250,11 @@ typedef struct Message__storage_ {
         .dataType = GPBDataTypeInt32,
       },
       {
-        .name = "content",
+        .name = "data_p",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Content,
+        .number = Message_FieldNumber_Data_p,
         .hasIndex = 5,
-        .offset = (uint32_t)offsetof(Message__storage_, content),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "tag",
-        .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Tag,
-        .hasIndex = 6,
-        .offset = (uint32_t)offsetof(Message__storage_, tag),
+        .offset = (uint32_t)offsetof(Message__storage_, data_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
@@ -273,7 +262,7 @@ typedef struct Message__storage_ {
         .name = "time",
         .dataTypeSpecific.className = NULL,
         .number = Message_FieldNumber_Time,
-        .hasIndex = 7,
+        .hasIndex = 6,
         .offset = (uint32_t)offsetof(Message__storage_, time),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeDouble,
@@ -282,7 +271,7 @@ typedef struct Message__storage_ {
         .name = "unread",
         .dataTypeSpecific.className = NULL,
         .number = Message_FieldNumber_Unread,
-        .hasIndex = 8,
+        .hasIndex = 7,
         .offset = (uint32_t)offsetof(Message__storage_, unread),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
@@ -509,6 +498,92 @@ typedef struct UserLoginResponse__storage_ {
 
 @end
 
+#pragma mark - UserProfileRequest
+
+@implementation UserProfileRequest
+
+@dynamic uid;
+
+typedef struct UserProfileRequest__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *uid;
+} UserProfileRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "uid",
+        .dataTypeSpecific.className = NULL,
+        .number = UserProfileRequest_FieldNumber_Uid,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(UserProfileRequest__storage_, uid),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserProfileRequest class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserProfileRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UserProfileResponse
+
+@implementation UserProfileResponse
+
+@dynamic hasUser, user;
+
+typedef struct UserProfileResponse__storage_ {
+  uint32_t _has_storage_[1];
+  UserData *user;
+} UserProfileResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "user",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserData),
+        .number = UserProfileResponse_FieldNumber_User,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(UserProfileResponse__storage_, user),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserProfileResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserProfileResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - ReadMessageRequest
 
 @implementation ReadMessageRequest
@@ -558,15 +633,15 @@ typedef struct ReadMessageRequest__storage_ {
 
 @dynamic type;
 @dynamic to;
-@dynamic content;
-@dynamic tag;
+@dynamic data_p;
+@dynamic mid;
 
 typedef struct SendMessageRequest__storage_ {
   uint32_t _has_storage_[1];
   int32_t type;
   NSString *to;
-  NSString *content;
-  NSString *tag;
+  NSString *data_p;
+  NSString *mid;
 } SendMessageRequest__storage_;
 
 // This method is threadsafe because it is initially called
@@ -594,20 +669,20 @@ typedef struct SendMessageRequest__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "content",
+        .name = "data_p",
         .dataTypeSpecific.className = NULL,
-        .number = SendMessageRequest_FieldNumber_Content,
+        .number = SendMessageRequest_FieldNumber_Data_p,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(SendMessageRequest__storage_, content),
+        .offset = (uint32_t)offsetof(SendMessageRequest__storage_, data_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "tag",
+        .name = "mid",
         .dataTypeSpecific.className = NULL,
-        .number = SendMessageRequest_FieldNumber_Tag,
+        .number = SendMessageRequest_FieldNumber_Mid,
         .hasIndex = 3,
-        .offset = (uint32_t)offsetof(SendMessageRequest__storage_, tag),
+        .offset = (uint32_t)offsetof(SendMessageRequest__storage_, mid),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
@@ -619,6 +694,60 @@ typedef struct SendMessageRequest__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(SendMessageRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - SendMessagenResponse
+
+@implementation SendMessagenResponse
+
+@dynamic omid;
+@dynamic nmid;
+
+typedef struct SendMessagenResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *omid;
+  NSString *nmid;
+} SendMessagenResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "omid",
+        .dataTypeSpecific.className = NULL,
+        .number = SendMessagenResponse_FieldNumber_Omid,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(SendMessagenResponse__storage_, omid),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "nmid",
+        .dataTypeSpecific.className = NULL,
+        .number = SendMessagenResponse_FieldNumber_Nmid,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(SendMessagenResponse__storage_, nmid),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[SendMessagenResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(SendMessagenResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;

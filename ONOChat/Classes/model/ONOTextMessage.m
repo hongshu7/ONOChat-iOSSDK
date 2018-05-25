@@ -13,12 +13,16 @@
     return 1;
 }
 
-- (NSString *)content {
+- (NSString *)encode {
     return self.text;
 }
 
-- (NSString *)data {
-    return @"";
+- (void)decode:(NSString *)data {
+    self.text = data;
+}
+
+- (NSString *)description {
+    return self.text;
 }
 
 @end

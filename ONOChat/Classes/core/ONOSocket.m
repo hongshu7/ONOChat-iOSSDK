@@ -9,7 +9,7 @@
 #import "ONOSocket.h"
 #import "FastSocket.h"
 #import "ONOMessage.h"
-#import "ONOIMClient.h"
+#import "ONOCore.h"
 
 @interface ONOSocket ()
 
@@ -267,7 +267,7 @@
     NSLog(@"dispatch packet");
     if (packet.type == IM_PT_HANDSHAKE) {
         //服务端握手回应
-        [[ONOIMClient sharedClient] handleConnected:packet.data];
+        [[ONOCore sharedCore] handleConnected:packet.data];
     } else if (packet.type == IM_PT_DATA) {
         //消息包
         ONOMessage *message = [[ONOMessage alloc] init];
@@ -280,7 +280,7 @@
 - (void)dispatchMessage:(id)message
 {
     NSLog(@"get packet:%@", message);
-    [[ONOIMClient sharedClient] handleResponse:message];
+    [[ONOCore sharedCore] handleResponse:message];
 }
 
 @end

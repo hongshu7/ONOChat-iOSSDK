@@ -8,17 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "ONOMessage.h"
-#import "ONORouteInfo.h"
 #import "ONOBaseMessage.h"
+#import "ONOConversation.h"
 
-//todo:重连机制，客户端保存session id
-typedef void (^IMSuccessResponse)(id msg);
-typedef void (^IMErrorResponse)(id msg);
+@protocol ONOReceiveMessageDelegate <NSObject>
+- (void)onReceived:(ONOBaseMessage *)message;
+@end
 
 
 @interface ONOIMClient : NSObject
 
 + (ONOIMClient *)sharedClient;
+
+@property (nonatomic, weak) id<ONOReceiveMessageDelegate> receiveMessageDelegate;
 
 /**
  *  设置聊天服务器参数
@@ -28,67 +30,36 @@ typedef void (^IMErrorResponse)(id msg);
  */
 - (void)setupWithHost:(NSString*)host port:(int)port;
 
+
 /**
  *  登录
  *
  *  @param token      令牌 (在后台绑定的登录token)
  */
-- (void)loginWithToken:(NSString *)token onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
-
-/**
- *  监听消息
- *
- *  @param route      监听指定类型消息
- *  @param response   获得消息回调函数
- *  @return 监听消息的唯一标识码
- */
-- (NSInteger)addListenerForRoute:(NSString *)route withCallback:(IMSuccessResponse)response;
-
-/**
- *  移除监听消息
- *
- *  @param listenerId      监听消息的唯一标识码
- */
-- (void)removeListenerWithId:(NSInteger)listenerId;
+- (void)loginWithToken:(NSString *)token onSuccess:(void(^)(ONOUser *user))successBlock onError:(void(^)(int errorCode, NSString *errorMsg))errorBlock;
 
 /**
  *  发送消息
  *
+ *  @param message   要发送的消息
  *  @param userId    目标用户ID
  */
 
-- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
+- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
+
 /**
- *  请求 标记消息已读
- *
- *  @param messageId 消息ID
- *  @discussion 登陆的时候服务器会返回(UserLoginResponse)里面有个(Message)数组.表示有未读消息.
+ *  获取会话列表
  */
-- (void)readMessage:(NSString *)messageId onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
+- (NSArray <ONOConversation *>*)getConversationList;
 
-/** 暂时不需要调用的函数 */
-@property (nonatomic) NSInteger userId;
-
-- (void)connect;
-- (void)disconnect;
-
-- (void)handleConnected:(NSData *)response;
-- (void)handleResponse:(ONOMessage *)message;
-
-- (NSString *)getRouteByMsgId:(NSUInteger)msgId;
-- (NSString *)getRouteByRouteId:(NSUInteger)routeId;
-- (ONORouteInfo *)getRouteInfo:(NSString *)route;
+/**
+ *  获取单个会话信息
+ *  @param userId    目标用户ID
+ */
+- (ONOConversation *)getConversation:(NSString *)userId;
 
 
-- (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg onSuccess:(IMSuccessResponse)success onError:(IMErrorResponse)error;
-- (void)notifyRoute:(NSString *)route withMessage:(GPBMessage *)msg;
-
-
-- (void)bindClientId:(NSString *)clientId;
-- (void)bindDeviceToken:(NSString *)deviceToken;
-
-
-
+- (ONOBaseMessage *)createMessageByType:(int)type;
 
 @end
 

@@ -21,10 +21,9 @@ message Message {
   string from = 3;
   string to = 4;
   int32 type = 5; 
-  string content = 6;
-  string tag = 7; 
-  double time = 8;
-  int32 unread = 9; 
+  string data = 6; 
+  double time = 7;
+  int32 unread = 8; 
 }
 
 message ErrorResponse {
@@ -32,7 +31,6 @@ message ErrorResponse {
   string message = 2;
   string extra = 3;
 }
-
 
 
 //推送 重复登录被提出
@@ -50,6 +48,13 @@ message UserLoginResponse {
   repeated Message messages = 2;
 }
 
+message UserProfileRequest {
+  string uid = 1;
+}
+message UserProfileResponse {
+  UserData user = 1;
+}
+
 //请求 标记消息已读
 message ReadMessageRequest {
   string mid = 1;
@@ -58,10 +63,14 @@ message ReadMessageRequest {
 message SendMessageRequest {
   int32 type = 1; //1文字 2图片 3表情
   string to = 2; //接收者id
-  string content = 3;
-  string tag = 4;
+  string data = 3;
+  string mid = 4;
 }
-
+//响应 发送消息
+message SendMessagenResponse {
+  string omid = 1;
+  string nmid = 2;
+}
 
 
 

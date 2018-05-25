@@ -96,10 +96,9 @@ typedef GPB_ENUM(Message_FieldNumber) {
   Message_FieldNumber_From = 3,
   Message_FieldNumber_To = 4,
   Message_FieldNumber_Type = 5,
-  Message_FieldNumber_Content = 6,
-  Message_FieldNumber_Tag = 7,
-  Message_FieldNumber_Time = 8,
-  Message_FieldNumber_Unread = 9,
+  Message_FieldNumber_Data_p = 6,
+  Message_FieldNumber_Time = 7,
+  Message_FieldNumber_Unread = 8,
 };
 
 @interface Message : GPBMessage
@@ -114,9 +113,7 @@ typedef GPB_ENUM(Message_FieldNumber) {
 
 @property(nonatomic, readwrite) int32_t type;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *content;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *tag;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
 
 @property(nonatomic, readwrite) double time;
 
@@ -194,6 +191,32 @@ typedef GPB_ENUM(UserLoginResponse_FieldNumber) {
 
 @end
 
+#pragma mark - UserProfileRequest
+
+typedef GPB_ENUM(UserProfileRequest_FieldNumber) {
+  UserProfileRequest_FieldNumber_Uid = 1,
+};
+
+@interface UserProfileRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+@end
+
+#pragma mark - UserProfileResponse
+
+typedef GPB_ENUM(UserProfileResponse_FieldNumber) {
+  UserProfileResponse_FieldNumber_User = 1,
+};
+
+@interface UserProfileResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) UserData *user;
+/** Test to see if @c user has been set. */
+@property(nonatomic, readwrite) BOOL hasUser;
+
+@end
+
 #pragma mark - ReadMessageRequest
 
 typedef GPB_ENUM(ReadMessageRequest_FieldNumber) {
@@ -214,8 +237,8 @@ typedef GPB_ENUM(ReadMessageRequest_FieldNumber) {
 typedef GPB_ENUM(SendMessageRequest_FieldNumber) {
   SendMessageRequest_FieldNumber_Type = 1,
   SendMessageRequest_FieldNumber_To = 2,
-  SendMessageRequest_FieldNumber_Content = 3,
-  SendMessageRequest_FieldNumber_Tag = 4,
+  SendMessageRequest_FieldNumber_Data_p = 3,
+  SendMessageRequest_FieldNumber_Mid = 4,
 };
 
 /**
@@ -229,9 +252,27 @@ typedef GPB_ENUM(SendMessageRequest_FieldNumber) {
 /** 接收者id */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *to;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *content;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *tag;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *mid;
+
+@end
+
+#pragma mark - SendMessagenResponse
+
+typedef GPB_ENUM(SendMessagenResponse_FieldNumber) {
+  SendMessagenResponse_FieldNumber_Omid = 1,
+  SendMessagenResponse_FieldNumber_Nmid = 2,
+};
+
+/**
+ * 响应 发送消息
+ **/
+@interface SendMessagenResponse : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *omid;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *nmid;
 
 @end
 

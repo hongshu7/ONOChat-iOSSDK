@@ -5,7 +5,7 @@
 //
 
 #import "ONOMessage.h"
-#import "ONOIMClient.h"
+#import "ONOCore.h"
 
 #define MSG_COMPRESS_GZIP_MASK 0x1;
 #define MSG_TYPE_MASK 0x7;
@@ -31,7 +31,7 @@
         //写入message id
         offset = [ONOMessage encodeMsgId:self.messageId andBuffer:headBytes andOffset:offset];
     }
-    ONORouteInfo *routeInfo = [[ONOIMClient sharedClient] getRouteInfo:self.route];
+    ONORouteInfo *routeInfo = [[ONOCore sharedCore] getRouteInfo:self.route];
     headBytes[offset++] = routeInfo.routeId;
     NSLog(@"encode type:%d, route:%@, routeid:%zd, msgid:%zd", self.type, self.route, routeInfo.routeId, self.messageId);
     
@@ -69,12 +69,12 @@
         } while(m >= 128);
         //消息id
         self.messageId = msgId;
-        self.route = [[ONOIMClient sharedClient] getRouteByMsgId:self.messageId];
+        self.route = [[ONOCore sharedCore] getRouteByMsgId:self.messageId];
         
     } else if (self.type == IM_MT_PUSH) {
         //解析route
         int routeId = bytes[offset++];
-        self.route = [[ONOIMClient sharedClient] getRouteByRouteId:routeId];
+        self.route = [[ONOCore sharedCore] getRouteByRouteId:routeId];
     }
     NSLog(@"decode messageId:%zd, route:%@, body length:%d", self.messageId, self.route, length - offset);
     NSData *body = [NSData dataWithBytes:&(bytes[offset]) length:length - offset];
@@ -84,7 +84,7 @@
     if (self.isError) {
         self.message = [ErrorResponse parseFromData:body error:nil];
     } else {
-        ONORouteInfo *routeInfo = [[ONOIMClient sharedClient] getRouteInfo:self.route];
+        ONORouteInfo *routeInfo = [[ONOCore sharedCore] getRouteInfo:self.route];
         //push将使用resuest
         NSString *messageName = self.type == IM_MT_RESPONSE ? routeInfo.response : routeInfo.request;
 //        if (self.type == IM_MT_PUSH) {
