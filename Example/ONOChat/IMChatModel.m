@@ -1,17 +1,17 @@
 //
-//  ChatModel.m
+//  IMChatModel.m
 //  UUChatTableView
 //
-//  Created by shake on 15/1/6.
-//  Copyright (c) 2015年 uyiuyao. All rights reserved.
+//  Created by carrot__lsp on 2018/5/22.
+//  Copyright © 2018年 Netease. All rights reserved.
 //
 
-#import "ChatModel.h"
+#import "IMChatModel.h"
 
 #import "UUMessage.h"
 #import "UUMessageFrame.h"
 
-@implementation ChatModel
+@implementation IMChatModel
 
 - (void)populateRandomDataSource {
     self.dataSource = [NSMutableArray array];

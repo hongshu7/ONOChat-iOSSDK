@@ -1,25 +1,25 @@
 //
-//  RootViewController.m
+//  IMChatViewController.m
 //  UUChatTableView
 //
-//  Created by shake on 15/1/4.
-//  Copyright (c) 2015年 uyiuyao. All rights reserved.
+//  Created by carrot__lsp on 2018/5/22.
+//  Copyright © 2018年 Netease. All rights reserved.
 //
 
-#import "RootViewController.h"
+#import "IMChatViewController.h"
 #import "UUInputFunctionView.h"
 #import "UUMessageCell.h"
-#import "ChatModel.h"
+#import "IMChatModel.h"
 #import "UUMessageFrame.h"
 #import "UUMessage.h"
 #import <MJRefresh/MJRefresh.h>
 #import "UUChatCategory.h"
 
-@interface RootViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	CGFloat _keyboardHeight;
 }
-@property (strong, nonatomic) ChatModel *chatModel;
+@property (strong, nonatomic) IMChatModel *chatModel;
 
 @property (strong, nonatomic) UITableView *chatTableView;
 
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation RootViewController
+@implementation IMChatViewController
 
 #pragma mark - life circle
 
@@ -126,7 +126,7 @@
 
 - (void)loadBaseViewsAndData
 {
-    self.chatModel = [[ChatModel alloc] init];
+    self.chatModel = [[IMChatModel alloc] init];
     self.chatModel.isGroupChat = NO;
     [self.chatModel populateRandomDataSource];
 	
