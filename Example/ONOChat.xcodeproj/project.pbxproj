@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0ACAA84320B969FE00224804 /* IMConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA83E20B969FE00224804 /* IMConversationViewController.m */; };
+		0ACAA84420B969FE00224804 /* IMConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA83F20B969FE00224804 /* IMConversationCell.m */; };
+		0ACAA84520B969FE00224804 /* IMConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACAA84020B969FE00224804 /* IMConversationCell.xib */; };
+		0ACAA84620B969FE00224804 /* IMConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACAA84120B969FE00224804 /* IMConversationViewController.xib */; };
+		0ACAA84C20B96A1C00224804 /* IMChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA84920B96A1C00224804 /* IMChatViewController.m */; };
+		0ACAA84D20B96A1C00224804 /* IMChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA84B20B96A1C00224804 /* IMChatModel.m */; };
 		4286A64C20B7C1C100EEDD8B /* UUAVAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */; };
 		4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */; };
 		4286A64E20B7C1C100EEDD8B /* UUMessageContentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63C20B7C1C100EEDD8B /* UUMessageContentButton.m */; };
@@ -21,15 +27,8 @@
 		4286A65E20B7C1DD00EEDD8B /* 0.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65A20B7C1DD00EEDD8B /* 0.jpeg */; };
 		4286A65F20B7C1DD00EEDD8B /* 1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65B20B7C1DD00EEDD8B /* 1.jpeg */; };
 		4286A66020B7C1DD00EEDD8B /* headImage.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */; };
-		4286A66320B7C97500EEDD8B /* IMChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A66120B7C97500EEDD8B /* IMChatViewController.m */; };
-		4286A66620B7C99600EEDD8B /* IMChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A66520B7C99600EEDD8B /* IMChatModel.m */; };
 		4286A66B20B7E3AF00EEDD8B /* logo_120.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286A66920B7E3AF00EEDD8B /* logo_120.png */; };
 		4286A66C20B7E3AF00EEDD8B /* logo_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286A66A20B7E3AF00EEDD8B /* logo_180.png */; };
-		4286A67120B7E80200EEDD8B /* IMSessionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A66F20B7E80200EEDD8B /* IMSessionViewCell.m */; };
-		4286A67220B7E80200EEDD8B /* IMSessionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4286A67020B7E80200EEDD8B /* IMSessionViewCell.xib */; };
-		4286A67620B7E93200EEDD8B /* IMSessionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A67420B7E93200EEDD8B /* IMSessionViewController.m */; };
-		4286A67720B7E93200EEDD8B /* IMSessionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4286A67520B7E93200EEDD8B /* IMSessionViewController.xib */; };
-		4286A67A20B7E9CB00EEDD8B /* IMUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A67920B7E9CB00EEDD8B /* IMUserModel.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -59,6 +58,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0ACAA83D20B969FE00224804 /* IMConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMConversationCell.h; sourceTree = "<group>"; };
+		0ACAA83E20B969FE00224804 /* IMConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMConversationViewController.m; sourceTree = "<group>"; };
+		0ACAA83F20B969FE00224804 /* IMConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMConversationCell.m; sourceTree = "<group>"; };
+		0ACAA84020B969FE00224804 /* IMConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IMConversationCell.xib; sourceTree = "<group>"; };
+		0ACAA84120B969FE00224804 /* IMConversationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IMConversationViewController.xib; sourceTree = "<group>"; };
+		0ACAA84220B969FE00224804 /* IMConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMConversationViewController.h; sourceTree = "<group>"; };
+		0ACAA84820B96A1C00224804 /* IMChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMChatModel.h; sourceTree = "<group>"; };
+		0ACAA84920B96A1C00224804 /* IMChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMChatViewController.m; sourceTree = "<group>"; };
+		0ACAA84A20B96A1C00224804 /* IMChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMChatViewController.h; sourceTree = "<group>"; };
+		0ACAA84B20B96A1C00224804 /* IMChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMChatModel.m; sourceTree = "<group>"; };
 		10435B51AE6D4053F6D94EBF /* ONOChat.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ONOChat.podspec; path = ../ONOChat.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		391BD87DC845599C12EEE3DF /* Pods_ONOChat_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ONOChat_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUAVAudioPlayer.m; sourceTree = "<group>"; };
@@ -85,20 +94,8 @@
 		4286A65A20B7C1DD00EEDD8B /* 0.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 0.jpeg; sourceTree = "<group>"; };
 		4286A65B20B7C1DD00EEDD8B /* 1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpeg; sourceTree = "<group>"; };
 		4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = headImage.jpeg; sourceTree = "<group>"; };
-		4286A66120B7C97500EEDD8B /* IMChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMChatViewController.m; sourceTree = "<group>"; };
-		4286A66220B7C97500EEDD8B /* IMChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMChatViewController.h; sourceTree = "<group>"; };
-		4286A66420B7C99600EEDD8B /* IMChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMChatModel.h; sourceTree = "<group>"; };
-		4286A66520B7C99600EEDD8B /* IMChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMChatModel.m; sourceTree = "<group>"; };
 		4286A66920B7E3AF00EEDD8B /* logo_120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_120.png; sourceTree = "<group>"; };
 		4286A66A20B7E3AF00EEDD8B /* logo_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_180.png; sourceTree = "<group>"; };
-		4286A66E20B7E80200EEDD8B /* IMSessionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMSessionViewCell.h; sourceTree = "<group>"; };
-		4286A66F20B7E80200EEDD8B /* IMSessionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMSessionViewCell.m; sourceTree = "<group>"; };
-		4286A67020B7E80200EEDD8B /* IMSessionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMSessionViewCell.xib; sourceTree = "<group>"; };
-		4286A67320B7E93200EEDD8B /* IMSessionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMSessionViewController.h; sourceTree = "<group>"; };
-		4286A67420B7E93200EEDD8B /* IMSessionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMSessionViewController.m; sourceTree = "<group>"; };
-		4286A67520B7E93200EEDD8B /* IMSessionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMSessionViewController.xib; sourceTree = "<group>"; };
-		4286A67820B7E9CB00EEDD8B /* IMUserModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMUserModel.h; sourceTree = "<group>"; };
-		4286A67920B7E9CB00EEDD8B /* IMUserModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMUserModel.m; sourceTree = "<group>"; };
 		48E1B27B551972DC2008F4D9 /* Pods-ONOChat_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ONOChat_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ONOChat_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ONOChat_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -153,6 +150,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0ACAA83C20B969FE00224804 /* Conversation */ = {
+			isa = PBXGroup;
+			children = (
+				0ACAA83D20B969FE00224804 /* IMConversationCell.h */,
+				0ACAA83F20B969FE00224804 /* IMConversationCell.m */,
+				0ACAA84020B969FE00224804 /* IMConversationCell.xib */,
+				0ACAA84220B969FE00224804 /* IMConversationViewController.h */,
+				0ACAA83E20B969FE00224804 /* IMConversationViewController.m */,
+				0ACAA84120B969FE00224804 /* IMConversationViewController.xib */,
+			);
+			path = Conversation;
+			sourceTree = "<group>";
+		};
+		0ACAA84720B96A1C00224804 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				0ACAA84820B96A1C00224804 /* IMChatModel.h */,
+				0ACAA84B20B96A1C00224804 /* IMChatModel.m */,
+				0ACAA84A20B96A1C00224804 /* IMChatViewController.h */,
+				0ACAA84920B96A1C00224804 /* IMChatViewController.m */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		302FAE658353C1BCEF068AEA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,7 +188,8 @@
 		4286A63720B7C19500EEDD8B /* DemoCode */ = {
 			isa = PBXGroup;
 			children = (
-				4286A66D20B7E7A200EEDD8B /* Session */,
+				0ACAA84720B96A1C00224804 /* Session */,
+				0ACAA83C20B969FE00224804 /* Conversation */,
 				4286A65620B7C1DD00EEDD8B /* OtherResources */,
 				4286A63820B7C1C100EEDD8B /* Class */,
 			);
@@ -222,21 +244,6 @@
 			path = photo;
 			sourceTree = "<group>";
 		};
-		4286A66D20B7E7A200EEDD8B /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				4286A67320B7E93200EEDD8B /* IMSessionViewController.h */,
-				4286A67420B7E93200EEDD8B /* IMSessionViewController.m */,
-				4286A67520B7E93200EEDD8B /* IMSessionViewController.xib */,
-				4286A66E20B7E80200EEDD8B /* IMSessionViewCell.h */,
-				4286A66F20B7E80200EEDD8B /* IMSessionViewCell.m */,
-				4286A67020B7E80200EEDD8B /* IMSessionViewCell.xib */,
-				4286A67820B7E9CB00EEDD8B /* IMUserModel.h */,
-				4286A67920B7E9CB00EEDD8B /* IMUserModel.m */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -278,10 +285,6 @@
 				6003F59C195388D20070C39A /* IMAppDelegate.h */,
 				6003F59D195388D20070C39A /* IMAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				4286A66220B7C97500EEDD8B /* IMChatViewController.h */,
-				4286A66120B7C97500EEDD8B /* IMChatViewController.m */,
-				4286A66420B7C99600EEDD8B /* IMChatModel.h */,
-				4286A66520B7C99600EEDD8B /* IMChatModel.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -414,17 +417,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACAA84520B969FE00224804 /* IMConversationCell.xib in Resources */,
 				4286A65F20B7C1DD00EEDD8B /* 1.jpeg in Resources */,
-				4286A67720B7E93200EEDD8B /* IMSessionViewController.xib in Resources */,
 				4286A65E20B7C1DD00EEDD8B /* 0.jpeg in Resources */,
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				4286A65020B7C1C100EEDD8B /* UUChatTableView.bundle in Resources */,
 				4286A66B20B7E3AF00EEDD8B /* logo_120.png in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
-				4286A67220B7E80200EEDD8B /* IMSessionViewCell.xib in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				4286A66C20B7E3AF00EEDD8B /* logo_180.png in Resources */,
+				0ACAA84620B969FE00224804 /* IMConversationViewController.xib in Resources */,
 				4286A66020B7C1DD00EEDD8B /* headImage.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -527,23 +530,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACAA84420B969FE00224804 /* IMConversationCell.m in Sources */,
 				4286A64F20B7C1C100EEDD8B /* UUMessageFrame.m in Sources */,
 				4286A65420B7C1C100EEDD8B /* UUImageAvatarBrowser.m in Sources */,
 				4286A65120B7C1C100EEDD8B /* UUMessageCell.m in Sources */,
-				4286A67A20B7E9CB00EEDD8B /* IMUserModel.m in Sources */,
-				4286A67120B7E80200EEDD8B /* IMSessionViewCell.m in Sources */,
-				4286A66620B7C99600EEDD8B /* IMChatModel.m in Sources */,
 				4286A64C20B7C1C100EEDD8B /* UUAVAudioPlayer.m in Sources */,
 				4286A64E20B7C1C100EEDD8B /* UUMessageContentButton.m in Sources */,
 				4286A65D20B7C1DD00EEDD8B /* NSDate+Utils.m in Sources */,
 				6003F59E195388D20070C39A /* IMAppDelegate.m in Sources */,
 				4286A65320B7C1C100EEDD8B /* UUMessage.m in Sources */,
-				4286A66320B7C97500EEDD8B /* IMChatViewController.m in Sources */,
 				4286A65520B7C1C100EEDD8B /* UUChatCategory.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
-				4286A67620B7E93200EEDD8B /* IMSessionViewController.m in Sources */,
+				0ACAA84C20B96A1C00224804 /* IMChatViewController.m in Sources */,
 				4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */,
+				0ACAA84320B969FE00224804 /* IMConversationViewController.m in Sources */,
 				4286A65220B7C1C100EEDD8B /* UUProgressHUD.m in Sources */,
+				0ACAA84D20B96A1C00224804 /* IMChatModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

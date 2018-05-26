@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "IMUserModel.h"
+#import "ONOConversation.h"
 
-@interface IMSessionViewCell : UITableViewCell
-@property (nonatomic, strong) IMUserModel *userModel;
+@interface IMConversationCell : UITableViewCell
+
+@property (strong, nonatomic) ONOConversation *conversation;
+
 @end

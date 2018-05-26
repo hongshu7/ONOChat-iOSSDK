@@ -59,7 +59,6 @@ typedef void (^ONOErrorResponse)(id msg);
 - (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error;
 - (void)notifyRoute:(NSString *)route withMessage:(GPBMessage *)msg;
 
-
 - (void)bindClientId:(NSString *)clientId;
 - (void)bindDeviceToken:(NSString *)deviceToken;
 

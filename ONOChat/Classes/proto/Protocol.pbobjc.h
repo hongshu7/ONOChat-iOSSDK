@@ -91,33 +91,27 @@ typedef GPB_ENUM(UserData_FieldNumber) {
 #pragma mark - Message
 
 typedef GPB_ENUM(Message_FieldNumber) {
-  Message_FieldNumber_Uid = 1,
-  Message_FieldNumber_Mid = 2,
+  Message_FieldNumber_Mid = 1,
+  Message_FieldNumber_Type = 2,
   Message_FieldNumber_From = 3,
   Message_FieldNumber_To = 4,
-  Message_FieldNumber_Type = 5,
-  Message_FieldNumber_Data_p = 6,
-  Message_FieldNumber_Time = 7,
-  Message_FieldNumber_Unread = 8,
+  Message_FieldNumber_Data_p = 5,
+  Message_FieldNumber_Time = 6,
 };
 
 @interface Message : GPBMessage
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
-
 @property(nonatomic, readwrite, copy, null_resettable) NSString *mid;
+
+@property(nonatomic, readwrite) int32_t type;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *from;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *to;
 
-@property(nonatomic, readwrite) int32_t type;
-
 @property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
 
 @property(nonatomic, readwrite) double time;
-
-@property(nonatomic, readwrite) int32_t unread;
 
 @end
 

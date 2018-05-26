@@ -15,9 +15,9 @@ typedef enum _ConversationType {
 
 @interface ONOConversation : NSObject
 
-@property (nonatomic, strong) NSString *belongId;
+//@property (nonatomic, strong) NSString *belongId;
 @property (nonatomic) ConversationType conversationType;
-@property (nonatomic) long long contactTime;
+@property (nonatomic) double contactTime;
 @property (nonatomic) int unreadCount;
 
 @property (nonatomic, strong) ONOUser *user;

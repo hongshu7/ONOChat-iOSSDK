@@ -16,14 +16,12 @@ message UserData {
 }
 
 message Message {
-  string uid = 1;
-  string mid = 2;
+  string mid = 1;
+  int32 type = 2; 
   string from = 3;
   string to = 4;
-  int32 type = 5; 
-  string data = 6; 
-  double time = 7;
-  int32 unread = 8; 
+  string data = 5; 
+  double time = 6;
 }
 
 message ErrorResponse {

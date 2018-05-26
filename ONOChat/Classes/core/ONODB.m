@@ -70,12 +70,12 @@ static FMDatabase *db;
 {
     NSString *sql = @"CREATE TABLE `conversation` ("
     "`belong_id`	TEXT NOT NULL,"
-    "`user_id`	TEXT NOT NULL,"
+    "`target_id`	TEXT NOT NULL,"
     "`contact_time`    INTEGER NOT NULL,"
-    "`conversation_type` INTEGER NOT NULL,"// 0 person  1 group
+    "`conversation_type` INTEGER NOT NULL,"// 1 person  2 group
     "`unread_count`	INTEGER NOT NULL,"
     "`last_message_id`	TEXT,"
-    "PRIMARY KEY(belong_id,user_id)"
+    "PRIMARY KEY(belong_id,target_id)"
     ");";
     [db executeUpdate:sql];
     sql = @"CREATE TABLE `message` ("
@@ -131,26 +131,26 @@ static FMDatabase *db;
     "`members`	TEXT," // ,id
     "PRIMARY KEY(group_id,belong_id)"
     ");";
-    //[db executeUpdate:sql];
+    [db executeUpdate:sql];
 }
 
 +(void)alterConversationTable
 {
 }
 
-+ (ONOConversation*)fetchConversation:(NSString *)userId {
++ (ONOConversation*)fetchConversation:(NSString *)targetId {
     [self initDB];
     [db open];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND user_id=?",
                        [self selfUserId],
-                       userId
+                       targetId
                        ];
     ONOConversation *conversation = nil;
     if ([rs next]) {
         conversation = [[ONOConversation alloc] init];
-        conversation.belongId = [rs stringForColumn:@"belong_id"];
+        //conversation.belongId = [rs stringForColumn:@"belong_id"];
         conversation.conversationType = [rs intForColumn:@"conversation_type"];
-        conversation.contactTime = [rs longLongIntForColumn:@"contact_time"];
+        conversation.contactTime = [rs doubleForColumn:@"contact_time"];
         conversation.unreadCount = [rs intForColumn:@"unread_count"];
         
         NSString *userId = [rs stringForColumn:@"user_id"];
@@ -165,23 +165,23 @@ static FMDatabase *db;
 }
 
 
-+ (ONOConversation*)fetchConversation:(NSString *)userId andConversationType:(NSInteger )conversationType
++ (ONOConversation*)fetchConversation:(NSString *)targetId withConversationType:(NSInteger)conversationType
 {
     [self initDB];
     [db open];
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND user_id=? AND message_type=?",
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND target_id=? AND message_type=?",
                        [self selfUserId],
-                       userId,
+                       targetId,
                        @(conversationType)];
     ONOConversation *conversation = nil;
     if ([rs next]) {
         conversation = [[ONOConversation alloc] init];
-        conversation.belongId = [rs stringForColumn:@"belong_id"];
+        //conversation.belongId = [rs stringForColumn:@"belong_id"];
         conversation.conversationType = [rs intForColumn:@"conversation_type"];
-        conversation.contactTime = [rs longLongIntForColumn:@"contact_time"];
+        conversation.contactTime = [rs doubleForColumn:@"contact_time"];
         conversation.unreadCount = [rs intForColumn:@"unread_count"];
         
-        NSString *userId = [rs stringForColumn:@"user_id"];
+        NSString *userId = [rs stringForColumn:@"target_id"];
         conversation.user = [self fetchUser:userId];
         NSString *lastMessageId = [rs stringForColumn:@"last_message_id"];
         if (lastMessageId != nil) {
@@ -201,12 +201,12 @@ static FMDatabase *db;
     ONOConversation *conversation = nil;
     while ([rs next]) {
         conversation = [[ONOConversation alloc] init];
-        conversation.belongId = [rs stringForColumn:@"belong_id"];
+        //conversation.belongId = [rs stringForColumn:@"belong_id"];
         conversation.conversationType = [rs intForColumn:@"conversation_type"];
-        conversation.contactTime = [rs longLongIntForColumn:@"contact_time"];
+        conversation.contactTime = [rs doubleForColumn:@"contact_time"];
         conversation.unreadCount = [rs intForColumn:@"unread_count"];
         
-        NSString *userId = [rs stringForColumn:@"user_id"];
+        NSString *userId = [rs stringForColumn:@"target_id"];
         conversation.user = [self fetchUser:userId];
         NSString *lastMessageId = [rs stringForColumn:@"last_message_id"];
         if (lastMessageId != nil) {
@@ -223,11 +223,15 @@ static FMDatabase *db;
 {
     [self initDB];
     [db open];
-    NSString *sql = @"INSERT INTO conversation(belong_id,user_id,conversation_type,contact_time,unread_count,last_message_id) VALUES(?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES(?,?,?,?,?,?)";
     NSString *userId = conversation.user.userId;
+    NSString *lastMessageId = @"";
+    if (conversation.lastMessage != nil) {
+        lastMessageId = conversation.lastMessage.messageId;
+    }
     [db executeUpdate:sql,
-     conversation.belongId, userId, @(conversation.conversationType), @(conversation.contactTime),
-     @(conversation.unreadCount), @""];
+     [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId];
+    NSLog(@"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES('%@','%@','%@','%@','%@','%@')", [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId);
     [db close];
 }
 
@@ -242,7 +246,7 @@ static FMDatabase *db;
     }
     NSString *userId = conversation.user.userId;
     [db executeUpdate:sql,
-     @(conversation.contactTime), @(conversation.unreadCount), lastMessageId, conversation.belongId, userId];
+     @(conversation.contactTime), @(conversation.unreadCount), lastMessageId, [self selfUserId], userId];
     [db close];
 }
 
@@ -264,6 +268,7 @@ static FMDatabase *db;
     NSString *sql = @"INSERT INTO user(user_id,nickname,avatar,gender) VALUES(?,?,?,?)";
     [db executeUpdate:sql,
      user.userId, user.nickname, user.avatar, @(user.gender)];
+    NSLog(@"INSERT INTO user(user_id,nickname,avatar,gender) VALUES('%@','%@','%@',%@)", user.userId, user.nickname, user.avatar, @(user.gender));
     [db close];
 }
 
@@ -383,29 +388,28 @@ static FMDatabase *db;
 }
 
 
-+ (void)insertMessage:(ONOBaseMessage*)message to:(NSString *)userId
++ (void)insertMessage:(ONOBaseMessage*)message
 {
     [self initDB];
     [db open];
     NSString *sql = @"INSERT INTO message(message_id,belong_id,user_id,group_id,type,data,timestamp,is_send,is_self,is_error) VALUES(?,?,?,?,?,?,?,?,?,?)";
     NSString *data = [message encode];
     [db executeUpdate:sql,
-        message.messageId, [self selfUserId], userId, @"", @([message type]), data, @(message.timestamp), @(message.isSend), @(message.isSelf), @(message.isError)];
+        message.messageId, [self selfUserId], message.user.userId, @"", @([message type]), data, @(message.timestamp), @(message.isSend), @(message.isSelf), @(message.isError)];
     [db close];
 }
 
-+ (void)updateMessage:(ONOBaseMessage*)message fromOldId:(NSString *)oldMessageId
++ (void)markMessageSend:(NSString *)newMessgeId fromOldId:(NSString *)oldMessageId
 {
-     NSLog(@"UPDATE message SET message_id=%@, is_send=%d, is_error=%d WHERE message_id=%lld", message.messageId, message.isSend, message.isError, oldMessageId);
+     NSLog(@"UPDATE message SET message_id=%@, is_send=%d, is_error=%d WHERE message_id=%@", newMessgeId, YES, NO, oldMessageId);
     [self initDB];
     [db open];
     NSString *sql = @"UPDATE message SET message_id=?, is_send=?, is_error=? WHERE message_id=?";
-    [db executeUpdate:sql,
-     message.messageId, @(message.isSend), @(message.isError), oldMessageId];
+    [db executeUpdate:sql, newMessgeId, @(YES), @(NO), oldMessageId];
     [db close];
 }
 
-+ (void)updateMessageError:(BOOL)error msgId:(NSString *)msgId
++ (void)markMessageError:(BOOL)error msgId:(NSString *)msgId
 {
     [self initDB];
     [db open];

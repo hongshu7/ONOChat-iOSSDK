@@ -6,15 +6,15 @@
 //  Copyright © 2018年 Kevin. All rights reserved.
 //
 
-#import "IMSessionViewCell.h"
+#import "IMConversationCell.h"
 
-@interface IMSessionViewCell ()
+@interface IMConversationCell()
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 
 @end
 
-@implementation IMSessionViewCell
+@implementation IMConversationCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -23,9 +23,9 @@
     self.avatarImageView.clipsToBounds = YES;
 }
 
-- (void)setUserModel:(IMUserModel *)userModel {
-    _userModel = userModel;
-    self.nicknameLabel.text = userModel.userId;
+- (void)setConversation:(ONOConversation *)conversation {
+    _conversation = conversation;
+    self.nicknameLabel.text = conversation.user.nickname;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

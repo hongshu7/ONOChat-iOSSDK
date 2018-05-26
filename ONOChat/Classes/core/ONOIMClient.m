@@ -19,7 +19,7 @@
 
 @interface ONOIMClient()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOBaseMessage*> *userQuerys;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOBaseMessage*> *messagesWaitFillUser;
 
 @end
 
@@ -39,7 +39,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _userQuerys = [NSMutableDictionary dictionary];
+        _messagesWaitFillUser = [NSMutableDictionary dictionary];
         [[ONOCore sharedCore] addListenerForRoute:@"push.Message" withCallback:^(Message *msg) {
             [self receiveMessage:msg];
         }];
@@ -55,10 +55,10 @@
     mb.messageId = msg.mid;
     mb.timestamp = msg.time;
     [mb decode:msg.data_p];
-    NSString *userId = msg.from;
     ONOUser *user =  [ONODB fetchUser:msg.from];
     if (user == nil) {
-        _userQuerys[msg.from] = mb;
+        self.messagesWaitFillUser[msg.from] = mb;
+        [self queryUserAsync:msg.from];
         return;
     }
     mb.user = user;
@@ -115,7 +115,28 @@
     message.messageId = [BSONIdGenerator generate];
     message.timestamp = [[NSDate date] timeIntervalSince1970];
     message.isSelf = YES;
-    [ONODB insertMessage:message to:userId];
+    ONOUser *user = [ONODB fetchUser:userId];
+    if (user == nil) {
+        user = [[ONOUser alloc] init];
+        user.userId = userId;
+        user.nickname = @"...";
+        user.avatar = @"";
+        user.gender = 1;
+        [ONODB insertUser:user];
+    }
+    message.user = user;
+    [ONODB insertMessage:message];
+
+    ONOConversation *conversation = [self getConversation:userId];
+    if (conversation == nil) {
+        conversation = [[ONOConversation alloc] init];
+        conversation.conversationType = ConversationTypePrivate;
+        conversation.contactTime = [[NSDate date] timeIntervalSince1970];
+        conversation.unreadCount = 0;
+        conversation.user = user;
+        conversation.lastMessage = message;
+        [ONODB insertConversation:conversation];
+    }
     
     SendMessageRequest *request = [[SendMessageRequest alloc] init];
     request.to = userId;
@@ -124,52 +145,36 @@
     request.mid = message.messageId;
     NSString *msgId = [message.messageId copy];
     [[ONOCore sharedCore] requestRoute:@"client.message.sendMessage" withMessage:request onSuccess:^(SendMessagenResponse *response) {
-        [ONODB updateMessage:response.nmid fromOldId:response.omid];
+        [ONODB markMessageSend:response.nmid fromOldId:response.omid];
         successBlock(response.nmid);
     } onError:^(ErrorResponse *err) {
-        [ONODB updateMessageError:YES msgId:msgId];
+        [ONODB markMessageError:YES msgId:msgId];
         errorBlock(err.code, msgId);
     }];
 }
 
-- (void)readMessage:(NSString *)messageId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
-{
+- (void)readMessage:(NSString *)messageId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error {
     ReadMessageRequest *request = [[ReadMessageRequest alloc] init];
     request.mid = messageId;
     [[ONOCore sharedCore] requestRoute:@"client.message.read" withMessage:request onSuccess:success onError:error];
 }
 
-- (void)queryUser:(NSString *)userId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
-{
-    UserProfileRequest *request = [[UserProfileRequest alloc] init];
-    request.uid = userId;
-    
-    [[ONOCore sharedCore] requestRoute:@"client.user.profile" withMessage:request onSuccess:^(UserData *msg) {
-        ONOBaseMessage *bmsg = self.userQuerys[userId];
-        if (bmsg == nil) {
-            return;
+- (void)queryUserAsync:(NSString *)userId {
+    [self userProfile:userId withCache:NO onSuccess:^(ONOUser *user) {
+        ONOBaseMessage *bmsg = self.messagesWaitFillUser[userId];
+        if (bmsg != nil) {
+            [self.messagesWaitFillUser removeObjectForKey:userId];
+            bmsg.user = user;
+            if (self.receiveMessageDelegate) {
+                [self.receiveMessageDelegate onReceived:bmsg];
+            }
         }
-        [self.userQuerys removeObjectForKey:userId];
-        ONOUser *user = [[ONOUser alloc] init];
-        user.userId = msg.uid;
-        user.nickname = msg.name;
-        user.avatar = msg.icon;
-        user.gender = msg.gender;
-        bmsg.user = user;
-        if ([ONODB fetchUser:userId] == nil) {
-            [ONODB insertUser:user];
-        } else {
-            [ONODB updateUser:user];
-        }
-        if (self.receiveMessageDelegate) {
-            [self.receiveMessageDelegate onReceived:bmsg];
+    } onError:^(int errorCode, NSString *messageId) {
+        ONOBaseMessage *bmsg = self.messagesWaitFillUser[userId];
+        if (bmsg != nil) {
+            [self.messagesWaitFillUser removeObjectForKey:userId];
         }
         
-    } onError:^(id msg) {
-        ONOBaseMessage *bmsg = self.userQuerys[userId];
-        if (bmsg != nil) {
-            [self.userQuerys removeObjectForKey:userId];
-        }
     }];
 }
 
@@ -177,8 +182,43 @@
     return [ONODB fetchConversations];
 }
 
-- (ONOConversation *)getConversation:(NSString *)userId {
-    return [ONODB fetchConversation:userId];
+- (ONOConversation *)getConversation:(NSString *)targetId {
+    return [ONODB fetchConversation:targetId];
+}
+
+- (void)updateConversation:(ONOConversation *)conversation {
+    return [ONODB updateConversation:conversation];
+}
+
+- (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+    [self userProfile:userId withCache:YES onSuccess:successBlock onError:errorBlock];
+}
+
+- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+    if (withCache) {
+        ONOUser *user = [ONODB fetchUser:userId];
+        if (user != nil) {
+            if (successBlock) successBlock(user);
+            return;
+        }
+    }
+    UserProfileRequest *request = [[UserProfileRequest alloc] init];
+    request.uid = userId;
+    [[ONOCore sharedCore] requestRoute:@"client.user.profile" withMessage:request onSuccess:^(UserProfileResponse *msg) {
+        ONOUser *user = [[ONOUser alloc] init];
+        user.userId = msg.user.uid;
+        user.nickname = msg.user.name;
+        user.avatar = msg.user.icon;
+        user.gender = msg.user.gender;
+        if ([ONODB fetchUser:userId] == nil) {
+            [ONODB insertUser:user];
+        } else {
+            [ONODB updateUser:user];
+        }
+        if (successBlock) successBlock(user);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
 }
 
 @end

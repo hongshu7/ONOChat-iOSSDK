@@ -12,8 +12,8 @@
 
 @interface ONODB : NSObject
 
-+ (ONOConversation *)fetchConversation:(NSString *)userId;
-+ (ONOConversation *)fetchConversation:(NSString *)userId andMessageType:(NSInteger )messageType;
++ (ONOConversation *)fetchConversation:(NSString *)targetId;
++ (ONOConversation *)fetchConversation:(NSString *)targetId withConversationType:(NSInteger)conversationType;
 + (NSArray<ONOConversation *> *)fetchConversations;
 
 + (void)insertConversation:(ONOConversation *)conversation;
@@ -26,9 +26,9 @@
 
 + (ONOBaseMessage*)fetchMessage:(NSString *)msgId;
 + (NSArray*)fetchMessages:(NSString *)userId offset:(NSString *)offset limit:(int)limit;
-+ (void)insertMessage:(ONOBaseMessage*)message to:(NSString *)userId;
-+ (void)updateMessage:(ONOBaseMessage*)message fromOldId:(NSString *)oldMessageId;
-+ (void)updateMessageError:(BOOL)error msgId:(NSString *)msgId;
++ (void)insertMessage:(ONOBaseMessage*)message;
++ (void)markMessageSend:(NSString *)newMessgeId fromOldId:(NSString *)oldMessageId;
++ (void)markMessageError:(BOOL)error msgId:(NSString *)msgId;
 + (void)deleteMessage:(NSString *)userId msgId:(NSString *)msgId;
 
 

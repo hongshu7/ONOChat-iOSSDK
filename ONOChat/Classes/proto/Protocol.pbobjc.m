@@ -177,20 +177,16 @@ typedef struct UserData__storage_ {
 
 @implementation Message
 
-@dynamic uid;
 @dynamic mid;
+@dynamic type;
 @dynamic from;
 @dynamic to;
-@dynamic type;
 @dynamic data_p;
 @dynamic time;
-@dynamic unread;
 
 typedef struct Message__storage_ {
   uint32_t _has_storage_[1];
   int32_t type;
-  int32_t unread;
-  NSString *uid;
   NSString *mid;
   NSString *from;
   NSString *to;
@@ -205,22 +201,22 @@ typedef struct Message__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "uid",
+        .name = "mid",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Uid,
+        .number = Message_FieldNumber_Mid,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(Message__storage_, uid),
+        .offset = (uint32_t)offsetof(Message__storage_, mid),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "mid",
+        .name = "type",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Mid,
+        .number = Message_FieldNumber_Type,
         .hasIndex = 1,
-        .offset = (uint32_t)offsetof(Message__storage_, mid),
+        .offset = (uint32_t)offsetof(Message__storage_, type),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeString,
+        .dataType = GPBDataTypeInt32,
       },
       {
         .name = "from",
@@ -241,19 +237,10 @@ typedef struct Message__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "type",
-        .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Type,
-        .hasIndex = 4,
-        .offset = (uint32_t)offsetof(Message__storage_, type),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
-      },
-      {
         .name = "data_p",
         .dataTypeSpecific.className = NULL,
         .number = Message_FieldNumber_Data_p,
-        .hasIndex = 5,
+        .hasIndex = 4,
         .offset = (uint32_t)offsetof(Message__storage_, data_p),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
@@ -262,19 +249,10 @@ typedef struct Message__storage_ {
         .name = "time",
         .dataTypeSpecific.className = NULL,
         .number = Message_FieldNumber_Time,
-        .hasIndex = 6,
+        .hasIndex = 5,
         .offset = (uint32_t)offsetof(Message__storage_, time),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeDouble,
-      },
-      {
-        .name = "unread",
-        .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_Unread,
-        .hasIndex = 7,
-        .offset = (uint32_t)offsetof(Message__storage_, unread),
-        .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =
