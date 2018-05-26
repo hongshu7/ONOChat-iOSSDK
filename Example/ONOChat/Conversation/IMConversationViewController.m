@@ -37,7 +37,7 @@
     
     // iPhoneX
     self.dataArray = @[];
-    [self loginToIMServerWithToken:@"907wf2h4l56aouv8cpqxntebs3rgjkm1"];
+    [self loginToIMServerWithToken:@"ju9es1b7w6kproa32ghqvdt0xzmfycin"];
     
     // iPhone8P
 //    self.dataArray = @[userOne];
@@ -52,7 +52,7 @@
 }
 
 - (void)loginToIMServerWithToken:(NSString *)token {
-    [[ONOIMClient sharedClient] setupWithHost:@"127.0.0.1" port:3001];
+    [[ONOIMClient sharedClient] setupWithHost:@"101.201.236.225" port:3001];
     [[ONOIMClient sharedClient] loginWithToken:token onSuccess:^(ONOUser *user) {
         NSLog(@"user logined with name:%@", user.nickname);
         self.dataArray = [[ONOIMClient sharedClient] getConversationList];
@@ -64,7 +64,8 @@
 }
 
 - (void)starNewSession {
-    [[ONOIMClient sharedClient] userProfile:@"10002" withCache:NO onSuccess:^(ONOUser *user) {
+    //发起对carrot2的会话
+    [[ONOIMClient sharedClient] userProfile:@"carrot2" withCache:NO onSuccess:^(ONOUser *user) {
         IMChatViewController *vc = [[IMChatViewController alloc] init];
         vc.toUserModel = user;
         [self.navigationController pushViewController:vc animated:YES];
