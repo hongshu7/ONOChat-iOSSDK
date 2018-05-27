@@ -8,7 +8,7 @@
 
 #import "ONOSocket.h"
 #import "FastSocket.h"
-#import "ONONetMessage.h"
+#import "ONOCMessage.h"
 #import "ONOCore.h"
 #import <CommonCrypto/CommonDigest.h>
 
@@ -114,7 +114,7 @@
     }
     NSString *str = [NSString stringWithFormat:@"{\"sys\":{\"type\":\"ios\",\"version\":\"1.0\",\"protocol\":\"protobuf\"},\"md5\":\"%@\"}", md5];
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
-    ONONetPacket *packet = [[ONONetPacket alloc] initWithType:IM_PT_HANDSHAKE andData:data];
+    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_HANDSHAKE andData:data];
     [self sendData:packet];
 }
 
@@ -127,7 +127,7 @@
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), hbi * NSEC_PER_SEC, 0);
     dispatch_source_set_event_handler(_timer, ^{
         //NSLog(@"heartbeat");
-        ONONetPacket* mp = [[ONONetPacket alloc] init];
+        ONOPacket* mp = [[ONOPacket alloc] init];
         mp.type = IM_PT_HEARTBEAT;
         [self sendData:mp];
         //if (self.lastSendTime < [[NSDate date] timeIntervalSince1970] - 30.0) {
@@ -212,7 +212,7 @@
 }
 
 
-- (void)sendData:(ONONetPacket*)packet
+- (void)sendData:(ONOPacket*)packet
 {
     //发送队列，先进先出
     dispatch_async(self.sendQueue, ^{
@@ -255,7 +255,7 @@
     
     NSLog(@"headers: %d,%d,%d,%d", headers[0], headers[1], headers[2], headers[3]);
     
-    ONONetPacket* packet = [[ONONetPacket alloc] init];
+    ONOPacket* packet = [[ONOPacket alloc] init];
     packet.type = type;
     NSLog(@"revice type:%d, length:%d", type, length);
     
@@ -289,7 +289,7 @@
         [[ONOCore sharedCore] handleConnected:response];
     } else if (packet.type == IM_PT_DATA) {
         //消息包
-        ONONetMessage *message = [[ONONetMessage alloc] init];
+        ONOCMessage *message = [[ONOCMessage alloc] init];
         [message decode:packet.data];
         [self performSelectorOnMainThread:@selector(dispatchMessage:) withObject:message waitUntilDone:NO];
     }

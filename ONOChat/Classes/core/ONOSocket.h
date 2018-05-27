@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ONONetPacket.h"
+#import "ONOPacket.h"
 
 @interface ONOSocket : NSObject
 
@@ -20,6 +20,6 @@
 
 - (void)heartBeat:(NSInteger)hbi;
 
-- (void)sendData:(ONONetPacket*)message;
+- (void)sendData:(ONOPacket*)message;
 
 @end

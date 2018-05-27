@@ -4,21 +4,21 @@
 //  Copyright (c) 2014年 Xiamen justit. All rights reserved.
 //
 
-#import "ONONetMessage.h"
+#import "ONOCMessage.h"
 #import "ONOCore.h"
 
 #define MSG_COMPRESS_GZIP_MASK 0x1;
 #define MSG_TYPE_MASK 0x7;
 #define MSG_ERROR_MASK 0x1;
 
-@implementation ONONetMessage
+@implementation ONOCMessage
 
 - (NSData *)encode {
     
     int headHength = 2; //flag + route
     if (self.type == IM_MT_REQUEST) {
         //msgid
-        headHength += [ONONetMessage caculateMsgIdBytes:self.messageId];
+        headHength += [ONOCMessage caculateMsgIdBytes:self.messageId];
     }
     
     char headBytes[headHength];
@@ -29,7 +29,7 @@
     headBytes[offset++] = (self.type << 1) | (compressGzip ? 1 : 0);
     if (self.type == IM_MT_REQUEST) {
         //写入message id
-        offset = [ONONetMessage encodeMsgId:self.messageId andBuffer:headBytes andOffset:offset];
+        offset = [ONOCMessage encodeMsgId:self.messageId andBuffer:headBytes andOffset:offset];
     }
     ONORouteInfo *routeInfo = [[ONOCore sharedCore] getRouteInfo:self.route];
     headBytes[offset++] = routeInfo.routeId;

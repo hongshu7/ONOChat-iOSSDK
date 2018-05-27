@@ -1,5 +1,5 @@
 //
-//  ONONetMessage.h
+//  ONOCMessage.h
 //  Lemeng
 //
 //  Created by Kevin Lai on 14-8-20.
@@ -15,7 +15,7 @@ typedef enum {
     IM_MT_PUSH
 } ONOMessageType;
 
-@interface ONONetMessage : NSObject
+@interface ONOCMessage : NSObject
 
 @property(nonatomic) ONOMessageType type;
 @property(nonatomic) NSString *route;

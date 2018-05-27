@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ONONetMessage.h"
+#import "ONOCMessage.h"
 #import "ONOMessage.h"
 #import "ONOConversation.h"
 

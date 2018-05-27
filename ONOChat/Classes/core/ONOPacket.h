@@ -15,7 +15,7 @@ typedef enum {
     IM_PT_KICK
 } ONOPacketType;
 
-@interface ONONetPacket : NSObject
+@interface ONOPacket : NSObject
 
 @property(nonatomic) ONOPacketType type;
 @property(nonatomic, strong) NSData *data;
