@@ -15,6 +15,7 @@
 #define DBNAME    @"message.sqlite"
 
 static BOOL isInit;
+static int openTimes;
 static FMDatabase *db;
 
 
@@ -138,9 +139,26 @@ static FMDatabase *db;
 {
 }
 
-+ (ONOConversation*)fetchConversation:(NSString *)targetId {
++(void)openDB
+{
     [self initDB];
-    [db open];
+    if (openTimes == 0) {
+        [db open];
+    }
+    openTimes++;
+}
+
++(void)closeDB
+{
+    openTimes--;
+    if (openTimes == 0) {
+        [db close];
+    }
+}
+
+
++ (ONOConversation*)fetchConversation:(NSString *)targetId {
+    [self openDB];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND user_id=?",
                        [self selfUserId],
                        targetId
@@ -160,15 +178,14 @@ static FMDatabase *db;
             conversation.lastMessage = [self fetchMessage:lastMessageId];
         }
     }
-    [db close];
+    [self closeDB];
     return conversation;
 }
 
 
 + (ONOConversation*)fetchConversation:(NSString *)targetId withConversationType:(NSInteger)conversationType
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND target_id=? AND message_type=?",
                        [self selfUserId],
                        targetId,
@@ -184,18 +201,18 @@ static FMDatabase *db;
         NSString *userId = [rs stringForColumn:@"target_id"];
         conversation.user = [self fetchUser:userId];
         NSString *lastMessageId = [rs stringForColumn:@"last_message_id"];
+        
         if (lastMessageId != nil) {
             conversation.lastMessage = [self fetchMessage:lastMessageId];
         }
     }
-    [db close];
+    [self closeDB];
     return conversation;
 }
 
 + (NSArray<ONOConversation *> *)fetchConversations
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSMutableArray* conversations = [NSMutableArray new];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=?", [self selfUserId]];
     ONOConversation *conversation = nil;
@@ -215,14 +232,13 @@ static FMDatabase *db;
         
         [conversations addObject:conversation];
     }
-    [db close];
+    [self closeDB];
     return conversations;
 }
 
 + (void)insertConversation:(ONOConversation *)conversation
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES(?,?,?,?,?,?)";
     NSString *userId = conversation.user.userId;
     NSString *lastMessageId = @"";
@@ -232,13 +248,12 @@ static FMDatabase *db;
     [db executeUpdate:sql,
      [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId];
     NSLog(@"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES('%@','%@','%@','%@','%@','%@')", [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId);
-    [db close];
+    [self closeDB];
 }
 
 + (void)updateConversation:(ONOConversation*)conversation
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"UPDATE conversation set contact_time=?, unread_count=?, last_message_id=? WHERE belong_id=? AND user_id=?";
     NSString *lastMessageId = @"";
     if (conversation.lastMessage != nil) {
@@ -247,44 +262,40 @@ static FMDatabase *db;
     NSString *userId = conversation.user.userId;
     [db executeUpdate:sql,
      @(conversation.contactTime), @(conversation.unreadCount), lastMessageId, [self selfUserId], userId];
-    [db close];
+    [self closeDB];
 }
 
 + (void)deleteConversation:(NSString *)userId
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"DELETE FROM conversation WHERE belong_id=? AND user_id=?";
     NSLog(@"DELETE FROM conversation WHERE belong_id=%@ AND user_id=%@", [self selfUserId], userId);
     [db executeUpdate:sql, [self selfUserId], userId];
-    [db close];
+    [self closeDB];
 }
 
 
 +(void)insertUser:(ONOUser *)user
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"INSERT INTO user(user_id,nickname,avatar,gender) VALUES(?,?,?,?)";
     [db executeUpdate:sql,
      user.userId, user.nickname, user.avatar, @(user.gender)];
     NSLog(@"INSERT INTO user(user_id,nickname,avatar,gender) VALUES('%@','%@','%@',%@)", user.userId, user.nickname, user.avatar, @(user.gender));
-    [db close];
+    [self closeDB];
 }
 
 +(void)updateUser:(ONOUser *)user
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"UPDATE user set nickname=?, avatar=?, gender=? WHERE user_id=?";
     [db executeUpdate:sql, user.nickname, user.avatar, @(user.gender), user.userId];
-    [db close];
+    [self closeDB];
 }
 
 +(ONOUser *)fetchUser:(NSString *)userId
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM user WHERE user_id=?", userId];
     ONOUser *user = nil;
@@ -295,15 +306,14 @@ static FMDatabase *db;
         user.avatar = [rs stringForColumn:@"avatar"];
         user.gender = [rs intForColumn:@"gender"];
     }
-    [db close];
+    [self closeDB];
     return user;
 }
 
 //+(NSArray *)fetchUsers:(NSString *)userIds
 //{
 //    NSMutableArray *userArr = [NSMutableArray array];
-//    [self initDB];
-//    [db open];
+//    [self openDB];
 //    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM user WHERE user_id IN (%@)",
 //                     userIds];
 //    FMResultSet *rs = [db executeQuery:sql];
@@ -316,15 +326,13 @@ static FMDatabase *db;
 //        user.gender = [rs intForColumn:@"gender"];
 //        [userArr addObject:user];
 //    }
-//    [db close];
+//    [self closeDB];
 //    return userArr;
 //}
 
 + (ONOBaseMessage*)fetchMessage:(NSString *)msgId
 {
-    [self initDB];
-    [db open];
-
+    [self openDB];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM message WHERE message_id=?", msgId];
     ONOBaseMessage *message = nil;
     if ([rs next]) {
@@ -342,14 +350,13 @@ static FMDatabase *db;
         NSString *data = [rs stringForColumn:@"data"];
         [message decode:data];
     }
-    [db close];
+    [self closeDB];
     return message;
 }
 
 + (NSArray*)fetchMessages:(NSString *)userId offset:(NSString *)offset limit:(int)limit
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSMutableArray* messages = [NSMutableArray new];
     FMResultSet *rs = nil;
     if (offset > 0) {
@@ -383,48 +390,44 @@ static FMDatabase *db;
         
         [messages addObject:message];
     }
-    [db close];
+    [self closeDB];
     return [[messages reverseObjectEnumerator] allObjects];
 }
 
 
 + (void)insertMessage:(ONOBaseMessage*)message
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"INSERT INTO message(message_id,belong_id,user_id,group_id,type,data,timestamp,is_send,is_self,is_error) VALUES(?,?,?,?,?,?,?,?,?,?)";
     NSString *data = [message encode];
     [db executeUpdate:sql,
         message.messageId, [self selfUserId], message.user.userId, @"", @([message type]), data, @(message.timestamp), @(message.isSend), @(message.isSelf), @(message.isError)];
-    [db close];
+    [self closeDB];
 }
 
 + (void)markMessageSend:(NSString *)newMessgeId fromOldId:(NSString *)oldMessageId
 {
      NSLog(@"UPDATE message SET message_id=%@, is_send=%d, is_error=%d WHERE message_id=%@", newMessgeId, YES, NO, oldMessageId);
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"UPDATE message SET message_id=?, is_send=?, is_error=? WHERE message_id=?";
     [db executeUpdate:sql, newMessgeId, @(YES), @(NO), oldMessageId];
-    [db close];
+    [self closeDB];
 }
 
 + (void)markMessageError:(BOOL)error msgId:(NSString *)msgId
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"UPDATE message SET is_error=? WHERE message_id=?";
     [db executeUpdate:sql, @(error ? 1 : 0), msgId];
-    [db close];
+    [self closeDB];
 }
 
 + (void)deleteMessage:(NSString *)userId msgId:(NSString *)msgId
 {
-    [self initDB];
-    [db open];
+    [self openDB];
     NSString *sql = @"DELETE FROM message WHERE message_id=?";
     [db executeUpdate:sql, msgId];
-    [db close];
+    [self closeDB];
 }
 
 @end
