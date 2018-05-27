@@ -49,7 +49,7 @@ typedef void (^ONOErrorResponse)(id msg);
 - (void)connect;
 - (void)disconnect;
 
-- (void)handleConnected:(NSData *)response;
+- (void)handleConnected:(NSDictionary *)response;
 - (void)handleResponse:(ONOMessage *)message;
 
 - (NSString *)getRouteByMsgId:(NSUInteger)msgId;

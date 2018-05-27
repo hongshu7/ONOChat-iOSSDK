@@ -10,14 +10,17 @@
 #import "FastSocket.h"
 #import "ONOMessage.h"
 #import "ONOCore.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @interface ONOSocket ()
 
 @property BOOL isStop;
 
-@property (strong, nonatomic)NSString *host;
+@property (strong, nonatomic) NSString *host;
 @property int port;
-@property (strong, nonatomic)FastSocket *client;
+@property (strong, nonatomic) FastSocket *client;
+
+@property (strong, nonatomic) NSDictionary *localData;
 
 @property dispatch_queue_t sendQueue;
 @property int delayInSeconds;
@@ -29,13 +32,15 @@
 
 @implementation ONOSocket
 
-
-
 - (id)init
 {
     if (self = [super init]) {
         const char *queueName = [[[NSDate date] description] UTF8String];
         self.sendQueue = dispatch_queue_create(queueName, NULL);
+        self.localData = [NSDictionary dictionaryWithContentsOfFile:[self dataFilePath]];
+        if (self.localData == nil) {
+            self.localData = @{};
+        }
     }
     return self;
 }
@@ -74,11 +79,11 @@
     if (self.isConnect) {
         return;
     }
-    NSLog(@"connectBackground");
+    //NSLog(@"connectBackground");
     //连接
     self.client = [[FastSocket alloc] initWithHost:self.host andPort:[@(self.port) stringValue]];
     [self.client connect];
-    NSLog(@"connectBackground 2");
+    //NSLog(@"connectBackground 2");
     if (self.client.lastError != nil) {
         [self connectAfterAWhile];
         return;
@@ -87,7 +92,7 @@
     self.isConnect = YES;
     self.isStop = NO;
     
-    NSLog(@"connectBackground 3");
+    //NSLog(@"connectBackground 3");
     //3秒后重新连接
     self.delayInSeconds = 3;
     
@@ -103,7 +108,11 @@
 //握手
 - (void)handshake
 {
-    NSString *str = @"{\"sys\":{\"type\":\"ios\",\"version\":\"1.0\",\"protocol\":\"protobuf\"}}";
+    NSString *md5 = @"";
+    if (self.localData[@"md5"]) {
+        md5 = self.localData[@"md5"];
+    }
+    NSString *str = [NSString stringWithFormat:@"{\"sys\":{\"type\":\"ios\",\"version\":\"1.0\",\"protocol\":\"protobuf\"},\"md5\":\"%@\"}", md5];
     NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
     ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_HANDSHAKE andData:data];
     [self sendData:packet];
@@ -112,16 +121,17 @@
 //心跳
 - (void)heartBeat:(NSInteger)hbi
 {
+    //NSLog(@"heartbeat:%d", hbi);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
      _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(_timer, dispatch_walltime(NULL, 0), hbi * NSEC_PER_SEC, 0);
     dispatch_source_set_event_handler(_timer, ^{
+        //NSLog(@"heartbeat");
         ONOPacket* mp = [[ONOPacket alloc] init];
         mp.type = IM_PT_HEARTBEAT;
         [self sendData:mp];
         //if (self.lastSendTime < [[NSDate date] timeIntervalSince1970] - 30.0) {
         //}
-
     });
     dispatch_resume(_timer);
 }
@@ -261,13 +271,22 @@
         
         packet.data = [NSData dataWithBytes:bytes length:length];
 
-        NSLog(@"revice msg type:%zd", packet.type);
+        NSLog(@"revice msg type:%d", packet.type);
         
     }
     NSLog(@"dispatch packet");
     if (packet.type == IM_PT_HANDSHAKE) {
         //服务端握手回应
-        [[ONOCore sharedCore] handleConnected:packet.data];
+        NSDictionary *response = [NSJSONSerialization JSONObjectWithData:packet.data options:kNilOptions error:nil];
+        if ([response[@"code"] intValue] == 201) {
+            //use cache
+            response = self.localData;
+        } else {
+            self.localData = response;
+            //save cache
+            [self.localData writeToFile:[self dataFilePath] atomically:YES];
+        }
+        [[ONOCore sharedCore] handleConnected:response];
     } else if (packet.type == IM_PT_DATA) {
         //消息包
         ONOMessage *message = [[ONOMessage alloc] init];
@@ -281,6 +300,16 @@
 {
     NSLog(@"get packet:%@", message);
     [[ONOCore sharedCore] handleResponse:message];
+}
+
+#pragma mark - utils
+
+- (NSString *)dataFilePath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docPath = [paths objectAtIndex:0];
+    NSString *path = [docPath stringByAppendingPathComponent:@"ono-chat-data.plist"];
+    NSLog(@"data path:%@", path);
+    return path;
 }
 
 @end

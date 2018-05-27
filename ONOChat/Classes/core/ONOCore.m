@@ -87,10 +87,9 @@
     [self.client close];
 }
 
-- (void)handleConnected:(NSData *)response
+- (void)handleConnected:(NSDictionary *)dict
 {
     //routes
-    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:response options:kNilOptions error:nil];
     //NSLog(@"handshake:%@", dict);
     NSDictionary *sys = dict[@"sys"];
     self.heartbeatInterval = [sys[@"heartbeat"] integerValue];
