@@ -330,11 +330,11 @@ static FMDatabase *db;
 //    return userArr;
 //}
 
-+ (ONOBaseMessage*)fetchMessage:(NSString *)msgId
++ (ONOMessage*)fetchMessage:(NSString *)msgId
 {
     [self openDB];
     FMResultSet *rs = [db executeQuery:@"SELECT * FROM message WHERE message_id=?", msgId];
-    ONOBaseMessage *message = nil;
+    ONOMessage *message = nil;
     if ([rs next]) {
         int type = [rs intForColumn:@"type"];
         message = [[ONOIMClient sharedClient] createMessageByType:type];
@@ -372,7 +372,7 @@ static FMDatabase *db;
               [NSNumber numberWithInt:limit]];
         NSLog(@"SELECT * FROM message WHERE belong_id=%@ AND user_id=%@ ORDER BY message_id DESC LIMIT %d", [self selfUserId], userId, limit);
     }
-    ONOBaseMessage *message = nil;
+    ONOMessage *message = nil;
     while ([rs next]) {
         int type = [rs intForColumn:@"type"];
         message = [[ONOIMClient sharedClient] createMessageByType:type];
@@ -395,7 +395,7 @@ static FMDatabase *db;
 }
 
 
-+ (void)insertMessage:(ONOBaseMessage*)message
++ (void)insertMessage:(ONOMessage*)message
 {
     [self openDB];
     NSString *sql = @"INSERT INTO message(message_id,belong_id,user_id,group_id,type,data,timestamp,is_send,is_self,is_error) VALUES(?,?,?,?,?,?,?,?,?,?)";

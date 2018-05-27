@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ONOMessage.h"
+#import "ONONetMessage.h"
 #import "ONORouteInfo.h"
 
 //todo:重连机制，客户端保存session id
@@ -50,7 +50,7 @@ typedef void (^ONOErrorResponse)(id msg);
 - (void)disconnect;
 
 - (void)handleConnected:(NSDictionary *)response;
-- (void)handleResponse:(ONOMessage *)message;
+- (void)handleResponse:(ONONetMessage *)message;
 
 - (NSString *)getRouteByMsgId:(NSUInteger)msgId;
 - (NSString *)getRouteByRouteId:(NSUInteger)routeId;

@@ -19,7 +19,7 @@
 
 @interface ONOIMClient()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOBaseMessage*> *messagesWaitFillUser;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOMessage*> *messagesWaitFillUser;
 
 @end
 
@@ -51,7 +51,7 @@
     //通过服务端已收到
     [self readMessage:msg.mid onSuccess:nil onError:nil];
     //创建消息
-    ONOBaseMessage *mb = [self createMessageByType:msg.type];
+    ONOMessage *mb = [self createMessageByType:msg.type];
     mb.messageId = msg.mid;
     mb.timestamp = msg.time;
     [mb decode:msg.data_p];
@@ -75,8 +75,8 @@
 }
 
 
-- (ONOBaseMessage *)createMessageByType:(int)type {
-    ONOBaseMessage *msg = nil;
+- (ONOMessage *)createMessageByType:(int)type {
+    ONOMessage *msg = nil;
     if (type == 1) {
         msg = [[ONOTextMessage alloc] init];
     } else if (type == 2) {
@@ -109,7 +109,7 @@
     }];
 }
 
-- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
     
     //create msgid
     message.messageId = [BSONIdGenerator generate];
@@ -161,7 +161,7 @@
 
 - (void)queryUserAsync:(NSString *)userId {
     [self userProfile:userId withCache:NO onSuccess:^(ONOUser *user) {
-        ONOBaseMessage *bmsg = self.messagesWaitFillUser[userId];
+        ONOMessage *bmsg = self.messagesWaitFillUser[userId];
         if (bmsg != nil) {
             [self.messagesWaitFillUser removeObjectForKey:userId];
             bmsg.user = user;
@@ -170,7 +170,7 @@
             }
         }
     } onError:^(int errorCode, NSString *messageId) {
-        ONOBaseMessage *bmsg = self.messagesWaitFillUser[userId];
+        ONOMessage *bmsg = self.messagesWaitFillUser[userId];
         if (bmsg != nil) {
             [self.messagesWaitFillUser removeObjectForKey:userId];
         }

@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ONONetMessage.h"
 #import "ONOMessage.h"
-#import "ONOBaseMessage.h"
 #import "ONOConversation.h"
 
 @protocol ONOReceiveMessageDelegate <NSObject>
-- (void)onReceived:(ONOBaseMessage *)message;
+- (void)onReceived:(ONOMessage *)message;
 @end
 
 
@@ -45,7 +45,7 @@
  *  @param userId    目标用户ID
  */
 
-- (void)sendMessage:(ONOBaseMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
 
 /**
  *  获取会话列表
@@ -59,7 +59,7 @@
 - (ONOConversation *)getConversation:(NSString *)userId;
 
 
-- (ONOBaseMessage *)createMessageByType:(int)type;
+- (ONOMessage *)createMessageByType:(int)type;
 
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
 - (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;

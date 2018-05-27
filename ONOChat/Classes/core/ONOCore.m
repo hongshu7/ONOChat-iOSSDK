@@ -8,7 +8,7 @@
 
 #import "ONOCore.h"
 #import "ONOSocket.h"
-#import "ONOPacket.h"
+#import "ONONetPacket.h"
 
 #import "ONOTextMessage.h"
 #import "ONOImageMessage.h"
@@ -160,7 +160,7 @@
 //    }
 }
 
-- (void)handleResponse:(ONOMessage *)message
+- (void)handleResponse:(ONONetMessage *)message
 {
     //处理回调
     if (message.messageId > 0) {
@@ -206,7 +206,7 @@
 #pragma mark -- send
 - (void)requestRoute:(NSString *)route withMessage:(GPBMessage *)msg  onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
 {
-    ONOMessage *msgPacket = [[ONOMessage alloc] init];
+    ONONetMessage *msgPacket = [[ONONetMessage alloc] init];
     msgPacket.type = IM_MT_REQUEST;
     msgPacket.route = route;
     msgPacket.messageId = [self randomNumber:1 to:99999999];
@@ -220,18 +220,18 @@
     rp.errorResponse = error;
     [self.responseMap setObject:rp forKey:[@(msgPacket.messageId) stringValue]];
     
-    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
+    ONONetPacket *packet = [[ONONetPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
     [self.client sendData:packet];
 }
 
 - (void)notifyRoute:(NSString *)route withMessage:(GPBMessage *)msg
 {
-    ONOMessage *msgPacket = [[ONOMessage alloc] init];
+    ONONetMessage *msgPacket = [[ONONetMessage alloc] init];
     msgPacket.type = IM_MT_NOTIFY;
     msgPacket.route = route;
     msgPacket.message = msg;
     
-    ONOPacket *packet = [[ONOPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
+    ONONetPacket *packet = [[ONONetPacket alloc] initWithType:IM_PT_DATA andData:[msgPacket encode]];
     [self.client sendData:packet];
 }
 

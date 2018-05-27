@@ -4,9 +4,9 @@
 //  Copyright (c) 2014年 Xiamen justit. All rights reserved.
 //
 
-#import "ONOPacket.h"
+#import "ONONetPacket.h"
 
-@implementation ONOPacket
+@implementation ONONetPacket
 
 
 - (instancetype)initWithType:(ONOPacketType)type andData:(NSData *)data

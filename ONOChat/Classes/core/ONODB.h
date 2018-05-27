@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ONOConversation.h"
-#import "ONOBaseMessage.h"
+#import "ONOMessage.h"
 
 @interface ONODB : NSObject
 
@@ -24,9 +24,9 @@
 +(void)updateUser:(ONOUser *)user;
 +(ONOUser *)fetchUser:(NSString *)userId;
 
-+ (ONOBaseMessage*)fetchMessage:(NSString *)msgId;
++ (ONOMessage*)fetchMessage:(NSString *)msgId;
 + (NSArray*)fetchMessages:(NSString *)userId offset:(NSString *)offset limit:(int)limit;
-+ (void)insertMessage:(ONOBaseMessage*)message;
++ (void)insertMessage:(ONOMessage*)message;
 + (void)markMessageSend:(NSString *)newMessgeId fromOldId:(NSString *)oldMessageId;
 + (void)markMessageError:(BOOL)error msgId:(NSString *)msgId;
 + (void)deleteMessage:(NSString *)userId msgId:(NSString *)msgId;

@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ONOUser.h"
-#import "ONOBaseMessage.h"
+#import "ONOMessage.h"
 
 typedef enum _ConversationType {
     ConversationTypePrivate  = 1,
@@ -21,7 +21,7 @@ typedef enum _ConversationType {
 @property (nonatomic) int unreadCount;
 
 @property (nonatomic, strong) ONOUser *user;
-@property (nonatomic, strong) ONOBaseMessage *lastMessage;
+@property (nonatomic, strong) ONOMessage *lastMessage;
 
 @property (nonatomic, assign) BOOL isNew;
 

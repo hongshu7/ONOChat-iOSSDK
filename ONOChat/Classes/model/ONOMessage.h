@@ -1,29 +1,24 @@
 //
-//  LMChatMessage.h
-//  Lemeng
+//  ONOMessage.h
+//  Kiwi
 //
-//  Created by Kevin Lai on 14-8-20.
-//  Copyright (c) 2014年 Xiamen justit. All rights reserved.
+//  Created by Kevin Lai on 2018/5/24.
 //
-#import <Foundation/Foundation.h>
-#import "Protocol.pbobjc.h"
 
-typedef enum {
-    IM_MT_REQUEST = 1,
-    IM_MT_NOTIFY,
-    IM_MT_RESPONSE,
-    IM_MT_PUSH
-} ONOMessageType;
+#import <Foundation/Foundation.h>
+#import "ONOUser.h"
 
 @interface ONOMessage : NSObject
 
-@property(nonatomic) ONOMessageType type;
-@property(nonatomic) NSString *route;
-@property(nonatomic) NSUInteger messageId;
-@property(nonatomic) BOOL isError;
-@property(nonatomic, strong) GPBMessage *message;
+@property (nonatomic, strong) NSString *messageId;
+@property (nonatomic, assign) double timestamp;
+@property (nonatomic, strong) ONOUser *user;
+@property (nonatomic, assign) BOOL isSend;
+@property (nonatomic, assign) BOOL isSelf;
+@property (nonatomic, assign) BOOL isError;
 
-- (NSData *)encode;
-- (void)decode:(NSData *)data;
+- (NSInteger)type;
+- (NSString *)encode;
+- (void)decode:(NSString *)data;
 
 @end

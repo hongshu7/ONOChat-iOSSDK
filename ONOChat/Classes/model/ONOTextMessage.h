@@ -5,9 +5,9 @@
 //  Created by Kevin Lai on 2018/5/24.
 //
 
-#import "ONOBaseMessage.h"
+#import "ONOMessage.h"
 
-@interface ONOTextMessage : ONOBaseMessage
+@interface ONOTextMessage : ONOMessage
 
 @property (nonatomic, strong) NSString *text;
 
