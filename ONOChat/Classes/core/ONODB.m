@@ -430,4 +430,23 @@ static FMDatabase *db;
     [self closeDB];
 }
 
+
++ (NSArray<ONOConversation *> *)fetchContacts
+{
+    [self openDB];
+    NSMutableArray* contacts = [NSMutableArray new];
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM user", [self selfUserId]];
+    
+    while ([rs next]) {
+        ONOUser *user =  [[ONOUser alloc] init];
+        user.userId = [rs stringForColumn:@"user_id"];
+        user.nickname = [rs stringForColumn:@"nickname"];
+        user.avatar = [rs stringForColumn:@"avatar"];
+        user.gender = [rs intForColumn:@"gender"];
+        [contacts addObject:user];
+    }
+    [self closeDB];
+    return contacts;
+}
+
 @end

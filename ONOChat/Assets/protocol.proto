@@ -35,6 +35,15 @@ message ErrorResponse {
 message UserKick {
   string content = 1;
 }
+//推送 新的好友
+message NewFriend {
+  UserData user = 1;
+}
+//推送 新的好友请求
+message NewFriendRequest {
+  UserData user = 1;
+  string greeting = 2;//招呼内容
+}
 
 //请求 登陆接口
 message UserLoginRequest {
@@ -71,4 +80,40 @@ message SendMessagenResponse {
 }
 
 
+//请求 好友列表
+message FriendListRequest {}
+//响应 好友列表
+message FriendListResponse {
+  repeated UserData friends = 1;
+}
 
+//请求 发起好友请求
+message FriendRequestRequest {
+  string uid = 1;
+  string greeting = 2; //招呼内容
+}
+
+//请求 好友请求列表
+message FriendRequestListRequest {
+  int32 limit = 1; //条数
+  string offset = 2; //分页之前的最一条的createdAt
+}
+//响应 好友请求列表
+message FriendRequestListResponse {
+  repeated NewFriendRequest requestList = 1;
+}
+
+//请求 同意好友请求
+message FriendAgreeRequest {
+  string uid = 1;
+}
+
+//请求 忽略好友请求
+message FriendIgnoreRequest {
+  string uid = 1;
+}
+
+//请求 删除好友请求
+message FriendDeleteRequest {
+  string uid = 1;
+}

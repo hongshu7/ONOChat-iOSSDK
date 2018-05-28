@@ -32,4 +32,5 @@
 + (void)deleteMessage:(NSString *)userId msgId:(NSString *)msgId;
 
 
++ (NSArray<ONOConversation *> *)fetchContacts;
 @end

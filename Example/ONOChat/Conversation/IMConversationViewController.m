@@ -26,9 +26,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"聊天";
+    self.title = @"会话";
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发起聊天" style:UIBarButtonItemStylePlain target:self action:@selector(starNewSession)];
+    
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加好友" style:UIBarButtonItemStylePlain target:self action:@selector(starNewSession)];
+    
     
     // 模拟两个用户
 //    userOne.token = @"ju9es1b7w6kproa32ghqvdt0xzmfycin";

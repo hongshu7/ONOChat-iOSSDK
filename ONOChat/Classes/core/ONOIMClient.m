@@ -221,4 +221,34 @@
     }];
 }
 
+- (NSArray<ONOConversation *> *)getContactList {
+    
+    return [ONODB fetchConversations];
+}
+
+- (void)getContactListFromServerOnSuccess:(void (^)(NSArray* *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+    FriendListRequest *request = [[FriendListRequest alloc] init];
+    [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
+        
+        
+        for (int i = 0;  i < msg.friendsArray.count; i++) {
+            UserData *userData = [msg.friendsArray objectAtIndex:i];
+            ONOUser *user = [[ONOUser alloc] init];
+            user.userId = userData.uid;
+            user.nickname = userData.name;
+            user.avatar = userData.icon;
+            user.gender = userData.gender;
+            if ([ONODB fetchUser:user.userId] == nil) {
+                [ONODB insertUser:user];
+            } else {
+                [ONODB updateUser:user];
+            }
+        }
+        
+        if (successBlock) successBlock(nil);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
 @end

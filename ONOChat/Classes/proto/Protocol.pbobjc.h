@@ -28,6 +28,7 @@
 CF_EXTERN_C_BEGIN
 
 @class Message;
+@class NewFriendRequest;
 @class UserData;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -145,6 +146,44 @@ typedef GPB_ENUM(UserKick_FieldNumber) {
 @interface UserKick : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *content;
+
+@end
+
+#pragma mark - NewFriend
+
+typedef GPB_ENUM(NewFriend_FieldNumber) {
+  NewFriend_FieldNumber_User = 1,
+};
+
+/**
+ * 推送 新的好友
+ **/
+@interface NewFriend : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) UserData *user;
+/** Test to see if @c user has been set. */
+@property(nonatomic, readwrite) BOOL hasUser;
+
+@end
+
+#pragma mark - NewFriendRequest
+
+typedef GPB_ENUM(NewFriendRequest_FieldNumber) {
+  NewFriendRequest_FieldNumber_User = 1,
+  NewFriendRequest_FieldNumber_Greeting = 2,
+};
+
+/**
+ * 推送 新的好友请求
+ **/
+@interface NewFriendRequest : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) UserData *user;
+/** Test to see if @c user has been set. */
+@property(nonatomic, readwrite) BOOL hasUser;
+
+/** 招呼内容 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *greeting;
 
 @end
 
@@ -267,6 +306,133 @@ typedef GPB_ENUM(SendMessagenResponse_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *omid;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *nmid;
+
+@end
+
+#pragma mark - FriendListRequest
+
+/**
+ * 请求 好友列表
+ **/
+@interface FriendListRequest : GPBMessage
+
+@end
+
+#pragma mark - FriendListResponse
+
+typedef GPB_ENUM(FriendListResponse_FieldNumber) {
+  FriendListResponse_FieldNumber_FriendsArray = 1,
+};
+
+/**
+ * 响应 好友列表
+ **/
+@interface FriendListResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserData*> *friendsArray;
+/** The number of items in @c friendsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger friendsArray_Count;
+
+@end
+
+#pragma mark - FriendRequestRequest
+
+typedef GPB_ENUM(FriendRequestRequest_FieldNumber) {
+  FriendRequestRequest_FieldNumber_Uid = 1,
+  FriendRequestRequest_FieldNumber_Greeting = 2,
+};
+
+/**
+ * 请求 发起好友请求
+ **/
+@interface FriendRequestRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+/** 招呼内容 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *greeting;
+
+@end
+
+#pragma mark - FriendRequestListRequest
+
+typedef GPB_ENUM(FriendRequestListRequest_FieldNumber) {
+  FriendRequestListRequest_FieldNumber_Limit = 1,
+  FriendRequestListRequest_FieldNumber_Offset = 2,
+};
+
+/**
+ * 请求 好友请求列表
+ **/
+@interface FriendRequestListRequest : GPBMessage
+
+/** 条数 */
+@property(nonatomic, readwrite) int32_t limit;
+
+/** 分页之前的最一条的createdAt */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *offset;
+
+@end
+
+#pragma mark - FriendRequestListResponse
+
+typedef GPB_ENUM(FriendRequestListResponse_FieldNumber) {
+  FriendRequestListResponse_FieldNumber_RequestListArray = 1,
+};
+
+/**
+ * 响应 好友请求列表
+ **/
+@interface FriendRequestListResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NewFriendRequest*> *requestListArray;
+/** The number of items in @c requestListArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger requestListArray_Count;
+
+@end
+
+#pragma mark - FriendAgreeRequest
+
+typedef GPB_ENUM(FriendAgreeRequest_FieldNumber) {
+  FriendAgreeRequest_FieldNumber_Uid = 1,
+};
+
+/**
+ * 请求 同意好友请求
+ **/
+@interface FriendAgreeRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+@end
+
+#pragma mark - FriendIgnoreRequest
+
+typedef GPB_ENUM(FriendIgnoreRequest_FieldNumber) {
+  FriendIgnoreRequest_FieldNumber_Uid = 1,
+};
+
+/**
+ * 请求 忽略好友请求
+ **/
+@interface FriendIgnoreRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+@end
+
+#pragma mark - FriendDeleteRequest
+
+typedef GPB_ENUM(FriendDeleteRequest_FieldNumber) {
+  FriendDeleteRequest_FieldNumber_Uid = 1,
+};
+
+/**
+ * 请求 删除好友请求
+ **/
+@interface FriendDeleteRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
 
 @end
 
