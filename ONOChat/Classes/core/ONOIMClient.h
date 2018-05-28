@@ -1,9 +1,8 @@
 //
-//  IMAPI.h
-//  Dida
+//  ONO Chat SDK
 //
-//  Created by Kevin Lai on 15/5/9.
-//  Copyright (c) 2018年 Xiamen ONO technology. All rights reserved.
+//  Created by Kevin Lai on 18/5.
+//  Copyright (c) 2018 ONO Team. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

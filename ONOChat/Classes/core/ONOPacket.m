@@ -1,7 +1,8 @@
-//  Lemeng
 //
-//  Created by Kevin Lai on 14-8-20.
-//  Copyright (c) 2014年 Xiamen justit. All rights reserved.
+//  ONO Chat SDK
+//
+//  Created by Kevin Lai on 18/5.
+//  Copyright (c) 2018 ONO Team. All rights reserved.
 //
 
 #import "ONOPacket.h"

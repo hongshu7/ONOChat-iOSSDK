@@ -1,9 +1,8 @@
 //
-//  ONOCMessage.h
-//  Lemeng
+//  ONO Chat SDK
 //
-//  Created by Kevin Lai on 14-8-20.
-//  Copyright (c) 2014年 Xiamen justit. All rights reserved.
+//  Created by Kevin Lai on 18/5.
+//  Copyright (c) 2018 ONO Team. All rights reserved.
 //
 #import <Foundation/Foundation.h>
 #import "Protocol.pbobjc.h"

@@ -1,9 +1,8 @@
 //
-//  [IMAPI data]
-//  Dida
+//  ONO Chat SDK
 //
-//  Created by Kevin Lai on 15/5/9.
-//  Copyright (c) 2018年 Xiamen ONO technology. All rights reserved.
+//  Created by Kevin Lai on 18/5.
+//  Copyright (c) 2018 ONO Team. All rights reserved.
 //
 
 #import "ONOIMClient.h"
@@ -306,7 +305,7 @@
     
     [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
         
-        if (msg.uidsArray.count < 0) {
+        if (msg.uidsArray.count == 0) {
             if (successBlock) successBlock([NSArray new]);
         } else {
             // 需要更新的 user
