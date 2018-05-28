@@ -55,10 +55,12 @@ static GPBFileDescriptor *ProtocolRoot_FileDescriptor(void) {
 @dynamic mobile;
 @dynamic gender;
 @dynamic ex;
+@dynamic isFriend;
 
 typedef struct UserData__storage_ {
   uint32_t _has_storage_[1];
   int32_t gender;
+  int32_t isFriend;
   NSString *uid;
   NSString *name;
   NSString *icon;
@@ -156,6 +158,15 @@ typedef struct UserData__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "isFriend",
+        .dataTypeSpecific.className = NULL,
+        .number = UserData_FieldNumber_IsFriend,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(UserData__storage_, isFriend),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[UserData class]
@@ -165,6 +176,11 @@ typedef struct UserData__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(UserData__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\n\010\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -426,12 +442,12 @@ typedef struct NewFriend__storage_ {
 
 @implementation NewFriendRequest
 
-@dynamic hasUser, user;
+@dynamic uid;
 @dynamic greeting;
 
 typedef struct NewFriendRequest__storage_ {
   uint32_t _has_storage_[1];
-  UserData *user;
+  NSString *uid;
   NSString *greeting;
 } NewFriendRequest__storage_;
 
@@ -442,13 +458,13 @@ typedef struct NewFriendRequest__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "user",
-        .dataTypeSpecific.className = GPBStringifySymbol(UserData),
-        .number = NewFriendRequest_FieldNumber_User,
+        .name = "uid",
+        .dataTypeSpecific.className = NULL,
+        .number = NewFriendRequest_FieldNumber_Uid,
         .hasIndex = 0,
-        .offset = (uint32_t)offsetof(NewFriendRequest__storage_, user),
+        .offset = (uint32_t)offsetof(NewFriendRequest__storage_, uid),
         .flags = GPBFieldOptional,
-        .dataType = GPBDataTypeMessage,
+        .dataType = GPBDataTypeString,
       },
       {
         .name = "greeting",
@@ -650,6 +666,92 @@ typedef struct UserProfileResponse__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(UserProfileResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UserProfilesRequest
+
+@implementation UserProfilesRequest
+
+@dynamic uidsArray, uidsArray_Count;
+
+typedef struct UserProfilesRequest__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *uidsArray;
+} UserProfilesRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "uidsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = UserProfilesRequest_FieldNumber_UidsArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(UserProfilesRequest__storage_, uidsArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserProfilesRequest class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserProfilesRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - UserProfilesResponse
+
+@implementation UserProfilesResponse
+
+@dynamic usersArray, usersArray_Count;
+
+typedef struct UserProfilesResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *usersArray;
+} UserProfilesResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "usersArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserData),
+        .number = UserProfilesResponse_FieldNumber_UsersArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(UserProfilesResponse__storage_, usersArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[UserProfilesResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(UserProfilesResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
@@ -866,11 +968,11 @@ typedef struct FriendListRequest__storage_ {
 
 @implementation FriendListResponse
 
-@dynamic friendsArray, friendsArray_Count;
+@dynamic uidsArray, uidsArray_Count;
 
 typedef struct FriendListResponse__storage_ {
   uint32_t _has_storage_[1];
-  NSMutableArray *friendsArray;
+  NSMutableArray *uidsArray;
 } FriendListResponse__storage_;
 
 // This method is threadsafe because it is initially called
@@ -880,13 +982,13 @@ typedef struct FriendListResponse__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "friendsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(UserData),
-        .number = FriendListResponse_FieldNumber_FriendsArray,
+        .name = "uidsArray",
+        .dataTypeSpecific.className = NULL,
+        .number = FriendListResponse_FieldNumber_UidsArray,
         .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(FriendListResponse__storage_, friendsArray),
+        .offset = (uint32_t)offsetof(FriendListResponse__storage_, uidsArray),
         .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =
@@ -1181,6 +1283,92 @@ typedef struct FriendDeleteRequest__storage_ {
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(FriendDeleteRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - FriendSearchRequest
+
+@implementation FriendSearchRequest
+
+@dynamic keyword;
+
+typedef struct FriendSearchRequest__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *keyword;
+} FriendSearchRequest__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "keyword",
+        .dataTypeSpecific.className = NULL,
+        .number = FriendSearchRequest_FieldNumber_Keyword,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FriendSearchRequest__storage_, keyword),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FriendSearchRequest class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FriendSearchRequest__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - FriendSearchResponse
+
+@implementation FriendSearchResponse
+
+@dynamic usersArray, usersArray_Count;
+
+typedef struct FriendSearchResponse__storage_ {
+  uint32_t _has_storage_[1];
+  NSMutableArray *usersArray;
+} FriendSearchResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "usersArray",
+        .dataTypeSpecific.className = GPBStringifySymbol(UserData),
+        .number = FriendSearchResponse_FieldNumber_UsersArray,
+        .hasIndex = GPBNoHasBit,
+        .offset = (uint32_t)offsetof(FriendSearchResponse__storage_, usersArray),
+        .flags = GPBFieldRepeated,
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FriendSearchResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FriendSearchResponse__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;

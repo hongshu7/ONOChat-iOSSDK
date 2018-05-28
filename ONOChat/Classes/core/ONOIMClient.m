@@ -104,6 +104,14 @@
             [ONODB updateUser:user];
         }
         successBlock(user);
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t) (0 * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(){
+            [[ONOIMClient sharedClient] updateMyFriendsFromServerOnSuccess:^(NSArray<ONOUser *> *userArray) {
+                NSLog(@"好友信息同步成功");
+            } onError:^(int errorCode, NSString *messageId) {
+                NSLog(@"好友信息同步失败 messageId%@",messageId);
+            }];
+        });
     } onError:^(ErrorResponse *msg) {
         errorBlock(msg.code, msg.message);
     }];
@@ -221,18 +229,28 @@
     }];
 }
 
-- (NSArray<ONOConversation *> *)getContactList {
+- (void)userProfiles:(NSArray *)userIds withCache:(BOOL)withCache onSuccess:(void (^)(NSArray<ONOUser*> *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
     
-    return [ONODB fetchConversations];
-}
-
-- (void)getContactListFromServerOnSuccess:(void (^)(NSArray* *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
-    FriendListRequest *request = [[FriendListRequest alloc] init];
-    [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
+    NSMutableArray *needFreshUserIdArray = [userIds mutableCopy];
+    
+    NSMutableArray *profileArray = [NSMutableArray new];
+    
+    if (withCache) {
+        for (NSString *userId in userIds) {
+            ONOUser *user = [ONODB fetchUser:userId];
+            if (user != nil) {
+                [profileArray addObject:user];
+                [needFreshUserIdArray removeObject:userId];
+            }
+        }
         
+    }
+    UserProfilesRequest *request = [[UserProfilesRequest alloc] init];
+    request.uidsArray = needFreshUserIdArray;
+    [[ONOCore sharedCore] requestRoute:@"client.user.profiles" withMessage:request onSuccess:^(UserProfilesResponse *msg) {
         
-        for (int i = 0;  i < msg.friendsArray.count; i++) {
-            UserData *userData = [msg.friendsArray objectAtIndex:i];
+        for (int i = 0 ; i < msg.usersArray.count; i++) {
+            UserData *userData = [msg.usersArray objectAtIndex:i];
             ONOUser *user = [[ONOUser alloc] init];
             user.userId = userData.uid;
             user.nickname = userData.name;
@@ -243,9 +261,38 @@
             } else {
                 [ONODB updateUser:user];
             }
+            [profileArray addObject:user];
         }
         
-        if (successBlock) successBlock(nil);
+        if (successBlock) successBlock(profileArray);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (NSArray<ONOUser *> *)myFriends {
+    
+    return [ONODB myFriends];
+}
+
+/**
+ *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
+ */
+- (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+    FriendListRequest *request = [[FriendListRequest alloc] init];
+    
+    [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
+        
+        if (msg.uidsArray.count < 0) {
+            if (successBlock) successBlock([NSArray new]);
+        } else {
+            // 需要更新的 user
+            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
+                if (successBlock) successBlock(userArray);
+            } onError:^(int errorCode, NSString *messageId) {
+                if (errorBlock) errorBlock(errorCode, messageId);
+            }];
+        }
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];

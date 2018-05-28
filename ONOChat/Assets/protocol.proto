@@ -1,7 +1,7 @@
 syntax = "proto3";
-option java_package = "com.highma.im.proto";
+option java_package = "chat.ono.chatsdk.proto";
 option java_outer_classname = "MessageProtos";
-option csharp_namespace = "Game.Net.Proto";
+
 //有推送 用户信息
 message UserData {
   string uid = 1;
@@ -13,6 +13,7 @@ message UserData {
   string mobile = 7;
   int32 gender = 8; //用户性别，0表示未知，1表示男，2女表示女，其它会报参数错误
   string ex = 9; //用户名片扩展字段，最大长度1024字符，用户可自行扩展，建议封装成JSON字符串
+  int32 isFriend = 10; //是否好友关系 0否 1是
 }
 
 message Message {
@@ -41,7 +42,7 @@ message NewFriend {
 }
 //推送 新的好友请求
 message NewFriendRequest {
-  UserData user = 1;
+  string uid = 1;
   string greeting = 2;//招呼内容
 }
 
@@ -60,6 +61,13 @@ message UserProfileRequest {
 }
 message UserProfileResponse {
   UserData user = 1;
+}
+
+message UserProfilesRequest {
+  repeated string uids = 1;
+}
+message UserProfilesResponse {
+  repeated UserData users = 1;
 }
 
 //请求 标记消息已读
@@ -84,7 +92,7 @@ message SendMessagenResponse {
 message FriendListRequest {}
 //响应 好友列表
 message FriendListResponse {
-  repeated UserData friends = 1;
+  repeated string uids = 1;
 }
 
 //请求 发起好友请求
@@ -116,4 +124,13 @@ message FriendIgnoreRequest {
 //请求 删除好友请求
 message FriendDeleteRequest {
   string uid = 1;
+}
+
+//请求 好友模糊查找
+message FriendSearchRequest {
+  string keyword = 1; //关键字
+}
+//响应 好友模糊查找
+message FriendSearchResponse {
+  repeated UserData users = 1;
 }

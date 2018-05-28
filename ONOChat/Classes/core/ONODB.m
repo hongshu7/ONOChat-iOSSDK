@@ -431,7 +431,7 @@ static FMDatabase *db;
 }
 
 
-+ (NSArray<ONOConversation *> *)fetchContacts
++ (nullable NSArray<ONOUser *> *)myFriends
 {
     [self openDB];
     NSMutableArray* contacts = [NSMutableArray new];

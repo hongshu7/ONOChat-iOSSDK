@@ -65,18 +65,13 @@
 
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
 - (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
-
+- (void)userProfiles:(NSArray *)userIds withCache:(BOOL)withCache onSuccess:(void (^)(NSArray<ONOUser*> *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
 
 
 /**
  *  获取 好友列表(从本地获取)
  */
-- (NSArray <ONOConversation *>*)getContactList;
-/**
- *  从服务端获取好友列表,并且更新本地数据库好友信息.
- */
-- (void)getContactListFromServerOnSuccess:(void (^)(NSArray* *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
-;
+- (NSArray <ONOUser *>*)myFriends;
 
 @end
 
