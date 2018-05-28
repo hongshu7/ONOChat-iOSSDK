@@ -33,5 +33,5 @@
 
 + (int)totalUnreadCount;
 
-+ (NSArray<ONOConversation *> *)fetchContacts;
++ (nullable NSArray<ONOUser *> *)myFriends;
 @end

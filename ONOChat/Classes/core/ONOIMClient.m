@@ -108,6 +108,14 @@
             [ONODB updateUser:user];
         }
         successBlock(user);
+        
+        //同步联系人
+        [[ONOIMClient sharedClient] updateMyFriendsFromServerOnSuccess:^(NSArray<ONOUser *> *userArray) {
+            NSLog(@"好友信息同步成功");
+        } onError:^(int errorCode, NSString *errorMessage) {
+            NSLog(@"好友信息同步失败 messageId%@",errorMessage);
+        }];
+
         //接着收信息
         if (msg.messagesArray_Count > 0) {
             for (Message *m in msg.messagesArray) {
@@ -127,8 +135,7 @@
                 [self updateConversationWithMessage:message];
             }
         }
-        //同步联系人
-        
+
     } onError:^(ErrorResponse *msg) {
         errorBlock(msg.code, msg.message);
     }];
@@ -285,31 +292,30 @@
     }];
 }
 
-- (NSArray<ONOConversation *> *)getContactList {
+
+- (NSArray<ONOUser *> *)myFriends {
     
-    return [ONODB fetchConversations];
+    return [ONODB myFriends];
 }
 
-- (void)getContactListFromServerOnSuccess:(void (^)(NSArray* *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+/**
+ *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
+ */
+- (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     FriendListRequest *request = [[FriendListRequest alloc] init];
+    
     [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
         
-        
-        for (int i = 0;  i < msg.friendsArray.count; i++) {
-            UserData *userData = [msg.friendsArray objectAtIndex:i];
-            ONOUser *user = [[ONOUser alloc] init];
-            user.userId = userData.uid;
-            user.nickname = userData.name;
-            user.avatar = userData.icon;
-            user.gender = userData.gender;
-            if ([ONODB fetchUser:user.userId] == nil) {
-                [ONODB insertUser:user];
-            } else {
-                [ONODB updateUser:user];
-            }
+        if (msg.uidsArray.count < 0) {
+            if (successBlock) successBlock([NSArray new]);
+        } else {
+            // 需要更新的 user
+            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
+                if (successBlock) successBlock(userArray);
+            } onError:^(int errorCode, NSString *messageId) {
+                if (errorBlock) errorBlock(errorCode, messageId);
+            }];
         }
-        
-        if (successBlock) successBlock(nil);
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];
