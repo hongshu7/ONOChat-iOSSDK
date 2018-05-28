@@ -19,7 +19,6 @@
 
 @interface ONOIMClient()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, ONOMessage*> *messagesWaitFillUser;
 
 @end
 
@@ -39,7 +38,6 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        _messagesWaitFillUser = [NSMutableDictionary dictionary];
         [[ONOCore sharedCore] addListenerForRoute:@"push.Message" withCallback:^(Message *msg) {
             [self receiveMessage:msg];
         }];
@@ -51,19 +49,24 @@
     //通过服务端已收到
     [self readMessage:msg.mid onSuccess:nil onError:nil];
     //创建消息
-    ONOMessage *mb = [self createMessageByType:msg.type];
-    mb.messageId = msg.mid;
-    mb.timestamp = msg.time;
-    [mb decode:msg.data_p];
-    ONOUser *user =  [ONODB fetchUser:msg.from];
-    if (user == nil) {
-        self.messagesWaitFillUser[msg.from] = mb;
-        [self queryUserAsync:msg.from];
-        return;
-    }
-    mb.user = user;
+    ONOMessage *message = [self createMessageByType:msg.type];
+    message.messageId = msg.mid;
+    message.timestamp = msg.time;
+    message.isSend = YES;
+    message.isSelf = [msg.from isEqualToString:[ONOCore sharedCore].userId];
+    message.targetId = message.isSelf ? msg.to : msg.from;
+    [message decode:msg.data_p];
+    
+    //填充用户信息,目前只有好友才发消息，所以不会存在user为空
+    message.user = [ONODB fetchUser:message.targetId];
+    //保存消息
+    [ONODB insertMessage:message];
+    //更新会话信息
+    [self updateConversationWithMessage:message];
+    
+    //回调事件
     if (self.receiveMessageDelegate) {
-        [self.receiveMessageDelegate onReceived:mb];
+        [self.receiveMessageDelegate onReceived:message];
     }
 }
 
@@ -92,6 +95,7 @@
 - (void)loginWithToken:(NSString *)token onSuccess:(void(^)(ONOUser *user))successBlock onError:(void(^)(int errorCode, NSString *errorMsg))errorBlock
 {
     [[ONOCore sharedCore] loginWithToken:token onSuccess:^(UserLoginResponse* msg) {
+        //获取自身信息
         NSString *userId = msg.user.uid;
         ONOUser *user = [[ONOUser alloc] init];
         user.userId = msg.user.uid;
@@ -104,6 +108,27 @@
             [ONODB updateUser:user];
         }
         successBlock(user);
+        //接着收信息
+        if (msg.messagesArray_Count > 0) {
+            for (Message *m in msg.messagesArray) {
+                ONOMessage *message = [self createMessageByType:m.type];
+                message.messageId = m.mid;
+                message.timestamp = m.time;
+                message.isSend = YES;
+                message.isSelf = [m.from isEqualToString:[ONOCore sharedCore].userId];
+                message.targetId = message.isSelf ? m.to : m.from;
+                [message decode:m.data_p];
+
+                //填充用户信息,目前只有好友才发消息，所以不会存在user为空
+                message.user = [ONODB fetchUser:message.targetId];
+                //保存消息
+                [ONODB insertMessage:message];
+                //更新会话信息
+                [self updateConversationWithMessage:message];
+            }
+        }
+        //同步联系人
+        
     } onError:^(ErrorResponse *msg) {
         errorBlock(msg.code, msg.message);
     }];
@@ -159,24 +184,6 @@
     [[ONOCore sharedCore] requestRoute:@"client.message.read" withMessage:request onSuccess:success onError:error];
 }
 
-- (void)queryUserAsync:(NSString *)userId {
-    [self userProfile:userId withCache:NO onSuccess:^(ONOUser *user) {
-        ONOMessage *bmsg = self.messagesWaitFillUser[userId];
-        if (bmsg != nil) {
-            [self.messagesWaitFillUser removeObjectForKey:userId];
-            bmsg.user = user;
-            if (self.receiveMessageDelegate) {
-                [self.receiveMessageDelegate onReceived:bmsg];
-            }
-        }
-    } onError:^(int errorCode, NSString *messageId) {
-        ONOMessage *bmsg = self.messagesWaitFillUser[userId];
-        if (bmsg != nil) {
-            [self.messagesWaitFillUser removeObjectForKey:userId];
-        }
-        
-    }];
-}
 
 - (NSArray <ONOConversation *>*)getConversationList {
     return [ONODB fetchConversations];
@@ -186,15 +193,48 @@
     return [ONODB fetchConversation:targetId];
 }
 
+- (ONOConversation *)getOrCreateConversation:(ONOUser *)user {
+    ONOConversation *conversation = [ONODB fetchConversation:user.userId];
+    if (conversation == nil) {
+        conversation = [[ONOConversation alloc] init];
+        [ONODB insertConversation:conversation];
+    }
+    return conversation;
+}
+
 - (void)updateConversation:(ONOConversation *)conversation {
     return [ONODB updateConversation:conversation];
 }
 
-- (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+- (void)updateConversationWithMessage:(ONOMessage *)message {
+    ONOConversation *conversation = [ONODB fetchConversation:message.user.userId];
+    BOOL isExists = NO;
+    if (conversation == nil) {
+        conversation = [[ONOConversation alloc] init];
+    } else {
+        isExists = YES;
+    }
+    conversation.unreadCount++;
+    conversation.lastMessage = message;
+    conversation.contactTime = [[NSDate date] timeIntervalSince1970];
+    conversation.user = message.user;
+    if (isExists) {
+        [ONODB updateConversation:conversation];
+    } else {
+        [ONODB insertConversation:conversation];
+    }
+}
+
+- (int)totalUnreadCount {
+    return [ONODB totalUnreadCount];
+}
+
+
+- (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     [self userProfile:userId withCache:YES onSuccess:successBlock onError:errorBlock];
 }
 
-- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     if (withCache) {
         ONOUser *user = [ONODB fetchUser:userId];
         if (user != nil) {
@@ -216,6 +256,30 @@
             [ONODB updateUser:user];
         }
         if (successBlock) successBlock(user);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    UserProfilesRequest *request = [[UserProfilesRequest alloc] init];
+    [request.uidsArray addObjectsFromArray:userIds];
+    [[ONOCore sharedCore] requestRoute:@"client.user.profiles" withMessage:request onSuccess:^(UserProfilesResponse *msg) {
+        NSMutableArray<ONOUser *>* users = [NSMutableArray array];
+        for (UserData* _user in msg.usersArray) {
+            ONOUser *user = [[ONOUser alloc] init];
+            user.userId = _user.uid;
+            user.nickname = _user.name;
+            user.avatar = _user.icon;
+            user.gender = _user.gender;
+            if ([ONODB fetchUser:user.userId] == nil) {
+                [ONODB insertUser:user];
+            } else {
+                [ONODB updateUser:user];
+            }
+            [users addObject:user];
+        }
+        if (successBlock) successBlock(users);
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];

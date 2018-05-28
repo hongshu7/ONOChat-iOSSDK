@@ -22,6 +22,7 @@
 
 @property (nonatomic, weak) id<ONOReceiveMessageDelegate> receiveMessageDelegate;
 
+
 /**
  *  设置聊天服务器参数
  *
@@ -60,12 +61,14 @@
  */
 - (ONOConversation *)getConversation:(NSString *)userId;
 
+- (int)totalUnreadCount;
+
 
 - (ONOMessage *)createMessageByType:(int)type;
 
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
-- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
-
+- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
 /**

@@ -23,7 +23,4 @@ typedef enum _ConversationType {
 @property (nonatomic, strong) ONOUser *user;
 @property (nonatomic, strong) ONOMessage *lastMessage;
 
-@property (nonatomic, assign) BOOL isNew;
-
-
 @end

@@ -238,30 +238,34 @@ static FMDatabase *db;
 
 + (void)insertConversation:(ONOConversation *)conversation
 {
+    if (conversation == nil || conversation.user == nil) {
+        return;
+    }
     [self openDB];
     NSString *sql = @"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES(?,?,?,?,?,?)";
-    NSString *userId = conversation.user.userId;
     NSString *lastMessageId = @"";
     if (conversation.lastMessage != nil) {
         lastMessageId = conversation.lastMessage.messageId;
     }
     [db executeUpdate:sql,
-     [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId];
-    NSLog(@"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES('%@','%@','%@','%@','%@','%@')", [self selfUserId], userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId);
+     [self selfUserId], conversation.user.userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId];
+    NSLog(@"INSERT INTO conversation(belong_id,target_id,conversation_type,contact_time,unread_count,last_message_id) VALUES('%@','%@','%@','%@','%@','%@')", [self selfUserId], conversation.user.userId, @(conversation.conversationType), @(conversation.contactTime),@(conversation.unreadCount), lastMessageId);
     [self closeDB];
 }
 
 + (void)updateConversation:(ONOConversation*)conversation
 {
+    if (conversation == nil || conversation.user == nil) {
+        return;
+    }
     [self openDB];
     NSString *sql = @"UPDATE conversation set contact_time=?, unread_count=?, last_message_id=? WHERE belong_id=? AND user_id=?";
     NSString *lastMessageId = @"";
     if (conversation.lastMessage != nil) {
         lastMessageId = conversation.lastMessage.messageId;
     }
-    NSString *userId = conversation.user.userId;
     [db executeUpdate:sql,
-     @(conversation.contactTime), @(conversation.unreadCount), lastMessageId, [self selfUserId], userId];
+     @(conversation.contactTime), @(conversation.unreadCount), lastMessageId, [self selfUserId], conversation.user.userId];
     [self closeDB];
 }
 
@@ -428,6 +432,11 @@ static FMDatabase *db;
     NSString *sql = @"DELETE FROM message WHERE message_id=?";
     [db executeUpdate:sql, msgId];
     [self closeDB];
+}
+
++ (int)totalUnreadCount {
+    //to do calc
+    return 0;
 }
 
 

@@ -31,6 +31,7 @@
 + (void)markMessageError:(BOOL)error msgId:(NSString *)msgId;
 + (void)deleteMessage:(NSString *)userId msgId:(NSString *)msgId;
 
++ (int)totalUnreadCount;
 
 + (NSArray<ONOConversation *> *)fetchContacts;
 @end

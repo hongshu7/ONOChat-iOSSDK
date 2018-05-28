@@ -60,6 +60,7 @@ typedef GPB_ENUM(UserData_FieldNumber) {
   UserData_FieldNumber_Mobile = 7,
   UserData_FieldNumber_Gender = 8,
   UserData_FieldNumber_Ex = 9,
+  UserData_FieldNumber_IsFriend = 10,
 };
 
 /**
@@ -87,6 +88,9 @@ typedef GPB_ENUM(UserData_FieldNumber) {
 /** 用户名片扩展字段，最大长度1024字符，用户可自行扩展，建议封装成JSON字符串 */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *ex;
 
+/** 是否好友关系 0否 1是 */
+@property(nonatomic, readwrite) int32_t isFriend;
+
 @end
 
 #pragma mark - Message
@@ -98,6 +102,7 @@ typedef GPB_ENUM(Message_FieldNumber) {
   Message_FieldNumber_To = 4,
   Message_FieldNumber_Data_p = 5,
   Message_FieldNumber_Time = 6,
+  Message_FieldNumber_User = 7,
 };
 
 @interface Message : GPBMessage
@@ -113,6 +118,10 @@ typedef GPB_ENUM(Message_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
 
 @property(nonatomic, readwrite) double time;
+
+@property(nonatomic, readwrite, strong, null_resettable) UserData *user;
+/** Test to see if @c user has been set. */
+@property(nonatomic, readwrite) BOOL hasUser;
 
 @end
 
@@ -169,7 +178,7 @@ typedef GPB_ENUM(NewFriend_FieldNumber) {
 #pragma mark - NewFriendRequest
 
 typedef GPB_ENUM(NewFriendRequest_FieldNumber) {
-  NewFriendRequest_FieldNumber_User = 1,
+  NewFriendRequest_FieldNumber_Uid = 1,
   NewFriendRequest_FieldNumber_Greeting = 2,
 };
 
@@ -178,9 +187,7 @@ typedef GPB_ENUM(NewFriendRequest_FieldNumber) {
  **/
 @interface NewFriendRequest : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) UserData *user;
-/** Test to see if @c user has been set. */
-@property(nonatomic, readwrite) BOOL hasUser;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
 
 /** 招呼内容 */
 @property(nonatomic, readwrite, copy, null_resettable) NSString *greeting;
@@ -247,6 +254,34 @@ typedef GPB_ENUM(UserProfileResponse_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) UserData *user;
 /** Test to see if @c user has been set. */
 @property(nonatomic, readwrite) BOOL hasUser;
+
+@end
+
+#pragma mark - UserProfilesRequest
+
+typedef GPB_ENUM(UserProfilesRequest_FieldNumber) {
+  UserProfilesRequest_FieldNumber_UidsArray = 1,
+};
+
+@interface UserProfilesRequest : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *uidsArray;
+/** The number of items in @c uidsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger uidsArray_Count;
+
+@end
+
+#pragma mark - UserProfilesResponse
+
+typedef GPB_ENUM(UserProfilesResponse_FieldNumber) {
+  UserProfilesResponse_FieldNumber_UsersArray = 1,
+};
+
+@interface UserProfilesResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserData*> *usersArray;
+/** The number of items in @c usersArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger usersArray_Count;
 
 @end
 
@@ -321,7 +356,7 @@ typedef GPB_ENUM(SendMessagenResponse_FieldNumber) {
 #pragma mark - FriendListResponse
 
 typedef GPB_ENUM(FriendListResponse_FieldNumber) {
-  FriendListResponse_FieldNumber_FriendsArray = 1,
+  FriendListResponse_FieldNumber_UidsArray = 1,
 };
 
 /**
@@ -329,9 +364,9 @@ typedef GPB_ENUM(FriendListResponse_FieldNumber) {
  **/
 @interface FriendListResponse : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserData*> *friendsArray;
-/** The number of items in @c friendsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger friendsArray_Count;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *uidsArray;
+/** The number of items in @c uidsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger uidsArray_Count;
 
 @end
 
@@ -433,6 +468,39 @@ typedef GPB_ENUM(FriendDeleteRequest_FieldNumber) {
 @interface FriendDeleteRequest : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+@end
+
+#pragma mark - FriendSearchRequest
+
+typedef GPB_ENUM(FriendSearchRequest_FieldNumber) {
+  FriendSearchRequest_FieldNumber_Keyword = 1,
+};
+
+/**
+ * 请求 好友模糊查找
+ **/
+@interface FriendSearchRequest : GPBMessage
+
+/** 关键字 */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *keyword;
+
+@end
+
+#pragma mark - FriendSearchResponse
+
+typedef GPB_ENUM(FriendSearchResponse_FieldNumber) {
+  FriendSearchResponse_FieldNumber_UsersArray = 1,
+};
+
+/**
+ * 响应 好友模糊查找
+ **/
+@interface FriendSearchResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserData*> *usersArray;
+/** The number of items in @c usersArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger usersArray_Count;
 
 @end
 

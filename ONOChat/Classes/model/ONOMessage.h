@@ -11,6 +11,7 @@
 @interface ONOMessage : NSObject
 
 @property (nonatomic, strong) NSString *messageId;
+@property (nonatomic, strong) NSString *targetId;
 @property (nonatomic, assign) double timestamp;
 @property (nonatomic, strong) ONOUser *user;
 @property (nonatomic, assign) BOOL isSend;
