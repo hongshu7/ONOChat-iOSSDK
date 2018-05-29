@@ -107,7 +107,7 @@
     IMChatViewController *vc = [[IMChatViewController alloc] init];
     ONOConversation *conversation = [self.dataArray objectAtIndex:indexPath.row];
     vc.toUserModel = conversation.user;
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController im_pushViewController:vc ];
 }
 
 
