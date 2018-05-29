@@ -7,6 +7,7 @@
 //
 
 #import "IMChatModel.h"
+#import "IMGlobalData.h"
 
 #import "UUMessage.h"
 #import "UUMessageFrame.h"
@@ -33,8 +34,10 @@
 }
 
 // 添加自己的item
-- (void)addSpecifiedItem:(NSDictionary *)dic
+- (void)addMyChatItem:(NSDictionary *)dic
 {
+    ONOUser *user = [IMGlobalData sharedData].user;
+    
     UUMessageFrame *messageFrame = [[UUMessageFrame alloc]init];
     UUMessage *message = [[UUMessage alloc] init];
     NSMutableDictionary *dataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
@@ -42,7 +45,7 @@
     NSString *URLStr = @"http://img0.bdstatic.com/img/image/shouye/xinshouye/mingxing16.jpg";
     [dataDic setObject:@(UUMessageFromMe) forKey:@"from"];
     [dataDic setObject:[[NSDate date] description] forKey:@"strTime"];
-	[dataDic setObject:@"Hi:sister" forKey:@"strName"];
+	[dataDic setObject:user.nickname forKey:@"strName"];
     [dataDic setObject:URLStr forKey:@"strIcon"];
     
     [message setWithDict:dataDic];
@@ -56,8 +59,8 @@
     [self.dataSource addObject:messageFrame];
 }
 
-// 添加自己的item
-- (void)addOtherSpecifiedItem:(NSDictionary *)dic
+// 添加别人的item
+- (void)addOtherChatItem:(NSDictionary *)dic
 {
     UUMessageFrame *messageFrame = [[UUMessageFrame alloc]init];
     UUMessage *message = [[UUMessage alloc] init];

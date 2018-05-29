@@ -7,6 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IMGlobalData.h"
+
+#import "ONOIMClient.h"
+#import "ONOTextMessage.h"
 
 @class UUMessageFrame;
 @interface IMChatModel : NSObject
@@ -19,7 +23,10 @@
 
 - (void)addRandomItemsToDataSource:(NSInteger)number;
 
-- (void)addSpecifiedItem:(NSDictionary *)dic;
+- (void)addMyChatItem:(NSDictionary *)dic;
+
+// 添加别人的item
+- (void)addOtherChatItem:(NSDictionary *)dic;
 
 - (void)recountFrame;
 

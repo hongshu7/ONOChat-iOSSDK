@@ -18,6 +18,7 @@
 		4222901820BBF943009AB56D /* IMAddNewFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4222901620BBF943009AB56D /* IMAddNewFriendViewController.m */; };
 		4222901920BBF943009AB56D /* IMAddNewFriendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4222901720BBF943009AB56D /* IMAddNewFriendViewController.xib */; };
 		4242CBCD20BD312000AC67AE /* UINavigationController+IM.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242CBCC20BD312000AC67AE /* UINavigationController+IM.m */; };
+		4242CBD020BD435000AC67AE /* IMGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4242CBCF20BD435000AC67AE /* IMGlobalData.m */; };
 		4286A64C20B7C1C100EEDD8B /* UUAVAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */; };
 		4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */; };
 		4286A64E20B7C1C100EEDD8B /* UUMessageContentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4286A63C20B7C1C100EEDD8B /* UUMessageContentButton.m */; };
@@ -83,6 +84,8 @@
 		4222901720BBF943009AB56D /* IMAddNewFriendViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMAddNewFriendViewController.xib; sourceTree = "<group>"; };
 		4242CBCB20BD312000AC67AE /* UINavigationController+IM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+IM.h"; sourceTree = "<group>"; };
 		4242CBCC20BD312000AC67AE /* UINavigationController+IM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+IM.m"; sourceTree = "<group>"; };
+		4242CBCE20BD435000AC67AE /* IMGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMGlobalData.h; sourceTree = "<group>"; };
+		4242CBCF20BD435000AC67AE /* IMGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMGlobalData.m; sourceTree = "<group>"; };
 		4286A63920B7C1C100EEDD8B /* UUAVAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUAVAudioPlayer.m; sourceTree = "<group>"; };
 		4286A63A20B7C1C100EEDD8B /* UUInputFunctionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUInputFunctionView.m; sourceTree = "<group>"; };
 		4286A63B20B7C1C100EEDD8B /* UUMessageFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUMessageFrame.h; sourceTree = "<group>"; };
@@ -252,6 +255,8 @@
 		4286A65620B7C1DD00EEDD8B /* OtherResources */ = {
 			isa = PBXGroup;
 			children = (
+				4242CBCE20BD435000AC67AE /* IMGlobalData.h */,
+				4242CBCF20BD435000AC67AE /* IMGlobalData.m */,
 				4242CBCB20BD312000AC67AE /* UINavigationController+IM.h */,
 				4242CBCC20BD312000AC67AE /* UINavigationController+IM.m */,
 				4286A65720B7C1DD00EEDD8B /* NSDate+Utils.h */,
@@ -609,6 +614,7 @@
 				0ACAA84C20B96A1C00224804 /* IMChatViewController.m in Sources */,
 				4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */,
 				0ACAA84320B969FE00224804 /* IMConversationViewController.m in Sources */,
+				4242CBD020BD435000AC67AE /* IMGlobalData.m in Sources */,
 				4222901820BBF943009AB56D /* IMAddNewFriendViewController.m in Sources */,
 				4286A65220B7C1C100EEDD8B /* UUProgressHUD.m in Sources */,
 				0ACAA84D20B96A1C00224804 /* IMChatModel.m in Sources */,

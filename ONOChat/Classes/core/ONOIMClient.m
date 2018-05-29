@@ -45,7 +45,7 @@
 }
 
 - (void)receiveMessage:(Message *)msg {
-    //通过服务端已收到
+    //通知服务端已收到
     [self readMessage:msg.mid onSuccess:nil onError:nil];
     //创建消息
     ONOMessage *message = [self createMessageByType:msg.type];
@@ -187,7 +187,7 @@
 - (void)readMessage:(NSString *)messageId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error {
     ReadMessageRequest *request = [[ReadMessageRequest alloc] init];
     request.mid = messageId;
-    [[ONOCore sharedCore] requestRoute:@"client.message.read" withMessage:request onSuccess:success onError:error];
+    [[ONOCore sharedCore] requestRoute:@"client.message.readMessage" withMessage:request onSuccess:success onError:error];
 }
 
 

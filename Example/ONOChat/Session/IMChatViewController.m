@@ -18,7 +18,7 @@
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
 
-@interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate,ONOReceiveMessageDelegate>
 {
 	CGFloat _keyboardHeight;
 }
@@ -43,9 +43,7 @@
 	_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
     
-//    [[ONOIMClient sharedClient] addListenerForRoute:@"push.message" withCallback:^(id msg) {
-//        NSLog(@"%@",msg);
-//    }];
+    [ONOIMClient sharedClient].receiveMessageDelegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -76,6 +74,21 @@
 		_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 		_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
 	}
+}
+
+
+#pragma mark - ONOReceiveMessageDelegate
+- (void)onReceived:(ONOMessage *)message {
+    
+    NSDictionary *dic = @{@"strContent": @"7777",
+                          @"type": @(UUMessageTypeText)};
+    
+    [self.chatModel addOtherChatItem:dic];
+    [self.chatTableView reloadData];
+    [self tableViewScrollToBottom];
+    
+    
+//    addOtherChatItem
 }
 
 #pragma mark - prive methods
@@ -229,7 +242,7 @@
 
 - (void)dealTheFunctionData:(NSDictionary *)dic
 {
-    [self.chatModel addSpecifiedItem:dic];
+    [self.chatModel addMyChatItem:dic];
     [self.chatTableView reloadData];
 	[self tableViewScrollToBottom];
 }

@@ -10,6 +10,7 @@
 #import "IMConversationCell.h"
 #import "IMChatViewController.h"
 #import "UINavigationController+IM.h"
+#import "IMGlobalData.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
@@ -34,18 +35,22 @@
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加好友" style:UIBarButtonItemStylePlain target:self action:@selector(starNewSession)];
     
     
-    // 模拟两个用户
-//    userOne.token = @"ju9es1b7w6kproa32ghqvdt0xzmfycin";
-//    userTwo.token = @"jkdlpx7830zuan4gr5o1f9sivmwbq2he";
-// 7d98kx2b5qulfzgsv4ma3rjnhwic06p1    carrot3
+    // 3个模拟用户
+// @"ju9es1b7w6kproa32ghqvdt0xzmfycin";     carrot
+// @"jkdlpx7830zuan4gr5o1f9sivmwbq2he";     carrot2
     
-    // iPhoneX
-    self.dataArray = @[];
-    [self loginToIMServerWithToken:@"ju9es1b7w6kproa32ghqvdt0xzmfycin"];
+// @"7d98kx2b5qulfzgsv4ma3rjnhwic06p1";     carrot3
     
-    // iPhone8P
-//    self.dataArray = @[userOne];
-//    [self LoginByUser:userTwo];
+    if (iPhoneX) {
+        // iPhoneX   carrot2
+        [self loginToIMServerWithToken:@"jkdlpx7830zuan4gr5o1f9sivmwbq2he"];
+//
+    } else {
+        // iPhone8P  carrot
+        [self loginToIMServerWithToken:@"ju9es1b7w6kproa32ghqvdt0xzmfycin"];
+    }
+    
+    
     self.dataArray = @[];
 
 }
@@ -59,6 +64,7 @@
     [[ONOIMClient sharedClient] setupWithHost:@"101.201.236.225" port:3001];
     [[ONOIMClient sharedClient] loginWithToken:token onSuccess:^(ONOUser *user) {
         NSLog(@"user logined with name:%@", user.nickname);
+        [IMGlobalData sharedData].user = user;
         self.dataArray = [[ONOIMClient sharedClient] getConversationList];
         [self.tableView reloadData];
     } onError:^(int errorCode, NSString *errorMsg) {
@@ -68,8 +74,22 @@
 }
 
 - (void)starNewSession {
+    // iPhoneX
+    // @"ju9es1b7w6kproa32ghqvdt0xzmfycin";     carrot
+    
+    // iPhone8P
+    // @"jkdlpx7830zuan4gr5o1f9sivmwbq2he";     carrot2
+    
+    NSString *userId = @"";
+    if (iPhoneX) {
+        userId = @"carrot";
+    } else {
+        userId = @"carrot2";
+    }
+    
+    
     //发起对carrot2的会话
-    [[ONOIMClient sharedClient] userProfile:@"carrot2" withCache:NO onSuccess:^(ONOUser *user) {
+    [[ONOIMClient sharedClient] userProfile:userId withCache:NO onSuccess:^(ONOUser *user) {
         IMChatViewController *vc = [[IMChatViewController alloc] init];
         vc.toUserModel = user;
         [self.navigationController im_pushViewController:vc];
