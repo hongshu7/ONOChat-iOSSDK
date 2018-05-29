@@ -12,8 +12,8 @@
 
 @property (nonatomic, strong) NSString *messageId;
 @property (nonatomic, strong) NSString *targetId;
+@property (nonatomic, strong) NSString *userId;
 @property (nonatomic, assign) double timestamp;
-@property (nonatomic, strong) ONOUser *user;
 @property (nonatomic, assign) BOOL isSend;
 @property (nonatomic, assign) BOOL isSelf;
 @property (nonatomic, assign) BOOL isError;
@@ -21,5 +21,7 @@
 - (NSInteger)type;
 - (NSString *)encode;
 - (void)decode:(NSString *)data;
+
+@property (nonatomic, strong) ONOUser *user;
 
 @end

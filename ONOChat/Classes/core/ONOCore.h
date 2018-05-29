@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ONOCMessage.h"
 #import "ONORouteInfo.h"
+#import "ONOUser.h"
 
 //todo:重连机制，客户端保存session id
 typedef void (^ONOSuccessResponse)(id msg);
@@ -44,6 +45,7 @@ typedef void (^ONOErrorResponse)(id msg);
 
 
 @property (nonatomic, strong) NSString *userId;
+@property (nonatomic, strong) ONOUser *user;
 
 - (void)connect;
 - (void)disconnect;

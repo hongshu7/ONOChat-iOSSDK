@@ -119,6 +119,14 @@
         
         //save uid
         self.userId = msg.user.uid;
+        
+        ONOUser *user = [[ONOUser alloc] init];
+        user.userId = msg.user.uid;
+        user.nickname = msg.user.name;
+        user.avatar = msg.user.avatar;
+        user.gender = msg.user.gender;
+        self.user = user;
+        
         //callback
         if (self.loginSuccessCallback) {
             self.loginSuccessCallback(msg);

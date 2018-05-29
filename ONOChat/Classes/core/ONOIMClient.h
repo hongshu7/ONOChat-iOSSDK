@@ -45,14 +45,12 @@
  *  @param userId    目标用户ID
  */
 
-- (void)sendMessage:(ONOMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
 
 /**
  *  获取会话列表
  */
 - (NSArray <ONOConversation *>*)getConversationList;
-
-
 
 /**
  *  获取单个会话信息
@@ -60,20 +58,27 @@
  */
 - (ONOConversation *)getConversation:(NSString *)userId;
 
-- (int)totalUnreadCount;
-
-- (ONOMessage *)createMessageByType:(int)type;
-
-- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
-- (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
-
-- (void)userProfiles:(NSArray *)userIds withCache:(BOOL)withCache onSuccess:(void (^)(NSArray<ONOUser*> *userArray))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
-
+/**
+ *  获取消息列表
+ */
+- (NSArray <ONOMessage *>*)getMessageList:(NSString *)targetId offset:(NSString *)offset limit:(int)limit;
 
 /**
  *  获取 好友列表(从本地获取)
  */
 - (NSArray <ONOUser *>*)getFriends;
+
+- (int)totalUnreadCount;
+
+- (ONOMessage *)createMessageByType:(int)type;
+
+- (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+- (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+
+
 
 - (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 

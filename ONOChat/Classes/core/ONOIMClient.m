@@ -54,14 +54,12 @@
     message.isSend = YES;
     message.isSelf = [msg.from isEqualToString:[ONOCore sharedCore].userId];
     message.targetId = message.isSelf ? msg.to : msg.from;
+    message.userId = msg.from;
     [message decode:msg.data_p];
-    
-    //填充用户信息,目前只有好友才发消息，所以不会存在user为空
-    message.user = [ONODB fetchUser:message.targetId];
     //保存消息
     [ONODB insertMessage:message];
     //更新会话信息
-    [self updateConversationWithMessage:message];
+    [self updateConversation:message.targetId withMessage:message];
     
     //回调事件
     if (self.receiveMessageDelegate) {
@@ -124,6 +122,7 @@
                 [ONODB deleteFriend:uid];
             }
         }
+        //todo:每分钟自动同步联系人
 
         //接着收信息
         if (msg.messagesArray_Count > 0) {
@@ -134,14 +133,13 @@
                 message.isSend = YES;
                 message.isSelf = [m.from isEqualToString:[ONOCore sharedCore].userId];
                 message.targetId = message.isSelf ? m.to : m.from;
+                message.userId = m.from;
                 [message decode:m.data_p];
 
-                //填充用户信息,目前只有好友才发消息，所以不会存在user为空
-                message.user = [ONODB fetchUser:message.targetId];
                 //保存消息
                 [ONODB insertMessage:message];
                 //更新会话信息
-                [self updateConversationWithMessage:message];
+                [self updateConversation:message.targetId withMessage:message];
             }
         }
 
@@ -150,37 +148,21 @@
     }];
 }
 
-- (void)sendMessage:(ONOMessage *)message to:(NSString *)userId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
     
     //create msgid
     message.messageId = [BSONIdGenerator generate];
     message.timestamp = [[NSDate date] timeIntervalSince1970];
     message.isSelf = YES;
-    ONOUser *user = [ONODB fetchUser:userId];
-    if (user == nil) {
-        user = [[ONOUser alloc] init];
-        user.userId = userId;
-        user.nickname = @"...";
-        user.avatar = @"";
-        user.gender = 1;
-        [ONODB insertUser:user];
-    }
-    message.user = user;
+    message.targetId = targetId;
+    message.userId = [ONOCore sharedCore].userId;
+    message.user = [ONOCore sharedCore].user;
     [ONODB insertMessage:message];
 
-    ONOConversation *conversation = [self getConversation:userId];
-    if (conversation == nil) {
-        conversation = [[ONOConversation alloc] init];
-        conversation.conversationType = ConversationTypePrivate;
-        conversation.contactTime = [[NSDate date] timeIntervalSince1970];
-        conversation.unreadCount = 0;
-        conversation.user = user;
-        conversation.lastMessage = message;
-        [ONODB insertConversation:conversation];
-    }
+    [self updateConversation:targetId withMessage:message];
     
     SendMessageRequest *request = [[SendMessageRequest alloc] init];
-    request.to = userId;
+    request.to = targetId;
     request.type = (int)[message type];
     request.data_p = [message encode];
     request.mid = message.messageId;
@@ -209,36 +191,40 @@
     return [ONODB fetchConversation:targetId];
 }
 
-- (ONOConversation *)getOrCreateConversation:(ONOUser *)user {
-    ONOConversation *conversation = [ONODB fetchConversation:user.userId];
-    if (conversation == nil) {
-        conversation = [[ONOConversation alloc] init];
-        [ONODB insertConversation:conversation];
-    }
-    return conversation;
-}
-
 - (void)updateConversation:(ONOConversation *)conversation {
     return [ONODB updateConversation:conversation];
 }
 
-- (void)updateConversationWithMessage:(ONOMessage *)message {
-    ONOConversation *conversation = [ONODB fetchConversation:message.user.userId];
+- (void)updateConversation:(NSString *)targetId withMessage:(ONOMessage *)message {
+    ONOConversation *conversation = [ONODB fetchConversation:targetId];
     BOOL isExists = NO;
     if (conversation == nil) {
         conversation = [[ONOConversation alloc] init];
+        conversation.user = [ONODB fetchUser:targetId];
     } else {
         isExists = YES;
     }
-    conversation.unreadCount++;
+    if (message.isSelf) {
+        conversation.unreadCount = 0;
+    } else {
+        conversation.unreadCount++;
+    }
     conversation.lastMessage = message;
     conversation.contactTime = [[NSDate date] timeIntervalSince1970];
-    conversation.user = message.user;
     if (isExists) {
         [ONODB updateConversation:conversation];
     } else {
         [ONODB insertConversation:conversation];
     }
+}
+
+- (NSArray <ONOMessage *> *)getMessageList:(NSString *)targetId offset:(NSString *)offset limit:(int)limit {
+    NSArray <ONOMessage *> *msgs = [ONODB fetchMessages:targetId offset:offset limit:limit];
+    ONOUser *targetUser = [ONODB fetchUser:targetId];
+    for (ONOMessage *msg in msgs) {
+        msg.user = msg.isSelf ? [ONOCore sharedCore].user : targetUser;
+    }
+    return msgs;
 }
 
 - (int)totalUnreadCount {

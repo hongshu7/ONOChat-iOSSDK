@@ -54,6 +54,7 @@ static FMDatabase *db;
 
 +(void)checkVersion
 {
+    return;
     NSString *sql = @"SELECT cvalue FROM setting";
     FMResultSet *rs = [db executeQuery:sql];
     NSInteger version = 1;
@@ -62,8 +63,7 @@ static FMDatabase *db;
     }
     [rs close];
     if (version < 2) {
-        //version == 2
-        [self createFriendTable];
+        [self createGroupTable];
     }
     if (version < 2) {
         sql = @"UPDATE setting SET cvalue=? WHERE ckey='version'";
@@ -87,7 +87,7 @@ static FMDatabase *db;
     "`message_id`	TEXT NOT NULL,"
     "`belong_id`	TEXT NOT NULL,"
     "`user_id`	TEXT NOT NULL,"
-    "`group_id`	TEXT NOT NULL DEFAULT '',"// 群id
+    "`target_id`	TEXT NOT NULL DEFAULT '',"// 群id
     "`type`	INTEGER NOT NULL DEFAULT 1,"
     "`data`	TEXT,"
     "`timestamp`	REAL DEFAULT 0,"
@@ -103,13 +103,21 @@ static FMDatabase *db;
     "`nickname`	TEXT,"
     "`gender`	INTEGER,"
     "`avatar`	TEXT,"
+    "`remark`   TEXT,"
     "PRIMARY KEY(user_id)"
+    ");";
+    [db executeUpdate:sql];
+    
+    sql = @"CREATE TABLE `friend` ("
+    "`user_id`    TEXT NOT NULL,"
+    "`friend_id`    TEXT NOT NULL,"
+    "PRIMARY KEY(user_id, friend_id)"
     ");";
     [db executeUpdate:sql];
 
     sql = @"CREATE INDEX `conversation_list` ON `conversation` (`belong_id` ASC,`contact_time` DESC);";
     [db executeUpdate:sql];
-    sql = @"CREATE UNIQUE INDEX `user_msg_list` ON `message` (`belong_id` ASC,`user_id` ASC, `message_id` DESC);";
+    sql = @"CREATE UNIQUE INDEX `user_msg_list` ON `message` (`belong_id` ASC,`target_id` ASC, `message_id` DESC);";
     [db executeUpdate:sql];
 
     sql = @"CREATE TABLE `setting` ("
@@ -119,19 +127,9 @@ static FMDatabase *db;
     ");";
     [db executeUpdate:sql];
     sql = @"INSERT INTO `setting`(ckey,cvalue) VALUES(?,?);";
-    [db executeUpdate:sql, @"version", @"2"];
+    [db executeUpdate:sql, @"version", @"1"];
 }
 
-+ (void)createFriendTable
-{
-    NSString *sql = @"CREATE TABLE `friend` ("
-    "`user_id`    TEXT NOT NULL,"
-    "`friend_id`    TEXT NOT NULL,"
-    "`remark`    TEXT,"
-    "PRIMARY KEY(user_id, friend_id)"
-    ");";
-    [db executeUpdate:sql];
-}
 
 + (void)createGroupTable
 {
@@ -402,10 +400,8 @@ static FMDatabase *db;
         int type = [rs intForColumn:@"type"];
         message = [[ONOIMClient sharedClient] createMessageByType:type];
         message.messageId = [rs stringForColumn:@"message_id"];
-        //message.belongId = [rs stringForColumn:@"belong_id"];
-        //message.groupId = [rs stringForColumn:@"group_id"];
-        NSString *userId = [rs stringForColumn:@"user_id"];
-        message.user = [self fetchUser:userId];
+        message.targetId = [rs stringForColumn:@"target_id"];
+        message.userId = [rs stringForColumn:@"user_id"];
         message.timestamp = [rs doubleForColumn:@"timestamp"];
         message.isSend = [rs boolForColumn:@"is_send"];
         message.isSelf = [rs boolForColumn:@"is_self"];
@@ -440,10 +436,8 @@ static FMDatabase *db;
         int type = [rs intForColumn:@"type"];
         message = [[ONOIMClient sharedClient] createMessageByType:type];
         message.messageId = [rs stringForColumn:@"message_id"];
-        //message.belongId = [rs stringForColumn:@"belong_id"];
-        //message.groupId = [rs stringForColumn:@"group_id"];
-        NSString *userId = [rs stringForColumn:@"user_id"];
-        message.user = [self fetchUser:userId];
+        message.targetId = [rs stringForColumn:@"target_id"];
+        message.userId = [rs stringForColumn:@"user_id"];
         message.timestamp = [rs doubleForColumn:@"timestamp"];
         message.isSend = [rs boolForColumn:@"is_send"];
         message.isSelf = [rs boolForColumn:@"is_self"];
@@ -461,10 +455,10 @@ static FMDatabase *db;
 + (void)insertMessage:(ONOMessage*)message
 {
     [self openDB];
-    NSString *sql = @"INSERT INTO message(message_id,belong_id,user_id,group_id,type,data,timestamp,is_send,is_self,is_error) VALUES(?,?,?,?,?,?,?,?,?,?)";
+    NSString *sql = @"INSERT INTO message(message_id,belong_id,target_id,user_id,type,data,timestamp,is_send,is_self,is_error) VALUES(?,?,?,?,?,?,?,?,?,?)";
     NSString *data = [message encode];
     [db executeUpdate:sql,
-        message.messageId, [self selfUserId], message.user.userId, @"", @([message type]), data, @(message.timestamp), @(message.isSend), @(message.isSelf), @(message.isError)];
+        message.messageId, [self selfUserId], message.targetId, message.userId, @([message type]), data, @(message.timestamp), @(message.isSend), @(message.isSelf), @(message.isError)];
     [self closeDB];
 }
 
