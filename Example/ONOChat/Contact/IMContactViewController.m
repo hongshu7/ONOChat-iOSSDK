@@ -10,6 +10,7 @@
 #import "IMConversationCell.h"
 #import "IMChatViewController.h"
 #import "IMAddNewFriendViewController.h"
+#import "UINavigationController+IM.h"
 
 #import "ONOIMClient.h"
 
@@ -33,7 +34,7 @@
 
 
 - (void)addNewFriend {
-    [self.navigationController pushViewController:[IMAddNewFriendViewController new] animated:YES];
+    [self.navigationController im_pushViewController:[IMAddNewFriendViewController new]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -69,7 +70,7 @@
     IMChatViewController *vc = [[IMChatViewController alloc] init];
     ONOConversation *conversation = [self.dataArray objectAtIndex:indexPath.row];
     vc.toUserModel = conversation.user;
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController im_pushViewController:vc];
 }
 
 

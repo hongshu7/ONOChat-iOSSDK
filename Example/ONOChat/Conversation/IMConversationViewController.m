@@ -9,6 +9,7 @@
 #import "IMConversationViewController.h"
 #import "IMConversationCell.h"
 #import "IMChatViewController.h"
+#import "UINavigationController+IM.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
@@ -71,7 +72,7 @@
     [[ONOIMClient sharedClient] userProfile:@"carrot2" withCache:NO onSuccess:^(ONOUser *user) {
         IMChatViewController *vc = [[IMChatViewController alloc] init];
         vc.toUserModel = user;
-        [self.navigationController pushViewController:vc animated:YES];
+        [self.navigationController im_pushViewController:vc];
     } onError:^(int errorCode, NSString *messageId) {
         
     }];
