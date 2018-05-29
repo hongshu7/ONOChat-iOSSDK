@@ -99,7 +99,7 @@
         ONOUser *user = [[ONOUser alloc] init];
         user.userId = msg.user.uid;
         user.nickname = msg.user.name;
-        user.avatar = msg.user.icon;
+        user.avatar = msg.user.avatar;
         user.gender = msg.user.gender;
         if ([ONODB fetchUser:userId] == nil) {
             [ONODB insertUser:user];
@@ -109,11 +109,21 @@
         successBlock(user);
         
         //同步联系人
-        [[ONOIMClient sharedClient] updateMyFriendsFromServerOnSuccess:^(NSArray<ONOUser *> *userArray) {
-            NSLog(@"好友信息同步成功");
-        } onError:^(int errorCode, NSString *errorMessage) {
-            NSLog(@"好友信息同步失败 messageId%@",errorMessage);
-        }];
+        if (msg.friendOperations != nil) {
+            for (UserData *u in msg.friendOperations.addsArray) {
+                //add
+                ONOUser *user = [[ONOUser alloc] init];
+                user.userId = u.uid;
+                user.nickname = u.name;
+                user.avatar = u.avatar;
+                user.gender = u.gender;
+                [ONODB insertOrUpdateUser:user];
+                [ONODB insertOrUpdateFriend:u.uid];
+            }
+            for (NSString *uid in msg.friendOperations.deletesArray) {
+                [ONODB deleteFriend:uid];
+            }
+        }
 
         //接着收信息
         if (msg.messagesArray_Count > 0) {
@@ -254,7 +264,7 @@
         ONOUser *user = [[ONOUser alloc] init];
         user.userId = msg.user.uid;
         user.nickname = msg.user.name;
-        user.avatar = msg.user.icon;
+        user.avatar = msg.user.avatar;
         user.gender = msg.user.gender;
         if ([ONODB fetchUser:userId] == nil) {
             [ONODB insertUser:user];
@@ -276,7 +286,7 @@
             ONOUser *user = [[ONOUser alloc] init];
             user.userId = _user.uid;
             user.nickname = _user.name;
-            user.avatar = _user.icon;
+            user.avatar = _user.avatar;
             user.gender = _user.gender;
             if ([ONODB fetchUser:user.userId] == nil) {
                 [ONODB insertUser:user];
@@ -292,9 +302,9 @@
 }
 
 
-- (NSArray<ONOUser *> *)myFriends {
+- (NSArray<ONOUser *> *)getFriends {
     
-    return [ONODB myFriends];
+    return [ONODB getFriends];
 }
 
 /**
@@ -305,16 +315,16 @@
     
     [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
         
-        if (msg.uidsArray.count == 0) {
-            if (successBlock) successBlock([NSArray new]);
-        } else {
-            // 需要更新的 user
-            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
-                if (successBlock) successBlock(userArray);
-            } onError:^(int errorCode, NSString *messageId) {
-                if (errorBlock) errorBlock(errorCode, messageId);
-            }];
-        }
+//        if (msg.uidsArray.count == 0) {
+//            if (successBlock) successBlock([NSArray new]);
+//        } else {
+//            // 需要更新的 user
+//            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
+//                if (successBlock) successBlock(userArray);
+//            } onError:^(int errorCode, NSString *messageId) {
+//                if (errorBlock) errorBlock(errorCode, messageId);
+//            }];
+//        }
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];

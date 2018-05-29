@@ -24,8 +24,7 @@ static FMDatabase *db;
     return [ONOCore sharedCore].userId;
 }
 
-+ (void)initDB
-{
++ (void)initDB {
     if (isInit) {
         return;
     }
@@ -57,12 +56,18 @@ static FMDatabase *db;
 {
     NSString *sql = @"SELECT cvalue FROM setting";
     FMResultSet *rs = [db executeQuery:sql];
+    NSInteger version = 1;
     if ([rs next]) {
-        NSInteger version = [rs intForColumn:@"cvalue"];
-        if (version == 1) {
-            [rs close];
-            [self alterConversationTable];
-        }
+        version = [rs intForColumn:@"cvalue"];
+    }
+    [rs close];
+    if (version < 2) {
+        //version == 2
+        [self createFriendTable];
+    }
+    if (version < 2) {
+        sql = @"UPDATE setting SET cvalue=? WHERE ckey='version'";
+        [db executeUpdate:sql,  @"2"];
     }
 }
 
@@ -114,12 +119,23 @@ static FMDatabase *db;
     ");";
     [db executeUpdate:sql];
     sql = @"INSERT INTO `setting`(ckey,cvalue) VALUES(?,?);";
-    [db executeUpdate:sql, @"version", @"1"];
+    [db executeUpdate:sql, @"version", @"2"];
+}
+
++ (void)createFriendTable
+{
+    NSString *sql = @"CREATE TABLE `friend` ("
+    "`user_id`    TEXT NOT NULL,"
+    "`friend_id`    TEXT NOT NULL,"
+    "`remark`    TEXT,"
+    "PRIMARY KEY(user_id, friend_id)"
+    ");";
+    [db executeUpdate:sql];
 }
 
 + (void)createGroupTable
 {
-    NSString * sql = @"CREATE TABLE `groupinfo` ("
+    NSString *sql = @"CREATE TABLE `groupinfo` ("
     "`group_id`	INTEGER NOT NULL,"
     "`belong_id`	INTEGER NOT NULL,"
     "`name`	TEXT,"
@@ -296,6 +312,16 @@ static FMDatabase *db;
     [self closeDB];
 }
 
++(void)insertOrUpdateUser:(ONOUser *)user
+{
+    [self openDB];
+    NSString *sql = @"REPLACE INTO user(user_id,nickname,avatar,gender) VALUES(?,?,?,?)";
+    [db executeUpdate:sql,
+     user.userId, user.nickname, user.avatar, @(user.gender)];
+    NSLog(@"INSERT INTO user(user_id,nickname,avatar,gender) VALUES('%@','%@','%@',%@)", user.userId, user.nickname, user.avatar, @(user.gender));
+    [self closeDB];
+}
+
 +(ONOUser *)fetchUser:(NSString *)userId
 {
     [self openDB];
@@ -311,6 +337,40 @@ static FMDatabase *db;
     }
     [self closeDB];
     return user;
+}
+
++(void)insertOrUpdateFriend:(NSString *)friendId
+{
+    [self openDB];
+    NSString *sql = @"REPLACE INTO friend(user_id,friend_id) VALUES(?,?)";
+    [db executeUpdate:sql, [self selfUserId], friendId];
+    NSLog(@"INSERT INTO user(user_id,friend_id) VALUES('%@','%@')", [self selfUserId], friendId);
+    [self closeDB];
+}
+
++ (void)deleteFriend:(NSString *)friendId
+{
+    [self openDB];
+    NSString *sql = @"DELETE FROM friend WHERE user_id=? AND friend_id=?";
+    NSLog(@"DELETE FROM conversation WHERE user_id=%@ AND friend_id=%@", [self selfUserId], friendId);
+    [db executeUpdate:sql, [self selfUserId], friendId];
+    [self closeDB];
+}
+
++ (nullable NSArray<ONOUser *> *)getFriends
+{
+    [self openDB];
+    NSMutableArray* contacts = [NSMutableArray new];
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM friend WHERE user_id=?", [self selfUserId]];
+    while ([rs next]) {
+        NSString *friendId = [rs stringForColumn:@"friend_id"];
+        ONOUser *user =  [self fetchUser:friendId];
+        if (user != nil) {
+            [contacts addObject:user];
+        }
+    }
+    [self closeDB];
+    return contacts;
 }
 
 //+(NSArray *)fetchUsers:(NSString *)userIds
@@ -439,22 +499,5 @@ static FMDatabase *db;
 }
 
 
-+ (nullable NSArray<ONOUser *> *)myFriends
-{
-    [self openDB];
-    NSMutableArray* contacts = [NSMutableArray new];
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM user", [self selfUserId]];
-    
-    while ([rs next]) {
-        ONOUser *user =  [[ONOUser alloc] init];
-        user.userId = [rs stringForColumn:@"user_id"];
-        user.nickname = [rs stringForColumn:@"nickname"];
-        user.avatar = [rs stringForColumn:@"avatar"];
-        user.gender = [rs intForColumn:@"gender"];
-        [contacts addObject:user];
-    }
-    [self closeDB];
-    return contacts;
-}
 
 @end

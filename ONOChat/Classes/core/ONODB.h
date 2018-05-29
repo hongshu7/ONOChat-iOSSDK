@@ -21,7 +21,12 @@
 
 +(void)insertUser:(ONOUser *)user;
 +(void)updateUser:(ONOUser *)user;
++(void)insertOrUpdateUser:(ONOUser *)user;
 +(ONOUser *)fetchUser:(NSString *)userId;
+
++(void)insertOrUpdateFriend:(NSString *)friendId;
++ (void)deleteFriend:(NSString *)friendId;
++ (nullable NSArray<ONOUser *> *)getFriends;
 
 + (ONOMessage*)fetchMessage:(NSString *)msgId;
 + (NSArray*)fetchMessages:(NSString *)userId offset:(NSString *)offset limit:(int)limit;
@@ -32,5 +37,5 @@
 
 + (int)totalUnreadCount;
 
-+ (nullable NSArray<ONOUser *> *)myFriends;
+
 @end

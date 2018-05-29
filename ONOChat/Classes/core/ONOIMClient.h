@@ -73,7 +73,7 @@
 /**
  *  获取 好友列表(从本地获取)
  */
-- (NSArray <ONOUser *>*)myFriends;
+- (NSArray <ONOUser *>*)getFriends;
 
 - (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 

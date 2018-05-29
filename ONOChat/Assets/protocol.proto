@@ -6,14 +6,9 @@ option java_outer_classname = "MessageProtos";
 message UserData {
   string uid = 1;
   string name = 2;
-  string icon = 3;
-  string sign = 4;
-  string email = 5;
-  string birth = 6; 
-  string mobile = 7;
-  int32 gender = 8; //用户性别，0表示未知，1表示男，2女表示女，其它会报参数错误
-  string ex = 9; //用户名片扩展字段，最大长度1024字符，用户可自行扩展，建议封装成JSON字符串
-  int32 isFriend = 10; //是否好友关系 0否 1是
+  string avatar = 3;
+  int32 gender = 4; //用户性别，0表示未知，1表示男，2女表示女，其它会报参数错误
+  string ex = 5; //用户名片扩展字段，最大长度1024字符，用户可自行扩展，建议封装成JSON字符串
 }
 
 message Message {
@@ -26,12 +21,16 @@ message Message {
   UserData user = 7;
 }
 
+message Friend {
+  string uid = 1;
+  string remark = 2;
+}
+
 message ErrorResponse {
   int32 code = 1;
   string message = 2;
   string extra = 3;
 }
-
 
 //推送 重复登录被提出
 message UserKick {
@@ -43,18 +42,28 @@ message NewFriend {
 }
 //推送 新的好友请求
 message NewFriendRequest {
-  string uid = 1;
+  UserData user = 1;
   string greeting = 2;//招呼内容
+}
+
+message FriendOperations {
+  repeated UserData adds = 1;
+  repeated UserData updates = 2;
+  repeated string deletes = 3;
+  int64 friendsUpdateTime = 4;
 }
 
 //请求 登陆接口
 message UserLoginRequest {
   string token = 1;
+  int64 friendsUpdateTime = 2;
 }
+
 //响应 登陆
 message UserLoginResponse {
   UserData user = 1;
   repeated Message messages = 2;
+  FriendOperations friendOperations = 3;
 }
 
 message UserProfileRequest {
@@ -88,12 +97,11 @@ message SendMessagenResponse {
   string nmid = 2;
 }
 
-
 //请求 好友列表
 message FriendListRequest {}
 //响应 好友列表
 message FriendListResponse {
-  repeated string uids = 1;
+  repeated Friend friends = 1;
 }
 
 //请求 发起好友请求
@@ -134,4 +142,10 @@ message FriendSearchRequest {
 //响应 好友模糊查找
 message FriendSearchResponse {
   repeated UserData users = 1;
+}
+
+//请求 好友备注
+message FriendRemarkRequest {
+  string uid = 1;
+  string remark = 2;
 }

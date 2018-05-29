@@ -379,7 +379,6 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				FF649C95FB0C197A4150FBB9 /* [CP] Embed Pods Frameworks */,
-				302C90E309A90556ED6FD5BF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -399,7 +398,6 @@
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
 				8F7B2D4F6F1537B88FF864C2 /* [CP] Embed Pods Frameworks */,
-				06241BFCB9DF0C9F2F19C2C8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -481,36 +479,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		06241BFCB9DF0C9F2F19C2C8 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ONOChat_Tests/Pods-ONOChat_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		302C90E309A90556ED6FD5BF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ONOChat_Example/Pods-ONOChat_Example-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		407F8F933AD1ED6AFC0F4A75 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
