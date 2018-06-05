@@ -10,7 +10,7 @@
 @implementation ONOImageMessage
 
 - (NSInteger)type {
-    return 2;
+    return 3;
 }
 
 - (NSString *)encode {

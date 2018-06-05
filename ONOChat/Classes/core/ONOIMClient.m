@@ -14,8 +14,6 @@
 #import "ONOImageMessage.h"
 #import "ONOAudioMessage.h"
 
-
-
 @interface ONOIMClient()
 
 
@@ -80,9 +78,11 @@
     if (type == 1) {
         msg = [[ONOTextMessage alloc] init];
     } else if (type == 2) {
-        msg = [[ONOImageMessage alloc] init];
-    } else if (type == 3) {
         msg = [[ONOAudioMessage alloc] init];
+    } else if (type == 3) {
+        msg = [[ONOImageMessage alloc] init];
+    } else if (type == 4) {
+        msg = [[ONOSmileMessage alloc] init];
     } else {
         //todo:custom types
     }
