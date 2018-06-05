@@ -5,6 +5,7 @@ target 'ONOChat_Example' do
   pod 'ONOChat', :path => '../'
   pod 'AFNetworking'
   pod 'MJRefresh'
+  pod 'SDWebImage', '~> 4.2.2'
 
   target 'ONOChat_Tests' do
     inherit! :search_paths

@@ -7,8 +7,18 @@
 //
 
 #import "IMAddNewFriendViewController.h"
+#import "UIImageView+WebCache.h"
+
+#import "ONOIMClient.h"
 
 @interface IMAddNewFriendViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (nonatomic, strong) NSArray *dataArray;
+
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
+@property (weak, nonatomic) IBOutlet UIButton *searchButton;
+@property (weak, nonatomic) IBOutlet UILabel *searchResultLabel;
 
 @end
 
@@ -20,19 +30,46 @@
     self.navigationItem.title = @"好友添加";
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)searchAction {
+    [[ONOIMClient sharedClient] friendSearchByKeyword:self.searchTextField.text onSuccess:^(NSArray<ONOUser *> *userArray) {
+        self.dataArray = userArray;
+        [self.tableView reloadData];
+    } onError:^(int errorCode, NSString *errorMessage) {
+        NSLog(@"%@",errorMessage);
+    }];
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - tableView about
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataArray.count;
 }
-*/
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *ID = @"UITableViewCell";
+    
+    UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:ID];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UITableViewCell"];
+    }
+    
+    ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
+    
+    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
+    cell.textLabel.text = user.nickname;
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 50;
+};
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
+}
+
 
 @end

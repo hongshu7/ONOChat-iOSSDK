@@ -79,8 +79,17 @@
 
 
 
+// 好友
 
-- (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+/**
+ *  好友模糊搜索
+ *  @param keyword    搜索关键字
+ */
+- (void)friendSearchByKeyword:(NSString *)keyword onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+
+- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
 
 @end
 
