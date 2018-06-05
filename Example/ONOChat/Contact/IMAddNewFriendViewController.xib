@@ -12,6 +12,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="IMAddNewFriendViewController">
             <connections>
+                <outlet property="searchButton" destination="Oj8-w2-bvx" id="gMk-rz-3HM"/>
+                <outlet property="searchResultLabel" destination="4SR-w7-bmo" id="U4E-gc-xbY"/>
+                <outlet property="searchTextField" destination="3nV-NK-MqM" id="FZo-zL-2av"/>
+                <outlet property="tableView" destination="2Ph-Us-9kS" id="aOw-6z-RFy"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,7 +24,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3nV-NK-MqM">
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="输入搜索关键字 如'car'" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3nV-NK-MqM">
                     <rect key="frame" x="20" y="40" width="335" height="40"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="fiG-Oe-Rgt"/>
@@ -38,6 +42,9 @@
                     <state key="normal" title="查询">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
+                    <connections>
+                        <action selector="searchAction" destination="-1" eventType="touchUpInside" id="vWm-7Z-4sj"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="查询结果:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4SR-w7-bmo">
                     <rect key="frame" x="20" y="160" width="335" height="20.5"/>
@@ -45,31 +52,30 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7uF-Kg-n0g">
-                    <rect key="frame" x="20" y="200.5" width="335" height="40"/>
-                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="40" id="VDX-V8-DL2"/>
-                    </constraints>
-                    <state key="normal" title="添加">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </state>
-                </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Ph-Us-9kS">
+                    <rect key="frame" x="0.0" y="195.5" width="375" height="471.5"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="owx-7i-9IA"/>
+                        <outlet property="delegate" destination="-1" id="zkh-j6-zaw"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="2Ph-Us-9kS" firstAttribute="top" secondItem="4SR-w7-bmo" secondAttribute="bottom" constant="15" id="1H2-ka-Uug"/>
                 <constraint firstItem="4SR-w7-bmo" firstAttribute="top" secondItem="Oj8-w2-bvx" secondAttribute="bottom" constant="20" id="7Yj-e3-sjh"/>
-                <constraint firstItem="7uF-Kg-n0g" firstAttribute="top" secondItem="4SR-w7-bmo" secondAttribute="bottom" constant="20" id="8Al-li-FNb"/>
                 <constraint firstItem="Oj8-w2-bvx" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="9mD-4F-ZYm"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="2Ph-Us-9kS" secondAttribute="bottom" id="C6a-ju-CWz"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="3nV-NK-MqM" secondAttribute="trailing" constant="20" id="CxU-Nd-rvv"/>
-                <constraint firstItem="7uF-Kg-n0g" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="Kvo-aK-Puv"/>
                 <constraint firstItem="3nV-NK-MqM" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="20" id="NCp-Dt-HbN"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="Oj8-w2-bvx" secondAttribute="trailing" constant="20" id="bP7-xp-eeR"/>
                 <constraint firstItem="4SR-w7-bmo" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="bSf-UL-wC0"/>
                 <constraint firstItem="Oj8-w2-bvx" firstAttribute="top" secondItem="3nV-NK-MqM" secondAttribute="bottom" constant="20" id="r9S-YB-U7K"/>
                 <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="4SR-w7-bmo" secondAttribute="trailing" constant="20" id="sOr-jy-j11"/>
-                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="7uF-Kg-n0g" secondAttribute="trailing" constant="20" id="wVI-aQ-RUr"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="2Ph-Us-9kS" secondAttribute="trailing" id="w7B-x4-a3X"/>
                 <constraint firstItem="3nV-NK-MqM" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="wrB-mR-y3q"/>
+                <constraint firstItem="2Ph-Us-9kS" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="zCB-YO-SZG"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
             <point key="canvasLocation" x="6" y="83"/>

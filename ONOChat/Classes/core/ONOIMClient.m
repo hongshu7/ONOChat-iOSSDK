@@ -296,7 +296,7 @@
 /**
  *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
  */
-- (void)updateMyFriendsFromServerOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     FriendListRequest *request = [[FriendListRequest alloc] init];
     
     [[ONOCore sharedCore] requestRoute:@"client.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
@@ -311,6 +311,28 @@
 //                if (errorBlock) errorBlock(errorCode, messageId);
 //            }];
 //        }
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+
+- (void)friendSearchByKeyword:(NSString *)keyword onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendSearchRequest *request = [[FriendSearchRequest alloc] init];
+    request.keyword = keyword;
+    [[ONOCore sharedCore] requestRoute:@"client.friend.search" withMessage:request onSuccess:^(FriendSearchResponse *msg) {
+        
+        NSMutableArray<ONOUser*> *onoUserArray = [NSMutableArray new];
+        for (UserData *userData in msg.usersArray) {
+            ONOUser *user = [[ONOUser alloc] init];
+            user.userId = userData.uid;
+            user.nickname = userData.name;
+            user.avatar = userData.avatar;
+            user.gender = userData.gender;
+            [onoUserArray addObject:user];
+        }
+        
+      if (successBlock) successBlock(onoUserArray);
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];
