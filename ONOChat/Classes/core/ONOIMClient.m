@@ -14,8 +14,6 @@
 #import "ONOImageMessage.h"
 #import "ONOAudioMessage.h"
 
-
-
 @interface ONOIMClient()
 
 
@@ -80,9 +78,11 @@
     if (type == 1) {
         msg = [[ONOTextMessage alloc] init];
     } else if (type == 2) {
-        msg = [[ONOImageMessage alloc] init];
-    } else if (type == 3) {
         msg = [[ONOAudioMessage alloc] init];
+    } else if (type == 3) {
+        msg = [[ONOImageMessage alloc] init];
+    } else if (type == 4) {
+        msg = [[ONOSmileMessage alloc] init];
     } else {
         //todo:custom types
     }
@@ -167,7 +167,7 @@
     request.data_p = [message encode];
     request.mid = message.messageId;
     NSString *msgId = [message.messageId copy];
-    [[ONOCore sharedCore] requestRoute:@"client.message.sendMessage" withMessage:request onSuccess:^(SendMessagenResponse *response) {
+    [[ONOCore sharedCore] requestRoute:@"im.message.send" withMessage:request onSuccess:^(SendMessagenResponse *response) {
         [ONODB markMessageSend:response.nmid fromOldId:response.omid];
         successBlock(response.nmid);
     } onError:^(ErrorResponse *err) {
@@ -179,7 +179,7 @@
 - (void)readMessage:(NSString *)messageId onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error {
     ReadMessageRequest *request = [[ReadMessageRequest alloc] init];
     request.mid = messageId;
-    [[ONOCore sharedCore] requestRoute:@"client.message.readMessage" withMessage:request onSuccess:success onError:error];
+    [[ONOCore sharedCore] requestRoute:@"im.message.read" withMessage:request onSuccess:success onError:error];
 }
 
 
@@ -246,7 +246,7 @@
     }
     UserProfileRequest *request = [[UserProfileRequest alloc] init];
     request.uid = userId;
-    [[ONOCore sharedCore] requestRoute:@"client.user.profile" withMessage:request onSuccess:^(UserProfileResponse *msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.user.profile" withMessage:request onSuccess:^(UserProfileResponse *msg) {
         ONOUser *user = [[ONOUser alloc] init];
         user.userId = msg.user.uid;
         user.nickname = msg.user.name;
@@ -266,7 +266,7 @@
 - (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     UserProfilesRequest *request = [[UserProfilesRequest alloc] init];
     [request.uidsArray addObjectsFromArray:userIds];
-    [[ONOCore sharedCore] requestRoute:@"client.user.profiles" withMessage:request onSuccess:^(UserProfilesResponse *msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.user.profiles" withMessage:request onSuccess:^(UserProfilesResponse *msg) {
         NSMutableArray<ONOUser *>* users = [NSMutableArray array];
         for (UserData* _user in msg.usersArray) {
             ONOUser *user = [[ONOUser alloc] init];
@@ -293,10 +293,13 @@
     return [ONODB getFriends];
 }
 
-- (void)friendListUpdateByUpdateTimestamp:(long)updateTimestamp onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendUpdatesRequest *request = [[FriendUpdatesRequest alloc] init];
+/**
+ *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
+ */
+- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendListRequest *request = [[FriendListRequest alloc] init];
     
-    [[ONOCore sharedCore] requestRoute:@"client.friend.updates" withMessage:request onSuccess:^(FriendUpdatesResponse *msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
         
 //        if (msg.uidsArray.count == 0) {
 //            if (successBlock) successBlock([NSArray new]);
@@ -317,7 +320,7 @@
 - (void)friendSearchByKeyword:(NSString *)keyword onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     FriendSearchRequest *request = [[FriendSearchRequest alloc] init];
     request.keyword = keyword;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.search" withMessage:request onSuccess:^(FriendSearchResponse *msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.search" withMessage:request onSuccess:^(FriendSearchResponse *msg) {
         
         NSMutableArray<ONOUser*> *onoUserArray = [NSMutableArray new];
         for (UserData *userData in msg.usersArray) {
@@ -330,83 +333,6 @@
         }
         
       if (successBlock) successBlock(onoUserArray);
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-- (void)friendAddWithUserId:(NSString *)usrId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendRequestRequest *request = [[FriendRequestRequest alloc] init];
-    request.greeting = greeting;
-    request.uid = usrId;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.request" withMessage:request onSuccess:^(id msg) {
-        if (successBlock) successBlock();
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-
-
-- (void)friendRequestListWithLimit:(int)limit andOffset:(NSString *)offset onSuccess:(void (^)(NSArray<ONOFriendRequest *> *friendRequest))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendRequestListRequest *request = [[FriendRequestListRequest alloc] init];
-    request.limit = limit;
-    request.offset = offset;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.requestList" withMessage:request onSuccess:^(FriendRequestListResponse *msg) {
-        NSMutableArray<ONOFriendRequest*> *onoFriendRequestArray = [NSMutableArray new];
-        for (NewFriendRequest *friendRequest in msg.requestListArray) {
-            ONOFriendRequest *onofriendRequest = [[ONOFriendRequest alloc] init];
-            onofriendRequest.user.userId = friendRequest.user.uid;
-            onofriendRequest.user.nickname = friendRequest.user.name;
-            onofriendRequest.user.avatar = friendRequest.user.avatar;
-            onofriendRequest.user.gender = friendRequest.user.gender;
-            onofriendRequest.greeting = friendRequest.greeting;
-            [onoFriendRequestArray addObject:onofriendRequest];
-        }
-        
-        if (successBlock) successBlock(onoFriendRequestArray);
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-
-- (void)friendAgreeWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendAgreeRequest *request = [[FriendAgreeRequest alloc] init];
-    request.uid = usrId;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.agree" withMessage:request onSuccess:^(id msg) {
-        if (successBlock) successBlock();
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-- (void)friendIgnoreWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendIgnoreRequest *request = [[FriendIgnoreRequest alloc] init];
-    request.uid = usrId;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.ignore" withMessage:request onSuccess:^(id msg) {
-        if (successBlock) successBlock();
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-- (void)friendDeleteWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendDeleteRequest *request = [[FriendDeleteRequest alloc] init];
-    request.uid = usrId;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.delete" withMessage:request onSuccess:^(id msg) {
-        if (successBlock) successBlock();
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
-
-- (void)friendRemarkWithUserId:(NSString *)usrId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendRemarkRequest *request = [[FriendRemarkRequest alloc] init];
-    request.remark = alias;
-    request.uid = usrId;
-    [[ONOCore sharedCore] requestRoute:@"client.friend.remark" withMessage:request onSuccess:^(id msg) {
-        if (successBlock) successBlock();
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];

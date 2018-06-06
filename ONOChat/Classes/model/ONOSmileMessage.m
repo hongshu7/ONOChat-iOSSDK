@@ -5,27 +5,27 @@
 //  Copyright (c) 2018 ONO Team. All rights reserved.
 //
 
-#import "ONOAudioMessage.h"
+#import "ONOSmileMessage.h"
 
-@implementation ONOAudioMessage
-
+@implementation ONOSmileMessage
 
 - (NSInteger)type {
-    return 2;
+    return 4;
 }
 
 - (NSString *)encode {
-    return [NSString stringWithFormat:@"%@,%d", self.audio, self.duration];
+    return [NSString stringWithFormat:@"%@,%d,%d", self.image, self.width, self.height];
 }
 
 - (void)decode:(NSString *)data {
     NSArray<NSString *> *arrays = [data componentsSeparatedByString:@","];
-    self.audio = arrays[0];
-    self.duration = arrays[1].intValue;
+    self.image = arrays[0];
+    self.width = arrays[1].intValue;
+    self.height = arrays[2].intValue;
 }
 
 - (NSString *)description {
-    return @"[语音]";
+    return @"[图片]";
 }
 
 @end

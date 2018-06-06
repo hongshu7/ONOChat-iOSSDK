@@ -112,7 +112,7 @@
     //do login
     UserLoginRequest *clientUserLogin = [[UserLoginRequest alloc] init];
     clientUserLogin.token = _loginToken;
-    [self requestRoute:@"client.user.login" withMessage:clientUserLogin onSuccess:^(UserLoginResponse *msg) {
+    [self requestRoute:@"im.user.login" withMessage:clientUserLogin onSuccess:^(UserLoginResponse *msg) {
         NSLog(@"user login response");
         //upload device token
         [self uploadDeviceToken];
@@ -150,7 +150,7 @@
 {
 //    if (self.clientId != nil) {
 //        DeviceBindRequest *request = [[[[DeviceBindRequest builder] setType:1] setToken:self.clientId] build];
-//        [self requestRoute:@"client.user.bindDevice" withMessage:request onSuccess:^(id msg) {
+//        [self requestRoute:@"im.user.bindDevice" withMessage:request onSuccess:^(id msg) {
 //            NSLog(@"upload clientid success, token:%@", self.clientId);
 //            self.clientId = nil; //only upload once
 //        } onError:^(ErrorResponse *error) {
@@ -159,7 +159,7 @@
 //    }
 //    if (self.deviceToken != nil) {
 //        DeviceBindRequest *request = [[[[DeviceBindRequest builder] setType:2] setToken:self.deviceToken] build];
-//        [self requestRoute:@"client.user.bindDevice" withMessage:request onSuccess:^(id msg) {
+//        [self requestRoute:@"im.user.bindDevice" withMessage:request onSuccess:^(id msg) {
 //            NSLog(@"upload device token success, token:%@", self.deviceToken);
 //            self.deviceToken = nil; //only upload once
 //        } onError:^(ErrorResponse *error) {
