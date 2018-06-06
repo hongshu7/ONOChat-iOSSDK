@@ -96,7 +96,7 @@
 - (void)friendAddWithUserId:(NSString *)userId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
- *  好友添加请求列表
+ *  好友添加请求列表(offset时间点以前的请求列表)
  *  @param limit       条数
  *  @param offset    分页之前的最一条的createdAt
  */
@@ -128,7 +128,7 @@
 - (void)friendRemarkWithUserId:(NSString *)userId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
-- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+//- (void)friendListUpdateByTimestamp:(long)timestamp onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
 @end

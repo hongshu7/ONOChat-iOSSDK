@@ -7,11 +7,13 @@
 //
 
 #import "IMContactViewController.h"
-#import "IMConversationCell.h"
+#import "IMContactCell.h"
 #import "IMChatViewController.h"
 #import "IMAddNewFriendViewController.h"
 #import "UINavigationController+IM.h"
 #import "IMFriendRequestListViewController.h"
+#import "IMToast.h"
+#import "UIView+Extension.h"
 
 #import "ONOIMClient.h"
 
@@ -46,7 +48,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    self.dataArray = [[ONOIMClient sharedClient] getConversationList];
+    self.dataArray = [[ONOIMClient sharedClient] getFriends];
     [self.tableView reloadData];
 }
 
@@ -57,18 +59,18 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *ID = @"IMSessionViewCell";
+    static NSString *ID = @"IMContactCell";
     
-    IMConversationCell *cell =  [tableView dequeueReusableCellWithIdentifier:ID];
+    IMContactCell *cell =  [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:NSStringFromClass([IMConversationCell class]) owner:nil options:nil] lastObject];
+        cell = [IMContactCell im_loadFromXIB];
     }
-    cell.conversation = [self.dataArray objectAtIndex:indexPath.row];
+    cell.user = [self.dataArray objectAtIndex:indexPath.row];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;
+    return 50;
 };
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -76,8 +78,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     IMChatViewController *vc = [[IMChatViewController alloc] init];
-    ONOConversation *conversation = [self.dataArray objectAtIndex:indexPath.row];
-    vc.toUserModel = conversation.user;
+    ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
+    vc.toUserModel = user;
     [self.navigationController im_pushViewController:vc];
 }
 

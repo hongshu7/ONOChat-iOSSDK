@@ -25,7 +25,7 @@
 
 - (void)setConversation:(ONOConversation *)conversation {
     _conversation = conversation;
-    self.nicknameLabel.text = conversation.user.nickname;
+//    self.nicknameLabel.text = conversation.user.nickname;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

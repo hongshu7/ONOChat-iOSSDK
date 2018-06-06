@@ -396,24 +396,25 @@
 /**
  *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
  */
-- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendUpdatesRequest *request = [[FriendUpdatesRequest alloc] init];
-    
-    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(FriendUpdatesResponse *msg) {
-        
-        //        if (msg.uidsArray.count == 0) {
-        //            if (successBlock) successBlock([NSArray new]);
-        //        } else {
-        //            // 需要更新的 user
-        //            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
-        //                if (successBlock) successBlock(userArray);
-        //            } onError:^(int errorCode, NSString *messageId) {
-        //                if (errorBlock) errorBlock(errorCode, messageId);
-        //            }];
-        //        }
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
+//- (void)friendListUpdateByTimestamp:(long)timestamp onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+//    FriendUpdatesRequest *request = [[FriendUpdatesRequest alloc] init];
+//    request.friendsUpdateTime = timestamp;
+//    [[ONOCore sharedCore] requestRoute:@"im.friend.updates" withMessage:request onSuccess:^(FriendUpdatesResponse *msg) {
+//        
+//        //        if (msg.uidsArray.count == 0) {
+//        //            if (successBlock) successBlock([NSArray new]);
+//        //        } else {
+//        //            // 需要更新的 user
+//        //            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
+//        //                if (successBlock) successBlock(userArray);
+//        //            } onError:^(int errorCode, NSString *messageId) {
+//        //                if (errorBlock) errorBlock(errorCode, messageId);
+//        //            }];
+//        //        }
+//        NSLog(@"333");
+//    } onError:^(ErrorResponse *msg) {
+//        if (errorBlock) errorBlock(msg.code, msg.message);
+//    }];
+//}
 
 @end
