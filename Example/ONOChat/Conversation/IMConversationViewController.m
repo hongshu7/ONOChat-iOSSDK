@@ -47,10 +47,10 @@
 //
     } else {
         // iPhone8P  carrot
-        [self loginToIMServerWithToken:@"ju9es1b7w6kproa32ghqvdt0xzmfycin"];
+//        [self loginToIMServerWithToken:@"ju9es1b7w6kproa32ghqvdt0xzmfycin"];
         
         
-//        [self loginToIMServerWithToken:@"7d98kx2b5qulfzgsv4ma3rjnhwic06p1"];
+        [self loginToIMServerWithToken:@"7d98kx2b5qulfzgsv4ma3rjnhwic06p1"];
         // @"7d98kx2b5qulfzgsv4ma3rjnhwic06p1";     carrot3
     }
     

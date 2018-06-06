@@ -6,6 +6,7 @@ target 'ONOChat_Example' do
   pod 'AFNetworking'
   pod 'MJRefresh'
   pod 'SDWebImage', '~> 4.2.2'
+  pod 'MBProgressHUD'
 
   target 'ONOChat_Tests' do
     inherit! :search_paths

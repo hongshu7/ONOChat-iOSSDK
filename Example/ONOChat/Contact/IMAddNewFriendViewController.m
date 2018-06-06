@@ -73,7 +73,7 @@
     [[ONOIMClient sharedClient] friendAddWithUserId:user.userId andGreeting:@"你好" onSuccess:^{
         NSLog(@"好友添加请求发送成功");
     } onError:^(int errorCode, NSString *errorMessage) {
-        NSLog(@"好友添加请求发送失败%@",errorMessage);
+        NSLog(@"好友添加请求发送失败:%@",errorMessage);
     }];
 }
 

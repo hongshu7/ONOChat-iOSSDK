@@ -322,7 +322,7 @@
     FriendRequestRequest *request = [[FriendRequestRequest alloc] init];
     request.uid = userId;
     request.greeting = greeting;
-    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(id msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.request" withMessage:request onSuccess:^(id msg) {
         if (successBlock) successBlock ();
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
@@ -333,7 +333,7 @@
     FriendRequestListRequest *request = [[FriendRequestListRequest alloc] init];
     request.limit = limit;
     request.offset = offset;
-    [[ONOCore sharedCore] requestRoute:@"im.friend.requestList" withMessage:request onSuccess:^(FriendRequestListResponse *msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.requests" withMessage:request onSuccess:^(FriendRequestListResponse *msg) {
         NSMutableArray<ONOFriendRequest*> *array = [NSMutableArray new];
         for (NewFriendRequest *friendRequest in msg.requestListArray) {
             ONOFriendRequest *onofriendRequest = [ONOFriendRequest new];

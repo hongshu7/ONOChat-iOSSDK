@@ -8,6 +8,9 @@
 
 #import "IMFriendRequestListViewController.h"
 #import "UIImageView+WebCache.h"
+#import "IMFriendRequestCell.h"
+#import "UIView+Extension.h"
+#import "IMToast.h"
 
 #import "ONOIMClient.h"
 
@@ -57,17 +60,36 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *ID = @"UITableViewCell";
+    static NSString *ID = @"IMFriendRequestCell";
     
-    UITableViewCell *cell =  [tableView dequeueReusableCellWithIdentifier:ID];
+    IMFriendRequestCell *cell =  [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UITableViewCell"];
+        cell = [IMFriendRequestCell im_loadFromXIB];
     }
     
     ONOFriendRequest *friendRequest = [self.dataArray objectAtIndex:indexPath.row];
     
-    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:friendRequest.user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
-    cell.textLabel.text = friendRequest.user.nickname;
+    cell.friendRequest = friendRequest;
+    
+    __weak typeof(self) weakSelf = self;
+    cell.acceptDidClicked = ^(ONOFriendRequest *friendRequest) {
+        [[ONOIMClient sharedClient] friendAgreeWithUserId:friendRequest.user.userId onSuccess:^{
+            [IMToast showTipMessage:@"成功接受"];
+            [weakSelf loadRequestData];
+        } onError:^(int errorCode, NSString *errorMessage) {
+            [IMToast showTipMessage:errorMessage];
+        }];
+    };
+    
+    cell.ignoreDidClicked = ^(ONOFriendRequest *friendRequest) {
+        [[ONOIMClient sharedClient] friendIgnoreWithUserId:friendRequest.user.userId onSuccess:^{
+            [IMToast showTipMessage:@"成功忽略"];
+            [weakSelf loadRequestData];
+        } onError:^(int errorCode, NSString *errorMessage) {
+            [IMToast showTipMessage:errorMessage];
+        }];
+    };
+    
     return cell;
 }
 
