@@ -25,6 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self loadRequestData];
+    self.navigationItem.title = @"好友请求";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,13 +33,22 @@
     // Dispose of any resources that can be recreated.
 }
 - (void)loadRequestData {
-    [[ONOIMClient sharedClient] friendRequestListWithLimit:100 andOffset:@"" onSuccess:^(NSArray<ONOFriendRequest *> *friendRequest) {
+    [[ONOIMClient sharedClient] friendRequestListWithLimit:100 andOffset:[self currentTimeStr] onSuccess:^(NSArray<ONOFriendRequest *> *friendRequest) {
         self.dataArray = friendRequest;
         [self.tableView reloadData];
     } onError:^(int errorCode, NSString *errorMessage) {
         
     }];
 }
+
+//获取当前时间戳
+- (NSString *)currentTimeStr{
+    NSDate* date = [NSDate dateWithTimeIntervalSinceNow:0];//获取当前时间0秒后的时间
+    NSTimeInterval time=[date timeIntervalSince1970]*1000;// *1000 是精确到毫秒，不乘就是精确到秒
+    NSString *timeString = [NSString stringWithFormat:@"%.0f", time];
+    return timeString;
+}
+
 
 #pragma mark - tableView about
 

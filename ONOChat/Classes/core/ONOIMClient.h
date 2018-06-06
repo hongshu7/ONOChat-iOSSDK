@@ -90,10 +90,10 @@
 
 /**
  *  好友添加
- *  @param usrId       添加好友的id
+ *  @param userId       添加好友的id
  *  @param greeting    添加好友的问候语
  */
-- (void)friendAddWithUserId:(NSString *)usrId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)friendAddWithUserId:(NSString *)userId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
  *  好友添加请求列表
@@ -104,28 +104,28 @@
 
 /**
  *  好友添加请求 -> 通过
- *  @param usrId       添加请求好友的id
+ *  @param userId       添加请求好友的id
  */
-- (void)friendAgreeWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)friendAgreeWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
  *  好友添加请求 -> 忽略
- *  @param usrId       添加请求好友的id
+ *  @param userId       添加请求好友的id
  */
-- (void)friendIgnoreWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)friendIgnoreWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
  *  好友删除
- *  @param usrId       要删除好友的id
+ *  @param userId       要删除好友的id
  */
-- (void)friendDeleteWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)friendDeleteWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
  *  好友添加别名(备注名称)
- *  @param usrId       好友的id
+ *  @param userId       好友的id
  *  @param alias       别名
  */
-- (void)friendRemarkWithUserId:(NSString *)usrId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+- (void)friendRemarkWithUserId:(NSString *)userId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
 - (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;

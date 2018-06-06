@@ -13,6 +13,7 @@
 #import "ONOTextMessage.h"
 #import "ONOImageMessage.h"
 #import "ONOAudioMessage.h"
+#import "ONOSmileMessage.h"
 
 @interface ONOIMClient()
 
@@ -293,28 +294,7 @@
     return [ONODB getFriends];
 }
 
-/**
- *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
- */
-- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
-    FriendListRequest *request = [[FriendListRequest alloc] init];
-    
-    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(FriendListResponse *msg) {
-        
-//        if (msg.uidsArray.count == 0) {
-//            if (successBlock) successBlock([NSArray new]);
-//        } else {
-//            // 需要更新的 user
-//            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
-//                if (successBlock) successBlock(userArray);
-//            } onError:^(int errorCode, NSString *messageId) {
-//                if (errorBlock) errorBlock(errorCode, messageId);
-//            }];
-//        }
-    } onError:^(ErrorResponse *msg) {
-        if (errorBlock) errorBlock(msg.code, msg.message);
-    }];
-}
+
 
 
 - (void)friendSearchByKeyword:(NSString *)keyword onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
@@ -333,6 +313,104 @@
         }
         
       if (successBlock) successBlock(onoUserArray);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)friendAddWithUserId:(NSString *)userId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendRequestRequest *request = [[FriendRequestRequest alloc] init];
+    request.uid = userId;
+    request.greeting = greeting;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(id msg) {
+        if (successBlock) successBlock ();
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)friendRequestListWithLimit:(int)limit andOffset:(NSString *)offset onSuccess:(void (^)(NSArray<ONOFriendRequest *> *friendRequest))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendRequestListRequest *request = [[FriendRequestListRequest alloc] init];
+    request.limit = limit;
+    request.offset = offset;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.requestList" withMessage:request onSuccess:^(FriendRequestListResponse *msg) {
+        NSMutableArray<ONOFriendRequest*> *array = [NSMutableArray new];
+        for (NewFriendRequest *friendRequest in msg.requestListArray) {
+            ONOFriendRequest *onofriendRequest = [ONOFriendRequest new];
+            onofriendRequest.user = [[ONOUser alloc] init];
+            onofriendRequest.user.userId = friendRequest.user.uid;
+            onofriendRequest.user.nickname = friendRequest.user.name;
+            onofriendRequest.user.avatar = friendRequest.user.avatar;
+            onofriendRequest.user.gender = friendRequest.user.gender;
+            onofriendRequest.greeting = friendRequest.greeting;
+            [array addObject:onofriendRequest];
+        }
+        if (successBlock) successBlock(array);
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)friendAgreeWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendAgreeRequest *request = [[FriendAgreeRequest alloc] init];
+    request.uid = userId;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.agree" withMessage:request onSuccess:^(id msg) {
+        if (successBlock) successBlock ();
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+
+- (void)friendIgnoreWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendIgnoreRequest *request = [[FriendIgnoreRequest alloc] init];
+    request.uid = userId;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.ignore" withMessage:request onSuccess:^(id msg) {
+        if (successBlock) successBlock ();
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)friendDeleteWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendDeleteRequest *request = [[FriendDeleteRequest alloc] init];
+    request.uid = userId;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.delete" withMessage:request onSuccess:^(id msg) {
+        if (successBlock) successBlock ();
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+- (void)friendRemarkWithUserId:(NSString *)userId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendRemarkRequest *request = [[FriendRemarkRequest alloc] init];
+    request.uid = userId;
+    request.remark = alias;
+    [[ONOCore sharedCore] requestRoute:@"im.friend.remark" withMessage:request onSuccess:^(id msg) {
+        if (successBlock) successBlock ();
+    } onError:^(ErrorResponse *msg) {
+        if (errorBlock) errorBlock(msg.code, msg.message);
+    }];
+}
+
+/**
+ *  从服务端获取好友列表,并且更新本地数据库好友信息.(登陆之后内部调用)
+ */
+- (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
+    FriendUpdatesRequest *request = [[FriendUpdatesRequest alloc] init];
+    
+    [[ONOCore sharedCore] requestRoute:@"im.friend.list" withMessage:request onSuccess:^(FriendUpdatesResponse *msg) {
+        
+        //        if (msg.uidsArray.count == 0) {
+        //            if (successBlock) successBlock([NSArray new]);
+        //        } else {
+        //            // 需要更新的 user
+        //            [[ONOIMClient sharedClient] userProfiles:msg.uidsArray withCache:YES onSuccess:^(NSArray<ONOUser *> *userArray) {
+        //                if (successBlock) successBlock(userArray);
+        //            } onError:^(int errorCode, NSString *messageId) {
+        //                if (errorBlock) errorBlock(errorCode, messageId);
+        //            }];
+        //        }
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
     }];
