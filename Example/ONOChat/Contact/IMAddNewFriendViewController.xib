@@ -46,7 +46,7 @@
                         <action selector="searchAction" destination="-1" eventType="touchUpInside" id="vWm-7Z-4sj"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="查询结果:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4SR-w7-bmo">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="查询结果(点击发送好友请求):" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4SR-w7-bmo">
                     <rect key="frame" x="20" y="160" width="335" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
@@ -78,7 +78,7 @@
                 <constraint firstItem="2Ph-Us-9kS" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="zCB-YO-SZG"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
-            <point key="canvasLocation" x="6" y="83"/>
+            <point key="canvasLocation" x="5.5" y="82.5"/>
         </view>
     </objects>
 </document>

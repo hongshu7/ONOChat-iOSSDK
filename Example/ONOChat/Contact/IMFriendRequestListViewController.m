@@ -1,41 +1,42 @@
 //
-//  IMAddNewFriendViewController.m
+//  IMFriendRequestListViewController.m
 //  ONOChat_Example
 //
-//  Created by carrot__lsp on 2018/5/28.
+//  Created by carrot__lsp on 2018/6/5.
 //  Copyright © 2018年 Kevin. All rights reserved.
 //
 
-#import "IMAddNewFriendViewController.h"
+#import "IMFriendRequestListViewController.h"
 #import "UIImageView+WebCache.h"
 
 #import "ONOIMClient.h"
 
-@interface IMAddNewFriendViewController ()
+@interface IMFriendRequestListViewController ()
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (nonatomic, strong) NSArray *dataArray;
 
-@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
-@property (weak, nonatomic) IBOutlet UIButton *searchButton;
-@property (weak, nonatomic) IBOutlet UILabel *searchResultLabel;
-
 @end
 
-@implementation IMAddNewFriendViewController
+@implementation IMFriendRequestListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.navigationItem.title = @"好友添加";
+    [self loadRequestData];
 }
 
-- (IBAction)searchAction {
-    [[ONOIMClient sharedClient] friendSearchByKeyword:self.searchTextField.text onSuccess:^(NSArray<ONOUser *> *userArray) {
-        self.dataArray = userArray;
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (void)loadRequestData {
+    [[ONOIMClient sharedClient] friendRequestListWithLimit:100 andOffset:@"" onSuccess:^(NSArray<ONOFriendRequest *> *friendRequest) {
+        self.dataArray = friendRequest;
         [self.tableView reloadData];
     } onError:^(int errorCode, NSString *errorMessage) {
-        NSLog(@"%@",errorMessage);
+        
     }];
 }
 
@@ -53,10 +54,10 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UITableViewCell"];
     }
     
-    ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
+    ONOFriendRequest *friendRequest = [self.dataArray objectAtIndex:indexPath.row];
     
-    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
-    cell.textLabel.text = user.nickname;
+    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:friendRequest.user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
+    cell.textLabel.text = friendRequest.user.nickname;
     return cell;
 }
 
@@ -68,13 +69,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
     
-    [[ONOIMClient sharedClient] friendAddWithUserId:user.userId andGreeting:@"你好" onSuccess:^{
-        NSLog(@"好友添加请求发送成功");
-    } onError:^(int errorCode, NSString *errorMessage) {
-        NSLog(@"好友添加请求发送失败%@",errorMessage);
-    }];
 }
 
 

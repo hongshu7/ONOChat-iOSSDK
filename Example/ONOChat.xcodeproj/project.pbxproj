@@ -13,6 +13,8 @@
 		0ACAA84620B969FE00224804 /* IMConversationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACAA84120B969FE00224804 /* IMConversationViewController.xib */; };
 		0ACAA84C20B96A1C00224804 /* IMChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA84920B96A1C00224804 /* IMChatViewController.m */; };
 		0ACAA84D20B96A1C00224804 /* IMChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACAA84B20B96A1C00224804 /* IMChatModel.m */; };
+		4207293E20C693CB0074054A /* IMFriendRequestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4207293C20C693CB0074054A /* IMFriendRequestListViewController.m */; };
+		4207293F20C693CB0074054A /* IMFriendRequestListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4207293D20C693CB0074054A /* IMFriendRequestListViewController.xib */; };
 		4222901320BBF184009AB56D /* IMContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4222901120BBF184009AB56D /* IMContactViewController.m */; };
 		4222901420BBF184009AB56D /* IMContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4222901220BBF184009AB56D /* IMContactViewController.xib */; };
 		4222901820BBF943009AB56D /* IMAddNewFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4222901620BBF943009AB56D /* IMAddNewFriendViewController.m */; };
@@ -76,6 +78,9 @@
 		0ACAA84B20B96A1C00224804 /* IMChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMChatModel.m; sourceTree = "<group>"; };
 		10435B51AE6D4053F6D94EBF /* ONOChat.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ONOChat.podspec; path = ../ONOChat.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		391BD87DC845599C12EEE3DF /* Pods_ONOChat_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ONOChat_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4207293B20C693CB0074054A /* IMFriendRequestListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMFriendRequestListViewController.h; sourceTree = "<group>"; };
+		4207293C20C693CB0074054A /* IMFriendRequestListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMFriendRequestListViewController.m; sourceTree = "<group>"; };
+		4207293D20C693CB0074054A /* IMFriendRequestListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMFriendRequestListViewController.xib; sourceTree = "<group>"; };
 		4222901020BBF184009AB56D /* IMContactViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMContactViewController.h; sourceTree = "<group>"; };
 		4222901120BBF184009AB56D /* IMContactViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMContactViewController.m; sourceTree = "<group>"; };
 		4222901220BBF184009AB56D /* IMContactViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMContactViewController.xib; sourceTree = "<group>"; };
@@ -210,6 +215,9 @@
 				4222901520BBF943009AB56D /* IMAddNewFriendViewController.h */,
 				4222901620BBF943009AB56D /* IMAddNewFriendViewController.m */,
 				4222901720BBF943009AB56D /* IMAddNewFriendViewController.xib */,
+				4207293B20C693CB0074054A /* IMFriendRequestListViewController.h */,
+				4207293C20C693CB0074054A /* IMFriendRequestListViewController.m */,
+				4207293D20C693CB0074054A /* IMFriendRequestListViewController.xib */,
 			);
 			path = Contact;
 			sourceTree = "<group>";
@@ -462,6 +470,7 @@
 				4286A65020B7C1C100EEDD8B /* UUChatTableView.bundle in Resources */,
 				4286A66B20B7E3AF00EEDD8B /* logo_120.png in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
+				4207293F20C693CB0074054A /* IMFriendRequestListViewController.xib in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 				4286A66C20B7E3AF00EEDD8B /* logo_180.png in Resources */,
 				0ACAA84620B969FE00224804 /* IMConversationViewController.xib in Resources */,
@@ -615,6 +624,7 @@
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				0ACAA84C20B96A1C00224804 /* IMChatViewController.m in Sources */,
 				4286A64D20B7C1C100EEDD8B /* UUInputFunctionView.m in Sources */,
+				4207293E20C693CB0074054A /* IMFriendRequestListViewController.m in Sources */,
 				0ACAA84320B969FE00224804 /* IMConversationViewController.m in Sources */,
 				4242CBD020BD435000AC67AE /* IMGlobalData.m in Sources */,
 				4222901820BBF943009AB56D /* IMAddNewFriendViewController.m in Sources */,

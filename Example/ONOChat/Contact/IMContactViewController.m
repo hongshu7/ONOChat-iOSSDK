@@ -11,6 +11,7 @@
 #import "IMChatViewController.h"
 #import "IMAddNewFriendViewController.h"
 #import "UINavigationController+IM.h"
+#import "IMFriendRequestListViewController.h"
 
 #import "ONOIMClient.h"
 
@@ -30,9 +31,16 @@
     self.title = @"通讯录";
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"+好友" style:UIBarButtonItemStylePlain target:self action:@selector(addNewFriend)];
+    
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"好友请求列表" style:UIBarButtonItemStylePlain target:self action:@selector(newFriendList)];
 }
 
 
+
+- (void)newFriendList {
+    [self.navigationController im_pushViewController:[IMFriendRequestListViewController new]];
+}
 - (void)addNewFriend {
     [self.navigationController im_pushViewController:[IMAddNewFriendViewController new]];
 }

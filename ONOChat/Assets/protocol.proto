@@ -98,10 +98,12 @@ message SendMessagenResponse {
 }
 
 //请求 好友列表
-message FriendListRequest {}
+message FriendUpdatesRequest {
+  int64 friendsUpdateTime = 1;
+}
 //响应 好友列表
-message FriendListResponse {
-  repeated Friend friends = 1;
+message FriendUpdatesResponse {
+  FriendOperations friendOperations = 1;
 }
 
 //请求 发起好友请求

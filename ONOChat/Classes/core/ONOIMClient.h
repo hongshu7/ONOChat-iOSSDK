@@ -9,6 +9,7 @@
 #import "ONOCMessage.h"
 #import "ONOMessage.h"
 #import "ONOConversation.h"
+#import "ONOFriendRequest.h"
 
 @protocol ONOReceiveMessageDelegate <NSObject>
 - (void)onReceived:(ONOMessage *)message;
@@ -86,6 +87,45 @@
  *  @param keyword    搜索关键字
  */
 - (void)friendSearchByKeyword:(NSString *)keyword onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友添加
+ *  @param usrId       添加好友的id
+ *  @param greeting    添加好友的问候语
+ */
+- (void)friendAddWithUserId:(NSString *)usrId andGreeting:(NSString *)greeting onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友添加请求列表
+ *  @param limit       条数
+ *  @param offset    分页之前的最一条的createdAt
+ */
+- (void)friendRequestListWithLimit:(int)limit andOffset:(NSString *)offset onSuccess:(void (^)(NSArray<ONOFriendRequest *> *friendRequest))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友添加请求 -> 通过
+ *  @param usrId       添加请求好友的id
+ */
+- (void)friendAgreeWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友添加请求 -> 忽略
+ *  @param usrId       添加请求好友的id
+ */
+- (void)friendIgnoreWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友删除
+ *  @param usrId       要删除好友的id
+ */
+- (void)friendDeleteWithUserId:(NSString *)usrId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
+
+/**
+ *  好友添加别名(备注名称)
+ *  @param usrId       好友的id
+ *  @param alias       别名
+ */
+- (void)friendRemarkWithUserId:(NSString *)usrId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
 - (void)friendListUpdateOnSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;

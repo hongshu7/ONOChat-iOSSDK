@@ -1052,46 +1052,16 @@ typedef struct SendMessagenResponse__storage_ {
 
 @end
 
-#pragma mark - FriendListRequest
+#pragma mark - FriendUpdatesRequest
 
-@implementation FriendListRequest
+@implementation FriendUpdatesRequest
 
+@dynamic friendsUpdateTime;
 
-typedef struct FriendListRequest__storage_ {
+typedef struct FriendUpdatesRequest__storage_ {
   uint32_t _has_storage_[1];
-} FriendListRequest__storage_;
-
-// This method is threadsafe because it is initially called
-// in +initialize for each subclass.
-+ (GPBDescriptor *)descriptor {
-  static GPBDescriptor *descriptor = nil;
-  if (!descriptor) {
-    GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[FriendListRequest class]
-                                     rootClass:[ProtocolRoot class]
-                                          file:ProtocolRoot_FileDescriptor()
-                                        fields:NULL
-                                    fieldCount:0
-                                   storageSize:sizeof(FriendListRequest__storage_)
-                                         flags:GPBDescriptorInitializationFlag_None];
-    NSAssert(descriptor == nil, @"Startup recursed!");
-    descriptor = localDescriptor;
-  }
-  return descriptor;
-}
-
-@end
-
-#pragma mark - FriendListResponse
-
-@implementation FriendListResponse
-
-@dynamic friendsArray, friendsArray_Count;
-
-typedef struct FriendListResponse__storage_ {
-  uint32_t _has_storage_[1];
-  NSMutableArray *friendsArray;
-} FriendListResponse__storage_;
+  int64_t friendsUpdateTime;
+} FriendUpdatesRequest__storage_;
 
 // This method is threadsafe because it is initially called
 // in +initialize for each subclass.
@@ -1100,23 +1070,76 @@ typedef struct FriendListResponse__storage_ {
   if (!descriptor) {
     static GPBMessageFieldDescription fields[] = {
       {
-        .name = "friendsArray",
-        .dataTypeSpecific.className = GPBStringifySymbol(Friend),
-        .number = FriendListResponse_FieldNumber_FriendsArray,
-        .hasIndex = GPBNoHasBit,
-        .offset = (uint32_t)offsetof(FriendListResponse__storage_, friendsArray),
-        .flags = GPBFieldRepeated,
-        .dataType = GPBDataTypeMessage,
+        .name = "friendsUpdateTime",
+        .dataTypeSpecific.className = NULL,
+        .number = FriendUpdatesRequest_FieldNumber_FriendsUpdateTime,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FriendUpdatesRequest__storage_, friendsUpdateTime),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
       },
     };
     GPBDescriptor *localDescriptor =
-        [GPBDescriptor allocDescriptorForClass:[FriendListResponse class]
+        [GPBDescriptor allocDescriptorForClass:[FriendUpdatesRequest class]
                                      rootClass:[ProtocolRoot class]
                                           file:ProtocolRoot_FileDescriptor()
                                         fields:fields
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
-                                   storageSize:sizeof(FriendListResponse__storage_)
+                                   storageSize:sizeof(FriendUpdatesRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\021\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - FriendUpdatesResponse
+
+@implementation FriendUpdatesResponse
+
+@dynamic hasFriendOperations, friendOperations;
+
+typedef struct FriendUpdatesResponse__storage_ {
+  uint32_t _has_storage_[1];
+  FriendOperations *friendOperations;
+} FriendUpdatesResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "friendOperations",
+        .dataTypeSpecific.className = GPBStringifySymbol(FriendOperations),
+        .number = FriendUpdatesResponse_FieldNumber_FriendOperations,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FriendUpdatesResponse__storage_, friendOperations),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeMessage,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FriendUpdatesResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FriendUpdatesResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\020\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

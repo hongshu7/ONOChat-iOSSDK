@@ -27,7 +27,6 @@
 
 CF_EXTERN_C_BEGIN
 
-@class Friend;
 @class FriendOperations;
 @class Message;
 @class NewFriendRequest;
@@ -382,29 +381,35 @@ typedef GPB_ENUM(SendMessagenResponse_FieldNumber) {
 
 @end
 
-#pragma mark - FriendListRequest
+#pragma mark - FriendUpdatesRequest
+
+typedef GPB_ENUM(FriendUpdatesRequest_FieldNumber) {
+  FriendUpdatesRequest_FieldNumber_FriendsUpdateTime = 1,
+};
 
 /**
  * 请求 好友列表
  **/
-@interface FriendListRequest : GPBMessage
+@interface FriendUpdatesRequest : GPBMessage
+
+@property(nonatomic, readwrite) int64_t friendsUpdateTime;
 
 @end
 
-#pragma mark - FriendListResponse
+#pragma mark - FriendUpdatesResponse
 
-typedef GPB_ENUM(FriendListResponse_FieldNumber) {
-  FriendListResponse_FieldNumber_FriendsArray = 1,
+typedef GPB_ENUM(FriendUpdatesResponse_FieldNumber) {
+  FriendUpdatesResponse_FieldNumber_FriendOperations = 1,
 };
 
 /**
  * 响应 好友列表
  **/
-@interface FriendListResponse : GPBMessage
+@interface FriendUpdatesResponse : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Friend*> *friendsArray;
-/** The number of items in @c friendsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger friendsArray_Count;
+@property(nonatomic, readwrite, strong, null_resettable) FriendOperations *friendOperations;
+/** Test to see if @c friendOperations has been set. */
+@property(nonatomic, readwrite) BOOL hasFriendOperations;
 
 @end
 
