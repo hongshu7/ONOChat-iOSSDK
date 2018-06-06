@@ -8,6 +8,7 @@
 
 #import "IMAddNewFriendViewController.h"
 #import "UIImageView+WebCache.h"
+#import "IMToast.h"
 
 #import "ONOIMClient.h"
 
@@ -71,9 +72,9 @@
     ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
     
     [[ONOIMClient sharedClient] friendAddWithUserId:user.userId andGreeting:@"你好" onSuccess:^{
-        NSLog(@"好友添加请求发送成功");
+        [IMToast showTipMessage:@"好友添加请求发送成功"];
     } onError:^(int errorCode, NSString *errorMessage) {
-        NSLog(@"好友添加请求发送失败:%@",errorMessage);
+        [IMToast showTipMessage:errorMessage];
     }];
 }
 
