@@ -43,7 +43,7 @@
  *  发送消息
  *
  *  @param message   要发送的消息
- *  @param userId    目标用户ID
+ *  @param targetId    目标ID
  */
 
 - (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;

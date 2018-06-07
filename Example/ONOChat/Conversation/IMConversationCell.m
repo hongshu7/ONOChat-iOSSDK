@@ -7,6 +7,7 @@
 //
 
 #import "IMConversationCell.h"
+#import "UIImageView+WebCache.h"
 
 @interface IMConversationCell()
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
@@ -25,7 +26,8 @@
 
 - (void)setConversation:(ONOConversation *)conversation {
     _conversation = conversation;
-//    self.nicknameLabel.text = conversation.user.nickname;
+    self.nicknameLabel.text = conversation.user.nickname;
+    [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:conversation.user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
