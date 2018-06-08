@@ -65,10 +65,8 @@
 - (NSArray <ONOMessage *>*)getMessageList:(NSString *)targetId offset:(NSString *)offset limit:(int)limit;
 
 /**
- *  获取 好友列表(从本地获取)
+ *  获取未读消息数目
  */
-- (NSArray <ONOUser *>*)getFriends;
-
 - (int)totalUnreadCount;
 
 - (ONOMessage *)createMessageByType:(int)type;
@@ -81,6 +79,12 @@
 
 
 // 好友
+
+/**
+ *  获取 好友列表(从本地获取)
+ */
+- (NSArray <ONOUser *>*)getFriends;
+
 
 /**
  *  好友模糊搜索

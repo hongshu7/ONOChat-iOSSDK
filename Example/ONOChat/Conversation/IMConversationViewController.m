@@ -28,7 +28,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"会话";
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"发起聊天" style:UIBarButtonItemStylePlain target:self action:@selector(starNewSession)];
     
@@ -69,6 +68,8 @@
     [[ONOIMClient sharedClient] loginWithToken:token onSuccess:^(ONOUser *user) {
         NSLog(@"user logined with name:%@", user.nickname);
         [IMGlobalData sharedData].user = user;
+        
+        self.navigationItem.title = user.nickname;
         self.dataArray = [[ONOIMClient sharedClient] getConversationList];
         [self.tableView reloadData];
     } onError:^(int errorCode, NSString *errorMsg) {

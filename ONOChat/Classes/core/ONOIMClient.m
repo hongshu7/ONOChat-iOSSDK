@@ -36,7 +36,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        [[ONOCore sharedCore] addListenerForRoute:@"push.Message" withCallback:^(Message *msg) {
+        [[ONOCore sharedCore] addListenerForRoute:@"push.message" withCallback:^(Message *msg) {
             [self receiveMessage:msg];
         }];
     }

@@ -14,9 +14,11 @@
 #import "UUMessage.h"
 #import <MJRefresh/MJRefresh.h>
 #import "UUChatCategory.h"
+#import "IMGlobalData.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
+#import "ONODB.h"
 
 @interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate,ONOReceiveMessageDelegate>
 {
@@ -44,6 +46,8 @@
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
     
     [ONOIMClient sharedClient].receiveMessageDelegate = self;
+    
+    self.navigationItem.title = self.toUserModel.nickname;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -80,12 +84,27 @@
 #pragma mark - ONOReceiveMessageDelegate
 - (void)onReceived:(ONOMessage *)message {
     
-    NSDictionary *dic = @{@"strContent": @"7777",
-                          @"type": @(UUMessageTypeText)};
+    if (message.type == 1) {
+        ONOTextMessage *textMessage = (ONOTextMessage *)message;
+        ONOUser *fromUser = [ONODB fetchUser:message.userId];
+        
+        NSDictionary *dic = @{
+                              @"strContent": textMessage.text,
+                              @"type": @(UUMessageTypeText),
+                              @"strIcon": fromUser.avatar,
+                              @"strName": fromUser.nickname,
+                              };
+        
+        [self.chatModel addOtherChatItem:dic];
+        [self.chatTableView reloadData];
+        [self tableViewScrollToBottom];
+    } else {
+        
+    }
     
-    [self.chatModel addOtherChatItem:dic];
-    [self.chatTableView reloadData];
-    [self tableViewScrollToBottom];
+//    [dataDic setObject:@"Hi:sister" forKey:@"strName"];
+//    [dataDic setObject:URLStr forKey:@"strIcon"];
+    
     
     
 //    addOtherChatItem
@@ -111,14 +130,14 @@
 	
 	
 	
-    UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:@[@" private ",@" group "]];
-    [segment addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
-    segment.selectedSegmentIndex = 0;
-    self.navigationItem.titleView = segment;
-    
-    self.navigationController.navigationBar.tintColor = [UIColor grayColor];
+//    UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:@[@" private ",@" group "]];
+//    [segment addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
+//    segment.selectedSegmentIndex = 0;
+//    self.navigationItem.titleView = segment;
+//
+//    self.navigationController.navigationBar.tintColor = [UIColor grayColor];
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:nil action:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:nil action:nil];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:nil action:nil];
 }
 
 - (void)addRefreshViews
@@ -208,8 +227,13 @@
 
 - (void)UUInputFunctionView:(UUInputFunctionView *)funcView sendMessage:(NSString *)message
 {
-    NSDictionary *dic = @{@"strContent": message,
-                          @"type": @(UUMessageTypeText)};
+    ONOUser *user = [IMGlobalData sharedData].user;
+    NSDictionary *dic = @{
+                          @"strContent": message,
+                          @"type": @(UUMessageTypeText),
+                          @"strIcon": user.avatar,
+                          @"strName": user.nickname,
+                          };
     funcView.textViewInput.text = @"";
     [funcView changeSendBtnWithPhoto:YES];
     [self dealTheFunctionData:dic];
