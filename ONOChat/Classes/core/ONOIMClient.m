@@ -17,6 +17,8 @@
 
 @interface ONOIMClient()
 
+@property (nonatomic, strong) NSString *gateHost;
+@property (nonatomic, assign) int gatePort;
 
 @end
 
@@ -36,6 +38,8 @@
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.gateHost = @"ono-chat.340wan.com";
+        self.gatePort = 3000;
         [[ONOCore sharedCore] addListenerForRoute:@"push.message" withCallback:^(Message *msg) {
             [self receiveMessage:msg];
         }];
@@ -68,9 +72,10 @@
 
 #pragma mark public apis
 
-- (void)setupWithHost:(NSString*)host port:(int)port
+- (void)setupGateHost:(NSString*)host port:(int)port
 {
-    [[ONOCore sharedCore] setupWithHost:host port:port];
+    self.gateHost = host;
+    self.gatePort = port;
 }
 
 
@@ -92,7 +97,7 @@
 
 - (void)loginWithToken:(NSString *)token onSuccess:(void(^)(ONOUser *user))successBlock onError:(void(^)(int errorCode, NSString *errorMsg))errorBlock
 {
-    [[ONOCore sharedCore] loginWithToken:token onSuccess:^(UserLoginResponse* msg) {
+    [[ONOCore sharedCore] loginToGateHost:self.gateHost port:self.gatePort token:token onSuccess:^(UserLoginResponse* msg) {
         //获取自身信息
         NSString *userId = msg.user.uid;
         ONOUser *user = [[ONOUser alloc] init];

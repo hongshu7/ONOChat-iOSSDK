@@ -47,7 +47,7 @@ typedef void (^ONOErrorResponse)(id msg);
 @property (nonatomic, strong) NSString *userId;
 @property (nonatomic, strong) ONOUser *user;
 
-- (void)connect;
+- (void)connectToGateHost:(NSString *)host port:(int)port;
 - (void)disconnect;
 
 - (void)handleConnected:(NSDictionary *)response;
@@ -63,7 +63,7 @@ typedef void (^ONOErrorResponse)(id msg);
 - (void)bindClientId:(NSString *)clientId;
 - (void)bindDeviceToken:(NSString *)deviceToken;
 
-- (void)loginWithToken:(NSString *)token onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error;
+- (void)loginToGateHost:(NSString *)host port:(int)port token:(NSString *)token onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error;
 
 
 @end

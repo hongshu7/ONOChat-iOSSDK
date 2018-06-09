@@ -15,8 +15,9 @@
 
 @property BOOL isStop;
 
-@property (strong, nonatomic) NSString *host;
-@property int port;
+@property (strong, nonatomic) NSString *gateUrl;
+@property (strong, nonatomic) NSString *chatHost;
+@property (strong, nonatomic) NSString *chatPort;
 @property (strong, nonatomic) FastSocket *client;
 
 @property (strong, nonatomic) NSDictionary *localData;
@@ -46,13 +47,12 @@
 
 - (BOOL)isSetup
 {
-    return  self.host != nil;
+    return  self.gateUrl != nil;
 }
 
-- (void)setupWithHost:(NSString*)host port:(int)port
+- (void)setupGateHost:(NSString*)host port:(int)port
 {
-    self.host = host;
-    self.port = port;
+    self.gateUrl = [NSString stringWithFormat:@"http://%@:%d", host, port];
 }
 
 - (void)connect
@@ -78,12 +78,19 @@
     if (self.isConnect) {
         return;
     }
-    //NSLog(@"connectBackground");
-    //连接
-    self.client = [[FastSocket alloc] initWithHost:self.host andPort:[@(self.port) stringValue]];
+    NSLog(@"connectBackground1");
+    //获取门服务器信息
+    if (self.chatHost == nil) {
+        [self connectToGate];
+        return;
+    }
+    NSLog(@"connectBackground2");
+    //连接节点
+    self.client = [[FastSocket alloc] initWithHost:self.chatHost andPort:self.chatPort];
     [self.client connect];
     //NSLog(@"connectBackground 2");
     if (self.client.lastError != nil) {
+        self.gateUrl = nil;
         [self connectAfterAWhile];
         return;
     }
@@ -101,6 +108,31 @@
     //开始接收数据
     while (!self.isStop) {
         [self reciveData];
+    }
+}
+
+- (void)connectToGate {
+    NSLog(@"gateUrl:%@", self.gateUrl);
+    NSURL *url = [NSURL URLWithString:self.gateUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod: @"GET"];
+    [request setTimeoutInterval: 5];
+    NSHTTPURLResponse *response = nil ;
+    NSError *error = nil;
+    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if([object isKindOfClass:[NSDictionary class]])
+    {
+        NSDictionary *dict = object;
+        self.chatHost = dict[@"ip"];
+        self.chatPort = dict[@"port"];
+        [self connectBackground];
+        [NSThread detachNewThreadSelector:@selector(connectBackground) toTarget:self withObject:nil];
+    }
+    else
+    {
+        [self connectAfterAWhile];
+        return;
     }
 }
 
