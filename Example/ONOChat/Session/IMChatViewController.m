@@ -15,12 +15,12 @@
 #import <MJRefresh/MJRefresh.h>
 #import "UUChatCategory.h"
 #import "IMGlobalData.h"
+#import "IMChatManager.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
-#import "ONODB.h"
 
-@interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate,ONOReceiveMessageDelegate>
+@interface IMChatViewController ()<UUInputFunctionViewDelegate, UUMessageCellDelegate, UITableViewDataSource, UITableViewDelegate,ONOReceiveMessageDelegate,IMReceiveMessageDelegate>
 {
 	CGFloat _keyboardHeight;
 }
@@ -44,10 +44,12 @@
     [self loadBaseViewsAndData];
 	_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
-    
-    [ONOIMClient sharedClient].receiveMessageDelegate = self;
+//
+//    [ONOIMClient sharedClient].receiveMessageDelegate = self;
     
     self.navigationItem.title = self.toUserModel.nickname;
+    
+    [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -86,18 +88,23 @@
     
     if (message.type == 1) {
         ONOTextMessage *textMessage = (ONOTextMessage *)message;
-        ONOUser *fromUser = [ONODB fetchUser:message.userId];
+        __weak typeof(self) weakSelf = self;
+        [[ONOIMClient sharedClient] userProfile:message.userId onSuccess:^(ONOUser *fromUser) {
+            NSDictionary *dic = @{
+                                  @"strContent": textMessage.text,
+                                  @"type": @(UUMessageTypeText),
+                                  @"strIcon": fromUser.avatar,
+                                  @"strName": fromUser.nickname,
+                                  };
+            [weakSelf.chatModel addOtherChatItem:dic];
+            [weakSelf.chatTableView reloadData];
+            [weakSelf tableViewScrollToBottom];
+        } onError:^(int errorCode, NSString *errorMessage) {
+            
+        }];
         
-        NSDictionary *dic = @{
-                              @"strContent": textMessage.text,
-                              @"type": @(UUMessageTypeText),
-                              @"strIcon": fromUser.avatar,
-                              @"strName": fromUser.nickname,
-                              };
         
-        [self.chatModel addOtherChatItem:dic];
-        [self.chatTableView reloadData];
-        [self tableViewScrollToBottom];
+        
     } else {
         
     }
@@ -167,6 +174,8 @@
 {
     self.chatModel = [[IMChatModel alloc] init];
     self.chatModel.isGroupChat = NO;
+    /**  */
+    self.chatModel.targetId = self.toUserModel.userId;
     [self.chatModel populateRandomDataSource];
 	
     [self.chatTableView reloadData];

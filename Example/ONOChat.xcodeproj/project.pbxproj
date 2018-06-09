@@ -37,6 +37,7 @@
 		4286A66020B7C1DD00EEDD8B /* headImage.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */; };
 		4286A66B20B7E3AF00EEDD8B /* logo_120.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286A66920B7E3AF00EEDD8B /* logo_120.png */; };
 		4286A66C20B7E3AF00EEDD8B /* logo_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 4286A66A20B7E3AF00EEDD8B /* logo_180.png */; };
+		42B496B720CBC113006FD9FF /* IMChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B496B620CBC113006FD9FF /* IMChatManager.m */; };
 		42C9869720C7C3AB0079575E /* IMFriendRequestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C9869520C7C3AB0079575E /* IMFriendRequestCell.m */; };
 		42C9869820C7C3AB0079575E /* IMFriendRequestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 42C9869620C7C3AB0079575E /* IMFriendRequestCell.xib */; };
 		42C9869C20C7C6820079575E /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 42C9869A20C7C6810079575E /* UIView+Extension.m */; };
@@ -123,6 +124,8 @@
 		4286A65C20B7C1DD00EEDD8B /* headImage.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = headImage.jpeg; sourceTree = "<group>"; };
 		4286A66920B7E3AF00EEDD8B /* logo_120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_120.png; sourceTree = "<group>"; };
 		4286A66A20B7E3AF00EEDD8B /* logo_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_180.png; sourceTree = "<group>"; };
+		42B496B520CBC113006FD9FF /* IMChatManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMChatManager.h; sourceTree = "<group>"; };
+		42B496B620CBC113006FD9FF /* IMChatManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMChatManager.m; sourceTree = "<group>"; };
 		42C9869420C7C3AB0079575E /* IMFriendRequestCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IMFriendRequestCell.h; sourceTree = "<group>"; };
 		42C9869520C7C3AB0079575E /* IMFriendRequestCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IMFriendRequestCell.m; sourceTree = "<group>"; };
 		42C9869620C7C3AB0079575E /* IMFriendRequestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMFriendRequestCell.xib; sourceTree = "<group>"; };
@@ -196,6 +199,8 @@
 				0ACAA83D20B969FE00224804 /* IMConversationCell.h */,
 				0ACAA83F20B969FE00224804 /* IMConversationCell.m */,
 				0ACAA84020B969FE00224804 /* IMConversationCell.xib */,
+				42B496B520CBC113006FD9FF /* IMChatManager.h */,
+				42B496B620CBC113006FD9FF /* IMChatManager.m */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -650,6 +655,7 @@
 				0ACAA84420B969FE00224804 /* IMConversationCell.m in Sources */,
 				4222901320BBF184009AB56D /* IMContactViewController.m in Sources */,
 				4286A64F20B7C1C100EEDD8B /* UUMessageFrame.m in Sources */,
+				42B496B720CBC113006FD9FF /* IMChatManager.m in Sources */,
 				4286A65420B7C1C100EEDD8B /* UUImageAvatarBrowser.m in Sources */,
 				4286A65120B7C1C100EEDD8B /* UUMessageCell.m in Sources */,
 				42C9869720C7C3AB0079575E /* IMFriendRequestCell.m in Sources */,

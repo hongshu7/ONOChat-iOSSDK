@@ -17,7 +17,8 @@
 
 + (void)insertConversation:(ONOConversation *)conversation;
 + (void)updateConversation:(ONOConversation *)conversation;
-+ (void)deleteConversation:(NSString *)userId;
++ (void)updateConversation:(NSString *)targetId toNewMessageId:(NSString *)messageId;
++ (void)deleteConversation:(NSString *)targetId;
 
 +(void)insertUser:(ONOUser *)user;
 +(void)updateUser:(ONOUser *)user;

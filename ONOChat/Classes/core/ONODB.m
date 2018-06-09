@@ -172,7 +172,7 @@ static FMDatabase *db;
 
 + (ONOConversation*)fetchConversation:(NSString *)targetId {
     [self openDB];
-    FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND user_id=?",
+    FMResultSet *rs = [db executeQuery:@"SELECT * FROM conversation WHERE belong_id=? AND target_id=?",
                        [self selfUserId],
                        targetId
                        ];
@@ -184,7 +184,7 @@ static FMDatabase *db;
         conversation.contactTime = [rs doubleForColumn:@"contact_time"];
         conversation.unreadCount = [rs intForColumn:@"unread_count"];
         
-        NSString *userId = [rs stringForColumn:@"user_id"];
+        NSString *userId = [rs stringForColumn:@"target_id"];
         conversation.user = [self fetchUser:userId];
         NSString *lastMessageId = [rs stringForColumn:@"last_message_id"];
         if (lastMessageId != nil) {
@@ -272,7 +272,7 @@ static FMDatabase *db;
         return;
     }
     [self openDB];
-    NSString *sql = @"UPDATE conversation set contact_time=?, unread_count=?, last_message_id=? WHERE belong_id=? AND user_id=?";
+    NSString *sql = @"UPDATE conversation set contact_time=?, unread_count=?, last_message_id=? WHERE belong_id=? AND target_id=?";
     NSString *lastMessageId = @"";
     if (conversation.lastMessage != nil) {
         lastMessageId = conversation.lastMessage.messageId;
@@ -282,12 +282,22 @@ static FMDatabase *db;
     [self closeDB];
 }
 
-+ (void)deleteConversation:(NSString *)userId
++ (void)updateConversation:(NSString *)targetId toNewMessageId:(NSString *)messageId {
+    if (targetId == nil || messageId == nil ) {
+        return;
+    }
+    [self openDB];
+    NSString *sql = @"UPDATE conversation set last_message_id=? WHERE belong_id=? AND target_id=?";
+    [db executeUpdate:sql,messageId, [self selfUserId], targetId];
+    [self closeDB];
+}
+
++ (void)deleteConversation:(NSString *)targetId
 {
     [self openDB];
     NSString *sql = @"DELETE FROM conversation WHERE belong_id=? AND user_id=?";
-    NSLog(@"DELETE FROM conversation WHERE belong_id=%@ AND user_id=%@", [self selfUserId], userId);
-    [db executeUpdate:sql, [self selfUserId], userId];
+    NSLog(@"DELETE FROM conversation WHERE belong_id=%@ AND target_id=%@", [self selfUserId], targetId);
+    [db executeUpdate:sql, [self selfUserId], targetId];
     [self closeDB];
 }
 
@@ -406,6 +416,7 @@ static FMDatabase *db;
         message.isSend = [rs boolForColumn:@"is_send"];
         message.isSelf = [rs boolForColumn:@"is_self"];
         message.isError = [rs boolForColumn:@"is_error"];
+        message.user = [self fetchUser:message.userId];
         NSString *data = [rs stringForColumn:@"data"];
         [message decode:data];
     }
@@ -413,23 +424,23 @@ static FMDatabase *db;
     return message;
 }
 
-+ (NSArray*)fetchMessages:(NSString *)userId offset:(NSString *)offset limit:(int)limit
++ (NSArray*)fetchMessages:(NSString *)targetId offset:(NSString *)offset limit:(int)limit
 {
     [self openDB];
     NSMutableArray* messages = [NSMutableArray new];
     FMResultSet *rs = nil;
-    if (offset > 0) {
-        rs = [db executeQuery:@"SELECT * FROM message WHERE belong_id=? AND user_id=? AND group_id = '0' AND message_id<? ORDER BY message_id DESC LIMIT ?",
+    if (offset != nil && ![offset isEqualToString:@""]) {
+        rs = [db executeQuery:@"SELECT * FROM message WHERE belong_id=? AND target_id=? AND message_id<? ORDER BY message_id DESC LIMIT ?",
                [self selfUserId],
-               userId,
+               targetId,
                offset,
                [NSNumber numberWithInt:limit]];
     } else {
-        rs = [db executeQuery:@"SELECT * FROM message WHERE belong_id=? AND user_id=? AND group_id = '0' ORDER BY message_id DESC LIMIT ?",
+        rs = [db executeQuery:@"SELECT * FROM message WHERE belong_id=? AND target_id=? ORDER BY message_id DESC LIMIT ?",
               [self selfUserId],
-              userId,
+              targetId,
               [NSNumber numberWithInt:limit]];
-        NSLog(@"SELECT * FROM message WHERE belong_id=%@ AND user_id=%@ ORDER BY message_id DESC LIMIT %d", [self selfUserId], userId, limit);
+        NSLog(@"SELECT * FROM message WHERE belong_id=%@ AND target_id=%@ ORDER BY message_id DESC LIMIT %d", [self selfUserId], targetId, limit);
     }
     ONOMessage *message = nil;
     while ([rs next]) {
@@ -465,6 +476,7 @@ static FMDatabase *db;
 + (void)markMessageSend:(NSString *)newMessgeId fromOldId:(NSString *)oldMessageId
 {
      NSLog(@"UPDATE message SET message_id=%@, is_send=%d, is_error=%d WHERE message_id=%@", newMessgeId, YES, NO, oldMessageId);
+    
     [self openDB];
     NSString *sql = @"UPDATE message SET message_id=?, is_send=?, is_error=? WHERE message_id=?";
     [db executeUpdate:sql, newMessgeId, @(YES), @(NO), oldMessageId];

@@ -16,7 +16,8 @@
 
 - (void)populateRandomDataSource {
     self.dataSource = [NSMutableArray array];
-//    [self.dataSource addObjectsFromArray:[self additems:5]];
+    [self.dataSource addObjectsFromArray:[self addRecordMessage]];
+//    [self addRecordMessage];
 }
 
 - (void)addRandomItemsToDataSource:(NSInteger)number{
@@ -104,6 +105,53 @@ static NSString *previousTime = nil;
         }
         [result addObject:messageFrame];
     }
+    return result;
+}
+
+
+- (NSArray<UUMessageFrame *> *)addRecordMessage
+{
+    
+    NSMutableArray<UUMessageFrame *> *result = [NSMutableArray array];
+    NSArray <ONOMessage *> *messageArray = [[ONOIMClient sharedClient] getMessageList:self.targetId offset:nil limit:200];
+    
+    
+    for (ONOMessage *message in messageArray) {
+        if (message.type == 1) {
+            ONOTextMessage *textMessage = (ONOTextMessage*)message;
+            
+            
+            NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+            
+            [dictionary setObject:textMessage.text forKey:@"strContent"];
+            [dictionary setObject:@(UUMessageTypeText) forKey:@"type"];
+            
+            NSDate *date = [[NSDate date]dateByAddingTimeInterval:arc4random()%1000*(2) ];
+            [dictionary setObject:[date description] forKey:@"strTime"];
+            [dictionary setObject:textMessage.user.nickname forKey:@"strName"];
+            [dictionary setObject:textMessage.user.avatar forKey:@"strIcon"];
+            
+            if (textMessage.isSelf) {
+                [dictionary setObject:@(UUMessageFromMe) forKey:@"from"];
+            } else {
+                [dictionary setObject:@(UUMessageFromOther) forKey:@"from"];
+            }
+            
+            NSDictionary *dataDic = [dictionary copy];
+            UUMessageFrame *messageFrame = [[UUMessageFrame alloc]init];
+            UUMessage *message = [[UUMessage alloc] init];
+            [message setWithDict:dataDic];
+            [message minuteOffSetStart:previousTime end:dataDic[@"strTime"]];
+            messageFrame.showTime = message.showDateLabel;
+            [messageFrame setMessage:message];
+            
+            if (message.showDateLabel) {
+                previousTime = dataDic[@"strTime"];
+            }
+            [result addObject:messageFrame];
+        }
+    }
+    
     return result;
 }
 

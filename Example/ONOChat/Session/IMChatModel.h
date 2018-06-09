@@ -17,12 +17,16 @@
 
 @property (nonatomic, strong) NSMutableArray<UUMessageFrame *> *dataSource;
 
+@property (nonatomic, strong) NSString *targetId;
+
+
 @property (nonatomic) BOOL isGroupChat;
 
 - (void)populateRandomDataSource;
 
 - (void)addRandomItemsToDataSource:(NSInteger)number;
 
+// 添加自己的item
 - (void)addMyChatItem:(NSDictionary *)dic;
 
 // 添加别人的item

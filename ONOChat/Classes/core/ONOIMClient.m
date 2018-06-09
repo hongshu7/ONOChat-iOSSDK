@@ -170,6 +170,7 @@
     NSString *msgId = [message.messageId copy];
     [[ONOCore sharedCore] requestRoute:@"im.message.send" withMessage:request onSuccess:^(SendMessagenResponse *response) {
         [ONODB markMessageSend:response.nmid fromOldId:response.omid];
+        [ONODB updateConversation:targetId toNewMessageId:response.nmid];
         successBlock(response.nmid);
     } onError:^(ErrorResponse *err) {
         [ONODB markMessageError:YES msgId:msgId];

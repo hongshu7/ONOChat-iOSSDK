@@ -73,6 +73,7 @@
 
 - (void)setupWithHost:(NSString*)host port:(int)port
 {
+    
     [self.client setupWithHost:host port:port];
 }
 
