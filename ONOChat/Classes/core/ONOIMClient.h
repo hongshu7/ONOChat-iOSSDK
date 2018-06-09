@@ -29,7 +29,7 @@
  *  @param host    帐号
  *  @param port    端口号
  */
-- (void)setupWithHost:(NSString*)host port:(int)port;
+- (void)setupGateHost:(NSString*)host port:(int)port;
 
 
 /**

@@ -12,7 +12,7 @@
 
 @property BOOL isConnect;
 
-- (void)setupWithHost:(NSString*)host port:(int)port;
+- (void)setupGateHost:(NSString*)host port:(int)port;
 
 - (void)connect;
 - (void)close;

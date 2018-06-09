@@ -71,14 +71,10 @@
     return self;
 }
 
-- (void)setupWithHost:(NSString*)host port:(int)port
-{
-    [self.client setupWithHost:host port:port];
-}
-
 #pragma mark -- socket actions
-- (void)connect
+- (void)connectToGateHost:(NSString *)host port:(int)port
 {
+    [self.client setupGateHost:host port:port];
     [self.client connect];
 }
 
@@ -285,12 +281,12 @@
 }
 
 #pragma mark -- login
-- (void)loginWithToken:(NSString *)token onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
+- (void)loginToGateHost:(NSString *)host port:(int)port token:(NSString *)token onSuccess:(ONOSuccessResponse)success onError:(ONOErrorResponse)error
 {
     self.loginToken = token;
     self.loginSuccessCallback = success;
     self.loginErrorCallback = error;
-    [self connect];
+    [self connectToGateHost:host port:port];
 }
 
 #pragma mark -- bind device token

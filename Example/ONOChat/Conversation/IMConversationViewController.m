@@ -64,7 +64,6 @@
 }
 
 - (void)loginToIMServerWithToken:(NSString *)token {
-    [[ONOIMClient sharedClient] setupWithHost:@"101.201.236.225" port:3001];
     [[ONOIMClient sharedClient] loginWithToken:token onSuccess:^(ONOUser *user) {
         NSLog(@"user logined with name:%@", user.nickname);
         [IMGlobalData sharedData].user = user;
