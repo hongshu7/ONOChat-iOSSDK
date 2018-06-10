@@ -22,7 +22,7 @@
 
 @property (nonatomic) BOOL isGroupChat;
 
-- (void)populateRandomDataSource;
+- (int)loadRecordMessageData;
 
 - (void)addRandomItemsToDataSource:(NSInteger)number;
 

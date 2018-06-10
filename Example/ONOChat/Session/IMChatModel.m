@@ -12,11 +12,25 @@
 #import "UUMessage.h"
 #import "UUMessageFrame.h"
 
+@interface IMChatModel ()
+
+@property (nonatomic, copy) NSString *offset;
+@end
+
 @implementation IMChatModel
 
-- (void)populateRandomDataSource {
-    self.dataSource = [NSMutableArray array];
-    [self.dataSource addObjectsFromArray:[self addRecordMessage]];
+- (int)loadRecordMessageData {
+    if (self.dataSource == nil) {
+        self.dataSource = [NSMutableArray array];
+    }
+    
+//    [self.dataSource addObjectsFromArray:[self addRecordMessage]];
+    
+    NSArray *array = [self addRecordMessage];
+    
+    [self.dataSource insertObjects:array atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, array.count)]];
+    
+    return array.count;
 //    [self addRecordMessage];
 }
 
@@ -113,20 +127,21 @@ static NSString *previousTime = nil;
 {
     
     NSMutableArray<UUMessageFrame *> *result = [NSMutableArray array];
-    NSArray <ONOMessage *> *messageArray = [[ONOIMClient sharedClient] getMessageList:self.targetId offset:nil limit:200];
+    NSArray <ONOMessage *> *messageArray = [[ONOIMClient sharedClient] getMessageList:self.targetId offset:self.offset limit:10];
     
-    
-    for (ONOMessage *message in messageArray) {
+    for (int i = 0 ; i < messageArray.count; i++) {
+        ONOMessage *message = [messageArray objectAtIndex:i];
+        if (i == 0) {
+            self.offset = message.messageId;
+        }
         if (message.type == 1) {
             ONOTextMessage *textMessage = (ONOTextMessage*)message;
-            
             
             NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
             
             [dictionary setObject:textMessage.text forKey:@"strContent"];
             [dictionary setObject:@(UUMessageTypeText) forKey:@"type"];
-            
-            NSDate *date = [[NSDate date]dateByAddingTimeInterval:arc4random()%1000*(2) ];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:textMessage.timestamp];
             [dictionary setObject:[date description] forKey:@"strTime"];
             [dictionary setObject:textMessage.user.nickname forKey:@"strName"];
             [dictionary setObject:textMessage.user.avatar forKey:@"strIcon"];

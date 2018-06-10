@@ -150,16 +150,13 @@
 - (void)addRefreshViews
 {
     __weak typeof(self) weakSelf = self;
-    
     //load more
-    int pageNum = 10;
-	
 	self.chatTableView.mj_header = [MJRefreshHeader headerWithRefreshingBlock:^{
 		
-		[weakSelf.chatModel addRandomItemsToDataSource:pageNum];
+		int count = [weakSelf.chatModel loadRecordMessageData];
 		
-		if (weakSelf.chatModel.dataSource.count > pageNum) {
-			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:pageNum inSection:0];
+		if (weakSelf.chatModel.dataSource.count > count) {
+			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:count inSection:0];
 			
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 				[weakSelf.chatTableView reloadData];
@@ -176,7 +173,7 @@
     self.chatModel.isGroupChat = NO;
     /**  */
     self.chatModel.targetId = self.toUserModel.userId;
-    [self.chatModel populateRandomDataSource];
+    [self.chatModel loadRecordMessageData];
 	
     [self.chatTableView reloadData];
 }
@@ -185,7 +182,7 @@
 {
 	self.chatModel.isGroupChat = segment.selectedSegmentIndex;
 	[self.chatModel.dataSource removeAllObjects];
-	[self.chatModel populateRandomDataSource];
+	[self.chatModel loadRecordMessageData];
 	[self.chatTableView reloadData];
 }
 
@@ -244,7 +241,7 @@
                           @"strName": user.nickname,
                           };
     funcView.textViewInput.text = @"";
-    [funcView changeSendBtnWithPhoto:YES];
+//    [funcView changeSendBtnWithPhoto:YES];
     [self dealTheFunctionData:dic];
     
     ONOTextMessage *msg = [[ONOTextMessage alloc] init];
