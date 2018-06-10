@@ -77,6 +77,7 @@
     __weak typeof(self) weakSelf = self;
     [[ONOIMClient sharedClient] loginWithToken:token onSuccess:^(ONOUser *user) {
         NSLog(@"user logined with name:%@", user.nickname);
+        [IMGlobalData sharedData].user = user;
         [weakSelf enterChatPage];
     } onError:^(int errorCode, NSString *errorMsg) {
         NSLog(@"user logined with error:%@", errorMsg);

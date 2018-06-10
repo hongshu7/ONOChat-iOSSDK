@@ -55,7 +55,6 @@
     }];
     
     
-    [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
     
     [[ONOIMClient sharedClient] clearConversationUnread:self.targetId];
 }
@@ -72,10 +71,18 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    
+    [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [[IMChatManager sharedChatManager] removeReceiveMessageDelegate:self];
 }
 
 - (void)viewDidLayoutSubviews
@@ -89,10 +96,6 @@
 		_chatTableView.frame = CGRectMake(0, 0, self.view.uu_width, self.view.uu_height-40);
 		_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
 	}
-}
-
-- (void)dealloc {
-    [[IMChatManager sharedChatManager] removeReceiveMessageDelegate:self];
 }
 
 #pragma mark - ONOReceiveMessageDelegate
@@ -114,6 +117,7 @@
         } onError:^(int errorCode, NSString *errorMessage) {
             
         }];
+        
         [[ONOIMClient sharedClient] clearConversationUnread:self.targetId];
     } else {
         

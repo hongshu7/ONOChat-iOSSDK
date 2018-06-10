@@ -74,6 +74,11 @@
     
     //通知服务端已收到
     [self readMessage:msg.mid onSuccess:nil onError:nil];
+//    [self readMessage:msg.mid onSuccess:^(id msg) {
+//        NSLog(@"333");
+//    } onError:^(id msg) {
+//        NSLog(@"333");
+//    }];
     //回调事件
     if (self.receiveMessageDelegate) {
         [self.receiveMessageDelegate onReceived:message];
