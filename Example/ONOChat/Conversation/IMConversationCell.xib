@@ -45,15 +45,28 @@
                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fMP-m2-PTW">
+                        <rect key="frame" x="288" y="15" width="20" height="20"/>
+                        <color key="backgroundColor" red="1" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="Noa-vM-ScM"/>
+                            <constraint firstAttribute="height" constant="20" id="hKt-Il-If4"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="SiM-kr-oja" secondAttribute="bottom" constant="8" id="0fg-it-gDg"/>
                     <constraint firstItem="SiM-kr-oja" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="2bS-4h-Ekn"/>
                     <constraint firstItem="Mct-fK-VPY" firstAttribute="top" secondItem="gFA-BK-mhJ" secondAttribute="bottom" constant="6" id="6kv-Yd-Xwc"/>
                     <constraint firstAttribute="trailing" secondItem="hnK-xS-o1k" secondAttribute="trailing" id="9Cd-RY-Xxg"/>
+                    <constraint firstAttribute="trailing" secondItem="fMP-m2-PTW" secondAttribute="trailing" constant="12" id="B0G-DG-3mC"/>
                     <constraint firstAttribute="bottom" secondItem="hnK-xS-o1k" secondAttribute="bottom" id="Blv-kT-5f9"/>
                     <constraint firstItem="SiM-kr-oja" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="F4T-xt-nLg"/>
                     <constraint firstItem="gFA-BK-mhJ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="FNv-Hy-H1c"/>
+                    <constraint firstItem="fMP-m2-PTW" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="KA0-c0-fu1"/>
                     <constraint firstItem="hnK-xS-o1k" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="OJw-Ea-obp"/>
                     <constraint firstItem="gFA-BK-mhJ" firstAttribute="leading" secondItem="SiM-kr-oja" secondAttribute="trailing" constant="8" id="dgK-S3-BVq"/>
                     <constraint firstItem="Mct-fK-VPY" firstAttribute="leading" secondItem="SiM-kr-oja" secondAttribute="trailing" constant="8" id="wtu-jn-IjI"/>
@@ -62,10 +75,11 @@
             <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
             <connections>
                 <outlet property="avatarImageView" destination="SiM-kr-oja" id="wiI-WM-HmP"/>
+                <outlet property="badgeLabel" destination="fMP-m2-PTW" id="aU2-v0-BjB"/>
                 <outlet property="lastMessageLabel" destination="Mct-fK-VPY" id="h3o-aV-x2x"/>
                 <outlet property="nicknameLabel" destination="gFA-BK-mhJ" id="Nt8-Wk-jpF"/>
             </connections>
-            <point key="canvasLocation" x="108" y="-105"/>
+            <point key="canvasLocation" x="41" y="-138"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -500,10 +500,24 @@ static FMDatabase *db;
 }
 
 + (int)totalUnreadCount {
-    //to do calc
-    return 0;
+    if ([self selfUserId] == nil) {
+        return 0;
+    }
+    [self openDB];
+    int unreadCount = 0;
+    FMResultSet *rs = [db executeQuery:@"SELECT SUM(unread_count) FROM conversation WHERE belong_id=?", [self selfUserId]];
+    while ([rs next]) {
+        unreadCount = [[rs stringForColumnIndex:0] intValue];
+    }
+    [self closeDB];
+    return unreadCount;
 }
 
-
++ (void)clearConversationUnread:(NSString *)targetId {
+    [self openDB];
+    NSString *sql = @"UPDATE conversation SET unread_count=0 WHERE target_id=?";
+    [db executeUpdate:sql,targetId];
+    [self closeDB];
+}
 
 @end

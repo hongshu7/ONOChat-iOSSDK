@@ -50,6 +50,8 @@
     self.navigationItem.title = self.toUserModel.nickname;
     
     [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
+    
+    [[ONOIMClient sharedClient] clearConversationUnread:self.toUserModel.userId];
 }
 
 - (void)viewDidAppear:(BOOL)animated

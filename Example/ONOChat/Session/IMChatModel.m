@@ -30,7 +30,7 @@
     
     [self.dataSource insertObjects:array atIndexes:[[NSIndexSet alloc] initWithIndexesInRange:NSMakeRange(0, array.count)]];
     
-    return array.count;
+    return (int)array.count;
 //    [self addRecordMessage];
 }
 

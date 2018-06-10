@@ -239,6 +239,11 @@
 }
 
 
+- (void)clearConversationUnread:(NSString *)targetId {
+    [ONODB clearConversationUnread:targetId];
+}
+
+
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     [self userProfile:userId withCache:YES onSuccess:successBlock onError:errorBlock];
 }

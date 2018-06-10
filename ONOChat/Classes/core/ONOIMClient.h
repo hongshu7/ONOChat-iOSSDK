@@ -69,6 +69,12 @@
  */
 - (int)totalUnreadCount;
 
+/**
+ *  清空指定会话的未读消息数
+ *  @param targetId    会话id
+ */
+- (void)clearConversationUnread:(NSString *)targetId;
+
 - (ONOMessage *)createMessageByType:(int)type;
 
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;

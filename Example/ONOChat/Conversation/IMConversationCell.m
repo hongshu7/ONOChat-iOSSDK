@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastMessageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *badgeLabel;
 
 @end
 
@@ -24,6 +25,9 @@
     // Initialization code
     self.avatarImageView.layer.cornerRadius = 4;
     self.avatarImageView.clipsToBounds = YES;
+    
+    self.badgeLabel.layer.cornerRadius = 10;
+    self.badgeLabel.clipsToBounds = YES;
 }
 
 - (void)setConversation:(ONOConversation *)conversation {
@@ -36,6 +40,14 @@
         self.lastMessageLabel.text = [NSString stringWithFormat:@"%@：%@",textMessage.user.nickname,textMessage.text];
     } else {
         
+    }
+    
+    if (conversation.unreadCount > 0) {
+        self.badgeLabel.text = [NSString stringWithFormat:@"%i",conversation.unreadCount];
+        self.badgeLabel.hidden = NO;
+    } else {
+        self.badgeLabel.text = @"0";
+        self.badgeLabel.hidden = YES;
     }
 }
 

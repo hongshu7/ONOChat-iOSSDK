@@ -11,12 +11,13 @@
 #import "IMChatViewController.h"
 #import "UINavigationController+IM.h"
 #import "IMGlobalData.h"
+#import "IMChatManager.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
 
 
-@interface IMConversationViewController ()
+@interface IMConversationViewController ()<IMReceiveMessageDelegate>
 
 @property (strong, nonatomic) NSArray *dataArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -58,9 +59,14 @@
 
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.dataArray = [[ONOIMClient sharedClient] getConversationList];
     [self.tableView reloadData];
+    [self updateTabbarBadge];
+}
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)loginToIMServerWithToken:(NSString *)token {
@@ -71,11 +77,31 @@
         self.navigationItem.title = user.nickname;
         self.dataArray = [[ONOIMClient sharedClient] getConversationList];
         [self.tableView reloadData];
+        [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
+        [self updateTabbarBadge];
     } onError:^(int errorCode, NSString *errorMsg) {
         NSLog(@"user logined with error:%@", errorMsg);
     }];
 
 }
+
+- (void)updateTabbarBadge {
+    int count = [[ONOIMClient sharedClient] totalUnreadCount];
+    if (count > 0) {
+        self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i",count];
+    } else {
+        self.tabBarItem.badgeValue = nil;
+    }
+}
+
+#pragma mark - ONOReceiveMessageDelegate
+- (void)onReceived:(ONOMessage *)message {
+    self.dataArray = [[ONOIMClient sharedClient] getConversationList];
+    [self.tableView reloadData];
+    [self updateTabbarBadge];
+}
+
+
 
 - (void)starNewSession {
     // iPhoneX

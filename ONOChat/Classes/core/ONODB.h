@@ -38,5 +38,6 @@
 
 + (int)totalUnreadCount;
 
++ (void)clearConversationUnread:(NSString *)targetId;
 
 @end
