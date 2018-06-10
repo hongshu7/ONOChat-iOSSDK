@@ -32,6 +32,7 @@
 }
 
 - (IBAction)searchAction {
+    [self.view endEditing:YES];
     [[ONOIMClient sharedClient] friendSearchByKeyword:self.searchTextField.text onSuccess:^(NSArray<ONOUser *> *userArray) {
         self.dataArray = userArray;
         [self.tableView reloadData];

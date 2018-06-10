@@ -3,7 +3,7 @@
 //
 //  Created by Kevin Lai on 18/5.
 //  Copyright (c) 2018 ONO Team. All rights reserved.
-//
+//  仅有此类对外调用
 
 #import <Foundation/Foundation.h>
 #import "ONOCMessage.h"
@@ -15,6 +15,17 @@
 - (void)onReceived:(ONOMessage *)message;
 @end
 
+@protocol ONOReceiveUserKickDelegate <NSObject>
+- (void)onReceivedUserKick:(NSString *)message;
+@end
+
+@protocol ONOReceiveFriendMessageDelegate <NSObject>
+/** 接到好友请求 */
+- (void)onReceivedNewFriendRequest:(NSString *)message;
+/** 新的好友 */
+- (void)onReceivedNewFriend:(NSString *)message;
+@end
+
 
 @interface ONOIMClient : NSObject
 
@@ -22,6 +33,9 @@
 
 @property (nonatomic, weak) id<ONOReceiveMessageDelegate> receiveMessageDelegate;
 
+@property (nonatomic, weak) id<ONOReceiveUserKickDelegate> receiveUserKickDelegate;
+
+@property (nonatomic, weak) id<ONOReceiveFriendMessageDelegate> receiveFriendMessageDelegate;
 
 /**
  *  设置聊天服务器参数
@@ -38,6 +52,14 @@
  *  @param token      令牌 (在后台绑定的登录token)
  */
 - (void)loginWithToken:(NSString *)token onSuccess:(void(^)(ONOUser *user))successBlock onError:(void(^)(int errorCode, NSString *errorMsg))errorBlock;
+
+/**
+ *  退出登录
+ *
+ */
+- (void)logout;
+
+
 
 /**
  *  发送消息
@@ -77,6 +99,11 @@
 
 - (ONOMessage *)createMessageByType:(int)type;
 
+
+/**
+ *  获取用户信息
+ *  @param userId    会话id
+ */
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 - (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 

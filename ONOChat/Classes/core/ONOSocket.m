@@ -60,6 +60,7 @@
     if (![self isSetup]) {
         return;
     }
+    NSLog(@"connect..");
     //start recive thread
     self.delayInSeconds = 3;
     [NSThread detachNewThreadSelector:@selector(connectBackground) toTarget:self withObject:nil];
@@ -127,7 +128,7 @@
         self.chatHost = dict[@"ip"];
         self.chatPort = dict[@"port"];
         [self connectBackground];
-        [NSThread detachNewThreadSelector:@selector(connectBackground) toTarget:self withObject:nil];
+        //[NSThread detachNewThreadSelector:@selector(connectBackground) toTarget:self withObject:nil];
     }
     else
     {

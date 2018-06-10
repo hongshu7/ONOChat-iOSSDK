@@ -7,6 +7,8 @@
 
 
 #import "IMGlobalData.h"
+#import "IMChatManager.h"
+#import "IMLoginViewController.h"
 
 @implementation IMGlobalData
 
@@ -20,5 +22,16 @@
     return _sharedObject;
 }
 
+- (void)logout {
+    self.token = nil;
+    self.user = nil;
+    [[IMChatManager sharedChatManager] stopListenOtherMessage];
+    [[ONOIMClient sharedClient] logout];
+    
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    
+    window.rootViewController = [IMLoginViewController new];
+    
+}
 
 @end

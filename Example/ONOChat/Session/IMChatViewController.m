@@ -16,6 +16,7 @@
 #import "UUChatCategory.h"
 #import "IMGlobalData.h"
 #import "IMChatManager.h"
+#import "IMToast.h"
 
 #import "ONOIMClient.h"
 #import "ONOTextMessage.h"
@@ -46,12 +47,17 @@
 	_inputFuncView.frame = CGRectMake(0, _chatTableView.uu_bottom, self.view.uu_width, 40);
 //
 //    [ONOIMClient sharedClient].receiveMessageDelegate = self;
+    __weak typeof(self) weakSelf = self;
+    [[ONOIMClient sharedClient] userProfile:self.targetId onSuccess:^(ONOUser *user) {
+        weakSelf.navigationItem.title = user.nickname;
+    } onError:^(int errorCode, NSString *errorMessage) {
+        [IMToast showTipMessage:errorMessage];
+    }];
     
-    self.navigationItem.title = self.toUserModel.nickname;
     
     [[IMChatManager sharedChatManager] addReceiveMessageDelegate:self];
     
-    [[ONOIMClient sharedClient] clearConversationUnread:self.toUserModel.userId];
+    [[ONOIMClient sharedClient] clearConversationUnread:self.targetId];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -63,6 +69,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardChange:) name:UIKeyboardWillHideNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustCollectionViewLayout) name:UIDeviceOrientationDidChangeNotification object:nil];
 	[self tableViewScrollToBottom];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -84,6 +91,9 @@
 	}
 }
 
+- (void)dealloc {
+    [[IMChatManager sharedChatManager] removeReceiveMessageDelegate:self];
+}
 
 #pragma mark - ONOReceiveMessageDelegate
 - (void)onReceived:(ONOMessage *)message {
@@ -104,9 +114,7 @@
         } onError:^(int errorCode, NSString *errorMessage) {
             
         }];
-        
-        
-        
+        [[ONOIMClient sharedClient] clearConversationUnread:self.targetId];
     } else {
         
     }
@@ -174,7 +182,7 @@
     self.chatModel = [[IMChatModel alloc] init];
     self.chatModel.isGroupChat = NO;
     /**  */
-    self.chatModel.targetId = self.toUserModel.userId;
+    self.chatModel.targetId = self.targetId;
     [self.chatModel loadRecordMessageData];
 	
     [self.chatTableView reloadData];
@@ -249,7 +257,7 @@
     ONOTextMessage *msg = [[ONOTextMessage alloc] init];
     msg.text = message;
     
-    [[ONOIMClient sharedClient] sendMessage:msg to:self.toUserModel.userId onSuccess:^(NSString *messageId) {
+    [[ONOIMClient sharedClient] sendMessage:msg to:self.targetId onSuccess:^(NSString *messageId) {
         NSLog(@"send ok");
     } onError:^(int errorCode, NSString *messageId) {
         NSLog(@"send failure");

@@ -11,6 +11,6 @@
 
 @interface IMChatViewController : UIViewController
 
-@property (nonatomic, strong) ONOUser *toUserModel;
+@property (nonatomic, strong) NSString *targetId;
 
 @end

@@ -43,13 +43,21 @@
         [[ONOCore sharedCore] addListenerForRoute:@"push.message" withCallback:^(Message *msg) {
             [self receiveMessage:msg];
         }];
+        
+        [[ONOCore sharedCore] addListenerForRoute:@"push.userKick" withCallback:^(UserKick *msg) {
+            [self receiveUserKick:msg];
+        }];
+        [[ONOCore sharedCore] addListenerForRoute:@"push.newFriend" withCallback:^(NewFriend *msg) {
+            [self receiveNewFriend:msg];
+        }];
+        [[ONOCore sharedCore] addListenerForRoute:@"push.newFriendRequest" withCallback:^(NewFriendRequest *msg) {
+            [self receiveNewFriendRequest:msg];
+        }];
     }
     return self;
 }
 
 - (void)receiveMessage:(Message *)msg {
-    //通知服务端已收到
-    [self readMessage:msg.mid onSuccess:nil onError:nil];
     //创建消息
     ONOMessage *message = [self createMessageByType:msg.type];
     message.messageId = msg.mid;
@@ -64,11 +72,36 @@
     //更新会话信息
     [self updateConversation:message.targetId withMessage:message];
     
+    //通知服务端已收到
+    [self readMessage:msg.mid onSuccess:nil onError:nil];
     //回调事件
     if (self.receiveMessageDelegate) {
         [self.receiveMessageDelegate onReceived:message];
     }
 }
+
+
+
+- (void)receiveUserKick:(UserKick *)msg {
+    if (self.receiveUserKickDelegate) {
+        [self.receiveUserKickDelegate onReceivedUserKick:msg.content];
+    }
+    [[ONOCore sharedCore] disconnect];
+}
+
+- (void)receiveNewFriend:(NewFriend *)msg {
+    if (self.receiveFriendMessageDelegate) {
+        [self.receiveFriendMessageDelegate onReceivedNewFriend:@"新的朋友"];
+    }
+}
+
+- (void)receiveNewFriendRequest:(NewFriendRequest *)msg {
+    if (self.receiveUserKickDelegate) {
+        [self.receiveFriendMessageDelegate onReceivedNewFriendRequest:@"新的好友请求"];
+    }
+}
+
+
 
 #pragma mark public apis
 
@@ -153,6 +186,16 @@
         errorBlock(msg.code, msg.message);
     }];
 }
+
+- (void)logout {
+    
+    [[ONOCore sharedCore] disconnect];
+//    [[ONOCore sharedCore] requestRoute:@"im.user.logout" withMessage:nil onSuccess:^(id msg) {
+//    } onError:^(id msg) {
+//
+//    }];
+}
+
 
 - (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
     

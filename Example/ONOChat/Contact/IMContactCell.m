@@ -23,6 +23,7 @@
 }
 
 - (void)setUser:(ONOUser *)user {
+    _user = user;
     [self.avatarImageView sd_setImageWithURL:[NSURL URLWithString:user.avatar] placeholderImage:[UIImage imageNamed:@"logo_120"]];
     self.nicknameLabel.text = user.nickname;
 }

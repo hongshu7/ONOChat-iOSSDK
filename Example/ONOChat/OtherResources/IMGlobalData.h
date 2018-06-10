@@ -17,7 +17,15 @@
 
 + (IMGlobalData *)sharedData;
 
+
+/** 当前用户,登陆成功后有数据 */
+@property (nonatomic, strong) NSString *token;
+
+/** 当前用户,登陆成功后有数据 */
 @property (nonatomic, strong) ONOUser *user;
+
+/** 退出登陆 */
+- (void)logout;
 
 @end
 

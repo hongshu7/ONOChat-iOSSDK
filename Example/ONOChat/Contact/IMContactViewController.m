@@ -79,7 +79,7 @@
     
     IMChatViewController *vc = [[IMChatViewController alloc] init];
     ONOUser *user = [self.dataArray objectAtIndex:indexPath.row];
-    vc.toUserModel = user;
+    vc.targetId = user.userId;
     [self.navigationController im_pushViewController:vc];
 }
 

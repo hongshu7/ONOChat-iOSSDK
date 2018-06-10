@@ -34,5 +34,9 @@
  */
 - (void)removeReceiveMessageDelegate:(id<IMReceiveMessageDelegate>)delegate;
 
+/** 登陆时候监听一些消息 */
+- (void)statListenOtherMessage;
+/** 退出登陆时候取消监听一些消息 */
+- (void)stopListenOtherMessage;
 
 @end

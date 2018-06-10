@@ -7,8 +7,10 @@
 //
 
 #import "IMChatManager.h"
+#import "IMToast.h"
+#import "IMGlobalData.h"
 
-@interface IMChatManager ()<ONOReceiveMessageDelegate>
+@interface IMChatManager ()<ONOReceiveMessageDelegate,ONOReceiveUserKickDelegate, ONOReceiveFriendMessageDelegate>
 
 @property (nonatomic, strong) NSMutableArray *delegateArray;
 
@@ -21,7 +23,6 @@
     __strong static id _sharedObject = nil;
     dispatch_once(&pred, ^{
         _sharedObject = [[IMChatManager alloc] init];
-        [ONOIMClient sharedClient].receiveMessageDelegate = _sharedObject;
     });
     return _sharedObject;
 }
@@ -38,7 +39,12 @@
 
 
 - (void)removeReceiveMessageDelegate:(id<IMReceiveMessageDelegate>)delegate{
-    
+    for (int i = ((int)self.delegateArray.count - 1) ; i >= 0 ; i--) {
+        id delegateClass = [self.delegateArray objectAtIndex:i];
+        if (delegate == delegateClass) {
+            [self.delegateArray removeObject:delegate];
+        }
+    }
 }
 
 #pragma mark - ONOReceiveMessageDelegate
@@ -48,6 +54,33 @@
             [delegate onReceived:message];
         }
     }
+}
+
+
+- (void)statListenOtherMessage {
+    [ONOIMClient sharedClient].receiveMessageDelegate = self;
+    [ONOIMClient sharedClient].receiveUserKickDelegate = self;
+    [ONOIMClient sharedClient].receiveFriendMessageDelegate = self;
+}
+- (void)stopListenOtherMessage {
+    [ONOIMClient sharedClient].receiveMessageDelegate = nil;
+    [ONOIMClient sharedClient].receiveUserKickDelegate = nil;
+    [ONOIMClient sharedClient].receiveFriendMessageDelegate = nil;
+}
+
+#pragma mark - ONOUserKickDelegate
+- (void)onReceivedUserKick:(NSString *)message {
+    [IMToast showTipMessage:message];
+    [[IMGlobalData sharedData] logout];
+}
+
+#pragma mark - ONOReceiveFriendMessageDelegate
+- (void)onReceivedNewFriend:(NSString *)message {
+    [IMToast showTipMessage:message];
+}
+
+- (void)onReceivedNewFriendRequest:(NSString *)message {
+    [IMToast showTipMessage:message];
 }
 
 

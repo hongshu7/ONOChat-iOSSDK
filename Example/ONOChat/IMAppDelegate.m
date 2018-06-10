@@ -7,8 +7,7 @@
 //
 
 #import "IMAppDelegate.h"
-#import "IMConversationViewController.h"
-#import "IMContactViewController.h"
+#import "IMLoginViewController.h"
 
 @implementation IMAppDelegate
 
@@ -18,32 +17,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
     
-    UITabBarController *tabbar = [[UITabBarController alloc] init];
     
-    
-    UITabBarItem *item1 = [[UITabBarItem alloc] initWithTitle:@"会话"
-                                                        image:[[UIImage imageNamed:@"tabbar_icon_chat_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
-                                                selectedImage:[[UIImage imageNamed:@"tabbar_icon_chat_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
-    
-    UITabBarItem *item2 = [[UITabBarItem alloc] initWithTitle:@"通讯录"
-                                                        image:[[UIImage imageNamed:@"tabbar_icon_contact_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
-                                                selectedImage:[[UIImage imageNamed:@"tabbar_icon_contact_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
-    
-    
-    
-    IMConversationViewController *conversationViewController = [[IMConversationViewController alloc] init];
-    conversationViewController.tabBarItem = item1;
-    UINavigationController *conversationNav = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
-  
-    
-    IMContactViewController *contactViewController = [[IMContactViewController alloc] init];
-    contactViewController.tabBarItem = item2;
-    UINavigationController *contactNav = [[UINavigationController alloc] initWithRootViewController:contactViewController];
-    
-    tabbar.viewControllers = @[conversationNav,contactNav];
-    tabbar.selectedIndex = 0;
-    
-    self.window.rootViewController = tabbar;
+    self.window.rootViewController = [[IMLoginViewController alloc] init];
     
     [self.window makeKeyAndVisible];
     return YES;
