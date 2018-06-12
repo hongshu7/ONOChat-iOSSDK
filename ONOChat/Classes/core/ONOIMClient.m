@@ -414,6 +414,7 @@
     FriendAgreeRequest *request = [[FriendAgreeRequest alloc] init];
     request.uid = userId;
     [[ONOCore sharedCore] requestRoute:@"im.friend.agree" withMessage:request onSuccess:^(id msg) {
+        [ONODB insertOrUpdateFriend:request.uid];
         if (successBlock) successBlock ();
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);
@@ -435,6 +436,7 @@
     FriendDeleteRequest *request = [[FriendDeleteRequest alloc] init];
     request.uid = userId;
     [[ONOCore sharedCore] requestRoute:@"im.friend.delete" withMessage:request onSuccess:^(id msg) {
+        [ONODB deleteFriend:request.uid];
         if (successBlock) successBlock ();
     } onError:^(ErrorResponse *msg) {
         if (errorBlock) errorBlock(msg.code, msg.message);

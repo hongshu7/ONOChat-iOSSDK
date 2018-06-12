@@ -69,6 +69,30 @@
     return cell;
 }
 
+- (BOOL)tableView: (UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+        // 添加一个删除按钮
+    __weak typeof(self) weakSelf = self;
+    UITableViewRowAction *deleteRowAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                       {
+                           ONOUser *user = [weakSelf.dataArray objectAtIndex:indexPath.row];
+                           [[ONOIMClient sharedClient] friendDeleteWithUserId:user.userId onSuccess:^{
+                               [IMToast showTipMessage:@"删除成功"];
+                               weakSelf.dataArray = [[ONOIMClient sharedClient] getFriends];
+                               [weakSelf.tableView reloadData];
+                           } onError:^(int errorCode, NSString *errorMessage) {
+                               [IMToast showTipMessage:errorMessage];
+                           }];
+                       }];
+
+    return @[deleteRowAction];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50;
 };
