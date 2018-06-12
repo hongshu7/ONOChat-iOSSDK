@@ -48,6 +48,7 @@
             [self receiveUserKick:msg];
         }];
         [[ONOCore sharedCore] addListenerForRoute:@"push.newFriend" withCallback:^(NewFriend *msg) {
+            [ONODB insertOrUpdateFriend:msg.user.uid];
             [self receiveNewFriend:msg];
         }];
         [[ONOCore sharedCore] addListenerForRoute:@"push.newFriendRequest" withCallback:^(NewFriendRequest *msg) {
@@ -96,7 +97,7 @@
 
 - (void)receiveNewFriend:(NewFriend *)msg {
     if (self.receiveFriendMessageDelegate) {
-        [self.receiveFriendMessageDelegate onReceivedNewFriend:@"新的朋友"];
+        [self.receiveFriendMessageDelegate onReceivedNewFriend:msg.user.uid];
     }
 }
 
@@ -202,7 +203,7 @@
 }
 
 
-- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock {
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     
     //create msgid
     message.messageId = [BSONIdGenerator generate];
@@ -227,7 +228,7 @@
         successBlock(response.nmid);
     } onError:^(ErrorResponse *err) {
         [ONODB markMessageError:YES msgId:msgId];
-        errorBlock(err.code, msgId);
+        errorBlock(err.code, err.message);
     }];
 }
 

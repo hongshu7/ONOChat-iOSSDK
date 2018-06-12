@@ -68,7 +68,7 @@
  *  @param targetId    目标ID
  */
 
-- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *messageId))errorBlock;
+- (void)sendMessage:(ONOMessage *)message to:(NSString *)targetId onSuccess:(void (^)(NSString *messageId))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 /**
  *  获取会话列表

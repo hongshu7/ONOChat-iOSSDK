@@ -75,8 +75,10 @@
 }
 
 #pragma mark - ONOReceiveFriendMessageDelegate
-- (void)onReceivedNewFriend:(NSString *)message {
-    [IMToast showTipMessage:message];
+- (void)onReceivedNewFriend:(NSString *)userId {
+    // 去发通知更新好友列表.
+    [IMToast showTipMessage:@"有新的好友,已经存到数据库,刷新即可."];
+    
 }
 
 - (void)onReceivedNewFriendRequest:(NSString *)message {

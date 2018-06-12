@@ -139,7 +139,6 @@ static NSString *previousTime = nil;
             
             NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
             
-            [dictionary setObject:textMessage.text forKey:@"strContent"];
             [dictionary setObject:@(UUMessageTypeText) forKey:@"type"];
             NSDate *date = [NSDate dateWithTimeIntervalSince1970:textMessage.timestamp];
             [dictionary setObject:[date description] forKey:@"strTime"];
@@ -150,6 +149,14 @@ static NSString *previousTime = nil;
                 [dictionary setObject:@(UUMessageFromMe) forKey:@"from"];
             } else {
                 [dictionary setObject:@(UUMessageFromOther) forKey:@"from"];
+            }
+            
+            if (message.isError) {
+                NSString *failureMessage = [NSString stringWithFormat:@"发送失败:%@",textMessage.text];
+                [dictionary setObject:failureMessage forKey:@"strContent"];
+            } else {
+                
+                [dictionary setObject:textMessage.text forKey:@"strContent"];
             }
             
             NSDictionary *dataDic = [dictionary copy];

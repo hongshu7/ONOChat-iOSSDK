@@ -247,24 +247,39 @@
 
 - (void)UUInputFunctionView:(UUInputFunctionView *)funcView sendMessage:(NSString *)message
 {
-    ONOUser *user = [IMGlobalData sharedData].user;
-    NSDictionary *dic = @{
-                          @"strContent": message,
-                          @"type": @(UUMessageTypeText),
-                          @"strIcon": user.avatar,
-                          @"strName": user.nickname,
-                          };
-    funcView.textViewInput.text = @"";
-//    [funcView changeSendBtnWithPhoto:YES];
-    [self dealTheFunctionData:dic];
+    
     
     ONOTextMessage *msg = [[ONOTextMessage alloc] init];
     msg.text = message;
     
+    __weak typeof(self) weakSelf = self;
     [[ONOIMClient sharedClient] sendMessage:msg to:self.targetId onSuccess:^(NSString *messageId) {
         NSLog(@"send ok");
-    } onError:^(int errorCode, NSString *messageId) {
-        NSLog(@"send failure");
+        ONOUser *user = [IMGlobalData sharedData].user;
+        NSDictionary *dic = @{
+                              @"strContent": message,
+                              @"type": @(UUMessageTypeText),
+                              @"strIcon": user.avatar,
+                              @"strName": user.nickname,
+                              };
+        funcView.textViewInput.text = @"";
+        //    [funcView changeSendBtnWithPhoto:YES];
+        [weakSelf dealTheFunctionData:dic];
+    } onError:^(int errorCode, NSString *errorMessage) {
+    
+        [IMToast showTipMessage:errorMessage];
+        NSString *failureMessage = [NSString stringWithFormat:@"发送失败:%@",message];
+        
+        ONOUser *user = [IMGlobalData sharedData].user;
+        NSDictionary *dic = @{
+                              @"strContent": failureMessage,
+                              @"type": @(UUMessageTypeText),
+                              @"strIcon": user.avatar,
+                              @"strName": user.nickname,
+                              };
+        funcView.textViewInput.text = @"";
+        //    [funcView changeSendBtnWithPhoto:YES];
+        [weakSelf dealTheFunctionData:dic];
     }];
 
 }
