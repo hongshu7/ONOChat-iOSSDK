@@ -405,10 +405,12 @@ typedef struct UserKick__storage_ {
 @implementation NewFriend
 
 @dynamic hasUser, user;
+@dynamic friendsUpdateTime;
 
 typedef struct NewFriend__storage_ {
   uint32_t _has_storage_[1];
   UserData *user;
+  int64_t friendsUpdateTime;
 } NewFriend__storage_;
 
 // This method is threadsafe because it is initially called
@@ -426,6 +428,15 @@ typedef struct NewFriend__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "friendsUpdateTime",
+        .dataTypeSpecific.className = NULL,
+        .number = NewFriend_FieldNumber_FriendsUpdateTime,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(NewFriend__storage_, friendsUpdateTime),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[NewFriend class]
@@ -435,6 +446,11 @@ typedef struct NewFriend__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(NewFriend__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\002\021\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }
@@ -1347,6 +1363,54 @@ typedef struct FriendAgreeRequest__storage_ {
 
 @end
 
+#pragma mark - FriendAgreeResponse
+
+@implementation FriendAgreeResponse
+
+@dynamic friendsUpdateTime;
+
+typedef struct FriendAgreeResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int64_t friendsUpdateTime;
+} FriendAgreeResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "friendsUpdateTime",
+        .dataTypeSpecific.className = NULL,
+        .number = FriendAgreeResponse_FieldNumber_FriendsUpdateTime,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FriendAgreeResponse__storage_, friendsUpdateTime),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FriendAgreeResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FriendAgreeResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\021\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - FriendIgnoreRequest
 
 @implementation FriendIgnoreRequest
@@ -1425,6 +1489,54 @@ typedef struct FriendDeleteRequest__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(FriendDeleteRequest__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
+    NSAssert(descriptor == nil, @"Startup recursed!");
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - FriendDeleteResponse
+
+@implementation FriendDeleteResponse
+
+@dynamic friendsUpdateTime;
+
+typedef struct FriendDeleteResponse__storage_ {
+  uint32_t _has_storage_[1];
+  int64_t friendsUpdateTime;
+} FriendDeleteResponse__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "friendsUpdateTime",
+        .dataTypeSpecific.className = NULL,
+        .number = FriendDeleteResponse_FieldNumber_FriendsUpdateTime,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(FriendDeleteResponse__storage_, friendsUpdateTime),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[FriendDeleteResponse class]
+                                     rootClass:[ProtocolRoot class]
+                                          file:ProtocolRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(FriendDeleteResponse__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\001\001\021\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     NSAssert(descriptor == nil, @"Startup recursed!");
     descriptor = localDescriptor;
   }

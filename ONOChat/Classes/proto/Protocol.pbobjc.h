@@ -162,6 +162,7 @@ typedef GPB_ENUM(UserKick_FieldNumber) {
 
 typedef GPB_ENUM(NewFriend_FieldNumber) {
   NewFriend_FieldNumber_User = 1,
+  NewFriend_FieldNumber_FriendsUpdateTime = 2,
 };
 
 /**
@@ -172,6 +173,8 @@ typedef GPB_ENUM(NewFriend_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) UserData *user;
 /** Test to see if @c user has been set. */
 @property(nonatomic, readwrite) BOOL hasUser;
+
+@property(nonatomic, readwrite) int64_t friendsUpdateTime;
 
 @end
 
@@ -484,6 +487,21 @@ typedef GPB_ENUM(FriendAgreeRequest_FieldNumber) {
 
 @end
 
+#pragma mark - FriendAgreeResponse
+
+typedef GPB_ENUM(FriendAgreeResponse_FieldNumber) {
+  FriendAgreeResponse_FieldNumber_FriendsUpdateTime = 1,
+};
+
+/**
+ * 响应 同意好友请求
+ **/
+@interface FriendAgreeResponse : GPBMessage
+
+@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+
+@end
+
 #pragma mark - FriendIgnoreRequest
 
 typedef GPB_ENUM(FriendIgnoreRequest_FieldNumber) {
@@ -511,6 +529,21 @@ typedef GPB_ENUM(FriendDeleteRequest_FieldNumber) {
 @interface FriendDeleteRequest : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *uid;
+
+@end
+
+#pragma mark - FriendDeleteResponse
+
+typedef GPB_ENUM(FriendDeleteResponse_FieldNumber) {
+  FriendDeleteResponse_FieldNumber_FriendsUpdateTime = 1,
+};
+
+/**
+ * 响应 删除好友请求
+ **/
+@interface FriendDeleteResponse : GPBMessage
+
+@property(nonatomic, readwrite) int64_t friendsUpdateTime;
 
 @end
 

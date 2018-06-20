@@ -13,6 +13,7 @@
 #import "IMConversationViewController.h"
 #import "IMContactViewController.h"
 #import "IMGlobalData.h"
+#import "IMToast.h"
 
 @interface IMLoginViewController ()
 
@@ -80,7 +81,7 @@
         [IMGlobalData sharedData].user = user;
         [weakSelf enterChatPage];
     } onError:^(int errorCode, NSString *errorMsg) {
-        NSLog(@"user logined with error:%@", errorMsg);
+        [IMToast showTipMessage:[NSString stringWithFormat:@"user logined with error:%@", errorMsg]];
     }];
     
 }

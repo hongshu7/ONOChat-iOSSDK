@@ -31,10 +31,13 @@
 
 + (ONOIMClient *)sharedClient;
 
+/** 收到信息delegate */
 @property (nonatomic, weak) id<ONOReceiveMessageDelegate> receiveMessageDelegate;
 
+/** 用户被踢出delegate */
 @property (nonatomic, weak) id<ONOReceiveUserKickDelegate> receiveUserKickDelegate;
 
+/** 用户好友相关操作delegate */
 @property (nonatomic, weak) id<ONOReceiveFriendMessageDelegate> receiveFriendMessageDelegate;
 
 /**
@@ -106,10 +109,7 @@
  */
 - (void)userProfile:(NSString *)userId onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 - (void)userProfile:(NSString *)userId withCache:(BOOL)withCache onSuccess:(void (^)(ONOUser *user))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
-
 - (void)userProfiles:(NSArray<NSString*> *)userIds onSuccess:(void (^)(NSArray<ONOUser *> *users))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
-
-
 
 // 好友
 

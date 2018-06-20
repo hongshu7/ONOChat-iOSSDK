@@ -39,6 +39,7 @@ message UserKick {
 //推送 新的好友
 message NewFriend {
   UserData user = 1;
+  int64 friendsUpdateTime = 2;
 }
 //推送 新的好友请求
 message NewFriendRequest {
@@ -127,6 +128,11 @@ message FriendAgreeRequest {
   string uid = 1;
 }
 
+//响应 同意好友请求
+message FriendAgreeResponse {
+  int64 friendsUpdateTime = 1;
+}
+
 //请求 忽略好友请求
 message FriendIgnoreRequest {
   string uid = 1;
@@ -135,6 +141,11 @@ message FriendIgnoreRequest {
 //请求 删除好友请求
 message FriendDeleteRequest {
   string uid = 1;
+}
+
+//响应 删除好友请求
+message FriendDeleteResponse {
+  int64 friendsUpdateTime = 1;
 }
 
 //请求 好友模糊查找
