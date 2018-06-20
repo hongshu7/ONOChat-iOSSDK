@@ -19,13 +19,6 @@ typedef void (^ONOErrorResponse)(id msg);
 
 + (ONOCore *)sharedCore;
 
-/**
- *  设置聊天服务器参数
- *
- *  @param host    帐号
- *  @param port    端口号
- */
-- (void)setupWithHost:(NSString*)host port:(int)port;
 
 /**
  *  监听消息
