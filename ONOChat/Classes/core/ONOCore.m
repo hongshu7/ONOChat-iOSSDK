@@ -108,6 +108,10 @@
     //do login
     UserLoginRequest *clientUserLogin = [[UserLoginRequest alloc] init];
     clientUserLogin.token = _loginToken;
+    
+    // 取出好友更新时间
+//    clientUserLogin.friendsUpdateTime = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@friendsUpdateTime",self.userId]] integerValue];
+//    NSLog(@"%i",clientUserLogin.friendsUpdateTime);
     [self requestRoute:@"im.user.login" withMessage:clientUserLogin onSuccess:^(UserLoginResponse *msg) {
         NSLog(@"user login response");
         //upload device token
@@ -115,6 +119,11 @@
         
         //save uid
         self.userId = msg.user.uid;
+        
+        //存储 friendupdate 时间
+//        NSString *key = [NSString stringWithFormat:@"%@friendsUpdateTime",[ONOCore sharedCore].userId];
+//        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendOperations.friendsUpdateTime) forKey:key];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
         
         ONOUser *user = [[ONOUser alloc] init];
         user.userId = msg.user.uid;

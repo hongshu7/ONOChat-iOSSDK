@@ -29,6 +29,7 @@
 
 @interface ONOIMClient : NSObject
 
+/** 单例 */
 + (ONOIMClient *)sharedClient;
 
 /** 收到信息delegate */
@@ -163,9 +164,6 @@
  *  @param alias       别名
  */
 - (void)friendRemarkWithUserId:(NSString *)userId andAlias:(NSString *)alias onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
-
-
-//- (void)friendListUpdateByTimestamp:(long)timestamp onSuccess:(void (^)(NSArray<ONOUser *> *userArray))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock;
 
 
 @end

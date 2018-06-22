@@ -48,6 +48,12 @@
             [self receiveUserKick:msg];
         }];
         [[ONOCore sharedCore] addListenerForRoute:@"push.newFriend" withCallback:^(NewFriend *msg) {
+            
+            //存储 friendsUpdateTime 时间
+            NSString *key = [NSString stringWithFormat:@"%@friendsUpdateTime",[ONOCore sharedCore].userId];
+            [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendsUpdateTime) forKey:key];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
             [ONODB insertOrUpdateFriend:msg.user.uid];
             [self receiveNewFriend:msg];
         }];
@@ -414,7 +420,12 @@
 - (void)friendAgreeWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     FriendAgreeRequest *request = [[FriendAgreeRequest alloc] init];
     request.uid = userId;
-    [[ONOCore sharedCore] requestRoute:@"im.friend.agree" withMessage:request onSuccess:^(id msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.agree" withMessage:request onSuccess:^(FriendAgreeResponse *msg) {
+        //存储 friendsUpdateTime 时间
+        NSString *key = [NSString stringWithFormat:@"%@friendsUpdateTime",[ONOCore sharedCore].userId];
+        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendsUpdateTime) forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         [ONODB insertOrUpdateFriend:request.uid];
         if (successBlock) successBlock ();
     } onError:^(ErrorResponse *msg) {
@@ -436,7 +447,12 @@
 - (void)friendDeleteWithUserId:(NSString *)userId onSuccess:(void (^)(void))successBlock onError:(void (^)(int errorCode, NSString *errorMessage))errorBlock {
     FriendDeleteRequest *request = [[FriendDeleteRequest alloc] init];
     request.uid = userId;
-    [[ONOCore sharedCore] requestRoute:@"im.friend.delete" withMessage:request onSuccess:^(id msg) {
+    [[ONOCore sharedCore] requestRoute:@"im.friend.delete" withMessage:request onSuccess:^(FriendDeleteResponse *msg) {
+        //存储 friendsUpdateTime 时间
+        NSString *key = [NSString stringWithFormat:@"%@friendsUpdateTime",[ONOCore sharedCore].userId];
+        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendsUpdateTime) forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         [ONODB deleteFriend:request.uid];
         if (successBlock) successBlock ();
     } onError:^(ErrorResponse *msg) {

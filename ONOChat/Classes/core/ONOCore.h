@@ -15,6 +15,7 @@ typedef void (^ONOSuccessResponse)(id msg);
 typedef void (^ONOErrorResponse)(id msg);
 
 
+
 @interface ONOCore : NSObject
 
 + (ONOCore *)sharedCore;
