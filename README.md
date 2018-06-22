@@ -11,18 +11,6 @@
 ```objc
 @interface ONOIMClient : NSObject
 
-/** 单例 */
-+ (ONOIMClient *)sharedClient;
-
-/** 收到信息delegate */
-@property (nonatomic, weak) id<ONOReceiveMessageDelegate> receiveMessageDelegate;
-
-/** 用户被踢出delegate */
-@property (nonatomic, weak) id<ONOReceiveUserKickDelegate> receiveUserKickDelegate;
-
-/** 用户好友相关操作delegate */
-@property (nonatomic, weak) id<ONOReceiveFriendMessageDelegate> receiveFriendMessageDelegate;
-
 /**
  *  设置聊天服务器参数
  *
