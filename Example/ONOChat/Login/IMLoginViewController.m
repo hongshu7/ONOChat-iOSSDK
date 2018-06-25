@@ -100,8 +100,6 @@
                                                         image:[[UIImage imageNamed:@"tabbar_icon_contact_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
                                                 selectedImage:[[UIImage imageNamed:@"tabbar_icon_contact_selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
     
-    
-    
     IMConversationViewController *conversationViewController = [[IMConversationViewController alloc] init];
     conversationViewController.tabBarItem = item1;
     UINavigationController *conversationNav = [[UINavigationController alloc] initWithRootViewController:conversationViewController];

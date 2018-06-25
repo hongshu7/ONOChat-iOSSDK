@@ -28,7 +28,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.navigationItem.title = @"好友添加";
+    self.navigationItem.title = @"添加好友";
+    
+    self.searchButton.clipsToBounds = YES;
+    self.searchButton.layer.cornerRadius = 4;
 }
 
 - (IBAction)searchAction {
