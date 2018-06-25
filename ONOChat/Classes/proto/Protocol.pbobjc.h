@@ -162,7 +162,7 @@ typedef GPB_ENUM(UserKick_FieldNumber) {
 
 typedef GPB_ENUM(NewFriend_FieldNumber) {
   NewFriend_FieldNumber_User = 1,
-  NewFriend_FieldNumber_FriendsUpdateTime = 2,
+  NewFriend_FieldNumber_FriendSyncTag = 2,
 };
 
 /**
@@ -174,7 +174,7 @@ typedef GPB_ENUM(NewFriend_FieldNumber) {
 /** Test to see if @c user has been set. */
 @property(nonatomic, readwrite) BOOL hasUser;
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+@property(nonatomic, readwrite) int64_t friendSyncTag;
 
 @end
 
@@ -205,7 +205,7 @@ typedef GPB_ENUM(FriendOperations_FieldNumber) {
   FriendOperations_FieldNumber_AddsArray = 1,
   FriendOperations_FieldNumber_UpdatesArray = 2,
   FriendOperations_FieldNumber_DeletesArray = 3,
-  FriendOperations_FieldNumber_FriendsUpdateTime = 4,
+  FriendOperations_FieldNumber_FriendSyncTag = 4,
 };
 
 @interface FriendOperations : GPBMessage
@@ -222,7 +222,7 @@ typedef GPB_ENUM(FriendOperations_FieldNumber) {
 /** The number of items in @c deletesArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger deletesArray_Count;
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+@property(nonatomic, readwrite) int64_t friendSyncTag;
 
 @end
 
@@ -230,7 +230,6 @@ typedef GPB_ENUM(FriendOperations_FieldNumber) {
 
 typedef GPB_ENUM(UserLoginRequest_FieldNumber) {
   UserLoginRequest_FieldNumber_Token = 1,
-  UserLoginRequest_FieldNumber_FriendsUpdateTime = 2,
 };
 
 /**
@@ -240,16 +239,12 @@ typedef GPB_ENUM(UserLoginRequest_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *token;
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
-
 @end
 
 #pragma mark - UserLoginResponse
 
 typedef GPB_ENUM(UserLoginResponse_FieldNumber) {
   UserLoginResponse_FieldNumber_User = 1,
-  UserLoginResponse_FieldNumber_MessagesArray = 2,
-  UserLoginResponse_FieldNumber_FriendOperations = 3,
 };
 
 /**
@@ -260,14 +255,6 @@ typedef GPB_ENUM(UserLoginResponse_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) UserData *user;
 /** Test to see if @c user has been set. */
 @property(nonatomic, readwrite) BOOL hasUser;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Message*> *messagesArray;
-/** The number of items in @c messagesArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger messagesArray_Count;
-
-@property(nonatomic, readwrite, strong, null_resettable) FriendOperations *friendOperations;
-/** Test to see if @c friendOperations has been set. */
-@property(nonatomic, readwrite) BOOL hasFriendOperations;
 
 @end
 
@@ -322,6 +309,52 @@ typedef GPB_ENUM(UserProfilesResponse_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<UserData*> *usersArray;
 /** The number of items in @c usersArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger usersArray_Count;
+
+@end
+
+#pragma mark - GetUnreadMessagesRequest
+
+@interface GetUnreadMessagesRequest : GPBMessage
+
+@end
+
+#pragma mark - GetUnreadMessagesResponse
+
+typedef GPB_ENUM(GetUnreadMessagesResponse_FieldNumber) {
+  GetUnreadMessagesResponse_FieldNumber_MessagesArray = 1,
+};
+
+@interface GetUnreadMessagesResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Message*> *messagesArray;
+/** The number of items in @c messagesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger messagesArray_Count;
+
+@end
+
+#pragma mark - GetNewMessagesRequest
+
+typedef GPB_ENUM(GetNewMessagesRequest_FieldNumber) {
+  GetNewMessagesRequest_FieldNumber_OffsetMessageId = 1,
+};
+
+@interface GetNewMessagesRequest : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *offsetMessageId;
+
+@end
+
+#pragma mark - GetNewMessagesResponse
+
+typedef GPB_ENUM(GetNewMessagesResponse_FieldNumber) {
+  GetNewMessagesResponse_FieldNumber_MessagesArray = 1,
+};
+
+@interface GetNewMessagesResponse : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Message*> *messagesArray;
+/** The number of items in @c messagesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger messagesArray_Count;
 
 @end
 
@@ -387,7 +420,7 @@ typedef GPB_ENUM(SendMessagenResponse_FieldNumber) {
 #pragma mark - FriendUpdatesRequest
 
 typedef GPB_ENUM(FriendUpdatesRequest_FieldNumber) {
-  FriendUpdatesRequest_FieldNumber_FriendsUpdateTime = 1,
+  FriendUpdatesRequest_FieldNumber_FriendSyncTag = 1,
 };
 
 /**
@@ -395,7 +428,7 @@ typedef GPB_ENUM(FriendUpdatesRequest_FieldNumber) {
  **/
 @interface FriendUpdatesRequest : GPBMessage
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+@property(nonatomic, readwrite) int64_t friendSyncTag;
 
 @end
 
@@ -490,7 +523,7 @@ typedef GPB_ENUM(FriendAgreeRequest_FieldNumber) {
 #pragma mark - FriendAgreeResponse
 
 typedef GPB_ENUM(FriendAgreeResponse_FieldNumber) {
-  FriendAgreeResponse_FieldNumber_FriendsUpdateTime = 1,
+  FriendAgreeResponse_FieldNumber_FriendSyncTag = 1,
 };
 
 /**
@@ -498,7 +531,7 @@ typedef GPB_ENUM(FriendAgreeResponse_FieldNumber) {
  **/
 @interface FriendAgreeResponse : GPBMessage
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+@property(nonatomic, readwrite) int64_t friendSyncTag;
 
 @end
 
@@ -535,7 +568,7 @@ typedef GPB_ENUM(FriendDeleteRequest_FieldNumber) {
 #pragma mark - FriendDeleteResponse
 
 typedef GPB_ENUM(FriendDeleteResponse_FieldNumber) {
-  FriendDeleteResponse_FieldNumber_FriendsUpdateTime = 1,
+  FriendDeleteResponse_FieldNumber_FriendSyncTag = 1,
 };
 
 /**
@@ -543,7 +576,7 @@ typedef GPB_ENUM(FriendDeleteResponse_FieldNumber) {
  **/
 @interface FriendDeleteResponse : GPBMessage
 
-@property(nonatomic, readwrite) int64_t friendsUpdateTime;
+@property(nonatomic, readwrite) int64_t friendSyncTag;
 
 @end
 

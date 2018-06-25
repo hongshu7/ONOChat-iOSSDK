@@ -39,7 +39,7 @@ message UserKick {
 //推送 新的好友
 message NewFriend {
   UserData user = 1;
-  int64 friendsUpdateTime = 2;
+  int64 friendSyncTag = 2;
 }
 //推送 新的好友请求
 message NewFriendRequest {
@@ -51,20 +51,17 @@ message FriendOperations {
   repeated UserData adds = 1;
   repeated UserData updates = 2;
   repeated string deletes = 3;
-  int64 friendsUpdateTime = 4;
+  int64 friendSyncTag = 4;
 }
 
 //请求 登陆接口
 message UserLoginRequest {
   string token = 1;
-  int64 friendsUpdateTime = 2;
 }
 
 //响应 登陆
 message UserLoginResponse {
   UserData user = 1;
-  repeated Message messages = 2;
-  FriendOperations friendOperations = 3;
 }
 
 message UserProfileRequest {
@@ -80,6 +77,22 @@ message UserProfilesRequest {
 message UserProfilesResponse {
   repeated UserData users = 1;
 }
+
+message GetUnreadMessagesRequest {
+}
+
+message GetUnreadMessagesResponse {
+  repeated Message messages = 1;
+}
+
+message GetNewMessagesRequest {
+  string offsetMessageId = 1;
+}
+
+message GetNewMessagesResponse {
+  repeated Message messages = 1;
+}
+
 
 //请求 标记消息已读
 message ReadMessageRequest {
@@ -100,7 +113,7 @@ message SendMessagenResponse {
 
 //请求 好友列表
 message FriendUpdatesRequest {
-  int64 friendsUpdateTime = 1;
+  int64 friendSyncTag = 1;
 }
 //响应 好友列表
 message FriendUpdatesResponse {
@@ -130,7 +143,7 @@ message FriendAgreeRequest {
 
 //响应 同意好友请求
 message FriendAgreeResponse {
-  int64 friendsUpdateTime = 1;
+  int64 friendSyncTag = 1;
 }
 
 //请求 忽略好友请求
@@ -145,7 +158,7 @@ message FriendDeleteRequest {
 
 //响应 删除好友请求
 message FriendDeleteResponse {
-  int64 friendsUpdateTime = 1;
+  int64 friendSyncTag = 1;
 }
 
 //请求 好友模糊查找
