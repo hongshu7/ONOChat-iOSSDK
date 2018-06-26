@@ -41,6 +41,8 @@
     self.navigationItem.title = [IMGlobalData sharedData].user.nickname;
     
     self.dataArray = @[];
+    
+    
 
 }
 
@@ -80,7 +82,11 @@
     [self updateTabbarBadge];
 }
 
-
+- (void)onGetUnreadMessages {
+    self.dataArray = [[ONOIMClient sharedClient] getConversationList];
+    [self.tableView reloadData];
+    [self updateTabbarBadge];
+}
 
 //- (void)starNewSession {
 //    // iPhoneX

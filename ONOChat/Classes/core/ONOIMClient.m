@@ -87,7 +87,7 @@
 //        NSLog(@"333");
 //    }];
     //回调事件
-    if (self.receiveMessageDelegate) {
+    if ([self.receiveMessageDelegate respondsToSelector:@selector(onReceived:)]) {
         [self.receiveMessageDelegate onReceived:message];
     }
 }
@@ -95,20 +95,20 @@
 
 
 - (void)receiveUserKick:(UserKick *)msg {
-    if (self.receiveUserKickDelegate) {
+    if ([self.receiveUserKickDelegate respondsToSelector:@selector(onReceivedUserKick:)]) {
         [self.receiveUserKickDelegate onReceivedUserKick:msg.content];
     }
     [[ONOCore sharedCore] disconnect];
 }
 
 - (void)receiveNewFriend:(NewFriend *)msg {
-    if (self.receiveFriendMessageDelegate) {
+    if ([self.receiveFriendMessageDelegate respondsToSelector:@selector(onReceivedNewFriend:)]) {
         [self.receiveFriendMessageDelegate onReceivedNewFriend:msg.user.uid];
     }
 }
 
 - (void)receiveNewFriendRequest:(NewFriendRequest *)msg {
-    if (self.receiveUserKickDelegate) {
+    if ([self.receiveUserKickDelegate respondsToSelector:@selector(onReceivedNewFriendRequest:)]) {
         [self.receiveFriendMessageDelegate onReceivedNewFriendRequest:@"新的好友请求"];
     }
 }
@@ -160,7 +160,14 @@
         //同步联系人
         [self friendListUpdateOnSuccess:^() {
             //接着收信息
-            [self getUnreadMessageArrayOnSuccess:nil onError:^(id msg) {
+            if ([self.receiveFriendMessageDelegate respondsToSelector:@selector(onReceivedFriendListUpdate)]) {
+                [self.receiveFriendMessageDelegate onReceivedFriendListUpdate];
+            }
+            [self getUnreadMessageArrayOnSuccess:^(id msg) {
+                if ([self.receiveMessageDelegate respondsToSelector:@selector(onGetUnreadMessages)]) {
+                    [self.receiveMessageDelegate onGetUnreadMessages];
+                }
+            } onError:^(id msg) {
                 // todo
             }];
         } onError:^(int errorCode, NSString *errorMessage) {

@@ -11,19 +11,28 @@
 #import "ONOConversation.h"
 #import "ONOFriendRequest.h"
 
+/** 收到信息delegate */
 @protocol ONOReceiveMessageDelegate <NSObject>
+/** 已经登陆状态下,收到消息 */
 - (void)onReceived:(ONOMessage *)message;
+/** 刚刚登陆状态下,收到未读消息,已存到本地数据库,刷新 conversion 会话列表即可 */
+- (void)onGetUnreadMessages;
 @end
 
+/** 用户被踢出delegate */
 @protocol ONOReceiveUserKickDelegate <NSObject>
 - (void)onReceivedUserKick:(NSString *)message;
 @end
 
+/** 用户好友相关操作delegate */
 @protocol ONOReceiveFriendMessageDelegate <NSObject>
 /** 接到好友请求 */
 - (void)onReceivedNewFriendRequest:(NSString *)message;
 /** 新的好友 */
 - (void)onReceivedNewFriend:(NSString *)message;
+/** 好友列表更新,刷新好友列表即可 */
+- (void)onReceivedFriendListUpdate;
+
 @end
 
 

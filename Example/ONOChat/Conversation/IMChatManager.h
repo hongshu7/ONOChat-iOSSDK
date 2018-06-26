@@ -13,8 +13,25 @@
 
 
 @protocol IMReceiveMessageDelegate <NSObject>
+@optional
 - (void)onReceived:(ONOMessage *)message;
+
+- (void)onGetUnreadMessages;
+
 @end
+
+/** 用户好友相关操作delegate */
+@protocol IMReceiveFriendMessageDelegate <NSObject>
+@optional
+/** 接到好友请求 */
+- (void)onReceivedNewFriendRequest:(NSString *)message;
+/** 新的好友 */
+- (void)onReceivedNewFriend:(NSString *)message;
+/** 好友列表更新,刷新好友列表即可 */
+- (void)onReceivedFriendListUpdate;
+@end
+
+
 
 @interface IMChatManager : NSObject
 
@@ -33,6 +50,10 @@
  *  @param delegate 多媒体委托
  */
 - (void)removeReceiveMessageDelegate:(id<IMReceiveMessageDelegate>)delegate;
+
+
+/** 用户好友相关操作delegate */
+@property (nonatomic, weak) id<IMReceiveFriendMessageDelegate> receiveFriendMessageDelegate;
 
 /** 登陆时候监听一些消息 */
 - (void)statListenOtherMessage;

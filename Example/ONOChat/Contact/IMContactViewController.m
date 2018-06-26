@@ -14,11 +14,12 @@
 #import "IMFriendRequestListViewController.h"
 #import "IMToast.h"
 #import "UIView+Extension.h"
+#import "IMChatManager.h"
 
 #import "ONOIMClient.h"
 
 
-@interface IMContactViewController ()
+@interface IMContactViewController ()<IMReceiveFriendMessageDelegate>
 
 @property (strong, nonatomic) NSArray *dataArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -36,9 +37,18 @@
     
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"好友请求列表" style:UIBarButtonItemStylePlain target:self action:@selector(newFriendList)];
+    
+    [IMChatManager sharedChatManager].receiveFriendMessageDelegate = self;
 }
 
+- (void)dealloc {
+    [IMChatManager sharedChatManager].receiveFriendMessageDelegate = nil;
+}
 
+- (void)onReceivedFriendListUpdate {
+    self.dataArray = [[ONOIMClient sharedClient] getFriends];
+    [self.tableView reloadData];
+}
 
 - (void)newFriendList {
     [self.navigationController im_pushViewController:[IMFriendRequestListViewController new]];

@@ -50,8 +50,16 @@
 #pragma mark - ONOReceiveMessageDelegate
 - (void)onReceived:(ONOMessage *)message {
     for (id<IMReceiveMessageDelegate> delegate in self.delegateArray) {
-        if ([delegate conformsToProtocol:@protocol(IMReceiveMessageDelegate)]) {
+        if ([delegate respondsToSelector:@selector(onReceived:)]) {
             [delegate onReceived:message];
+        }
+    }
+}
+
+- (void)onGetUnreadMessages {
+    for (id<IMReceiveMessageDelegate> delegate in self.delegateArray) {
+        if ([delegate respondsToSelector:@selector(onGetUnreadMessages)]) {
+            [delegate onGetUnreadMessages];
         }
     }
 }
@@ -84,6 +92,13 @@
 - (void)onReceivedNewFriendRequest:(NSString *)message {
     [IMToast showTipMessage:message];
 }
+
+- (void)onReceivedFriendListUpdate {
+    if ([self.receiveFriendMessageDelegate respondsToSelector:@selector(onReceivedFriendListUpdate)]) {
+        [self.receiveFriendMessageDelegate onReceivedFriendListUpdate];
+    }
+}
+
 
 
 @end
