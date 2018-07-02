@@ -50,9 +50,9 @@
         [[ONOCore sharedCore] addListenerForRoute:@"push.newFriend" withCallback:^(NewFriend *msg) {
             
             //存储 friendsUpdateTime 时间
-            NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
-            [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+//            NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
+//            [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
             
             [ONODB insertOrUpdateFriend:msg.user.uid];
             [self receiveNewFriend:msg];
@@ -81,11 +81,11 @@
     
     //通知服务端已收到
     [self readMessage:msg.mid onSuccess:nil onError:nil];
-//    [self readMessage:msg.mid onSuccess:^(id msg) {
-//        NSLog(@"333");
-//    } onError:^(id msg) {
-//        NSLog(@"333");
-//    }];
+//        [self readMessage:msg.mid onSuccess:^(id msg) {
+//            NSLog(@"333");
+//        } onError:^(id msg) {
+//            NSLog(@"333");
+//        }];
     //回调事件
     if ([self.receiveMessageDelegate respondsToSelector:@selector(onReceived:)]) {
         [self.receiveMessageDelegate onReceived:message];
@@ -174,25 +174,25 @@
             // todo
         }];
         //todo:每分钟自动同步联系人
-
-        //接着收信息
-//        if (msg.messagesArray_Count > 0) {
-//            for (Message *m in msg.messagesArray) {
-//                ONOMessage *message = [self createMessageByType:m.type];
-//                message.messageId = m.mid;
-//                message.timestamp = m.time;
-//                message.isSend = YES;
-//                message.isSelf = [m.from isEqualToString:[ONOCore sharedCore].userId];
-//                message.targetId = message.isSelf ? m.to : m.from;
-//                message.userId = m.from;
-//                [message decode:m.data_p];
 //
-//                //保存消息
-//                [ONODB insertMessage:message];
-//                //更新会话信息
-//                [self updateConversation:message.targetId withMessage:message];
+//            接着收信息
+//            if (msg.messagesArray_Count > 0) {
+//                for (Message *m in msg.messagesArray) {
+//                    ONOMessage *message = [self createMessageByType:m.type];
+//                    message.messageId = m.mid;
+//                    message.timestamp = m.time;
+//                    message.isSend = YES;
+//                    message.isSelf = [m.from isEqualToString:[ONOCore sharedCore].userId];
+//                    message.targetId = message.isSelf ? m.to : m.from;
+//                    message.userId = m.from;
+//                    [message decode:m.data_p];
+//
+//                    //保存消息
+//                    [ONODB insertMessage:message];
+//                    //更新会话信息
+//                    [self updateConversation:message.targetId withMessage:message];
+//                }
 //            }
-//        }
 
     } onError:^(ErrorResponse *msg) {
         errorBlock(msg.code, msg.message);
@@ -456,9 +456,9 @@
     request.uid = userId;
     [[ONOCore sharedCore] requestRoute:@"im.friend.agree" withMessage:request onSuccess:^(FriendAgreeResponse *msg) {
         //存储 friendsUpdateTime 时间
-        NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
-        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+//        NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
+//        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
         
         [ONODB insertOrUpdateFriend:request.uid];
         if (successBlock) successBlock ();
@@ -483,9 +483,9 @@
     request.uid = userId;
     [[ONOCore sharedCore] requestRoute:@"im.friend.delete" withMessage:request onSuccess:^(FriendDeleteResponse *msg) {
         //存储 friendsUpdateTime 时间
-        NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
-        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+//        NSString *key = [NSString stringWithFormat:@"%@friendSyncTag",[ONOCore sharedCore].userId];
+//        [[NSUserDefaults standardUserDefaults] setObject:@(msg.friendSyncTag) forKey:key];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
         
         [ONODB deleteFriend:request.uid];
         if (successBlock) successBlock ();
